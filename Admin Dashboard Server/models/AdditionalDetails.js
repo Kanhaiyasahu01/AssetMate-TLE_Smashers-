@@ -1,0 +1,41 @@
+const mongoose = require("mongoose");
+
+// CustomField schema
+const customFieldSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+});
+
+const CustomField = mongoose.model("CustomField", customFieldSchema);
+
+// AdditionalDetails schema
+const additionalDetailsSchema = new mongoose.Schema({
+    tax: {
+        type: Number,
+    },
+    discount: {
+        type: Number,
+    },
+    documentId: {
+        type: String,
+    },
+    customFields: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "CustomField",
+        }
+    ],
+});
+
+const AdditionalDetails = mongoose.model("AdditionalDetails", additionalDetailsSchema);
+
+module.exports = {
+    CustomField,
+    AdditionalDetails,
+};
