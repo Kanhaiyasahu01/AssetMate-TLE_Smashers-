@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'; // For navigation
 import { addWarehouseService } from '../services/operations/warehouse'; // Import service for adding warehouse
 import { useSelector } from 'react-redux';
 
+
 export const AddWarehouse = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Hook to navigate
@@ -14,6 +15,7 @@ export const AddWarehouse = () => {
     description: '',
     location: '',
   });
+
 
   // Handle form change
   const handleChange = (e) => {

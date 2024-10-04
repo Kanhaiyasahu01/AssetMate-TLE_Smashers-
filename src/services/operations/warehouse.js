@@ -11,6 +11,7 @@ import { setWarehouses } from "../../slice/warehouse"; // Import actions
 const {
     ADD_WAREHOUSE,
     GET_WAREHOUSES,
+    ADD_NEW_PRODUCT,
 } = warehouseEndpoints
 
 
@@ -79,13 +80,17 @@ export const addNewProduct = (formData,navigate,token) => {
   return async (dispatch) => {
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector.get("POST",ADD_NEW_PRODUCT,formData,{
+      const response = await apiConnector("POST",ADD_NEW_PRODUCT,formData,{
         Authorization: `Bearer ${token}`
-    }); // Replace with your API call
+    }); 
 
 
     // i am confused here
-      dispatch(setWarehouses(response.data.product)); 
+    if(response.data.success)
+    {
+      toast.success("Product added successfully");
+      navigate('/stock/manage-product');
+    }
     } catch (error) {
       console.error("Error fetching warehouses:", error);
       toast.error("Failed to fetch warehouses");

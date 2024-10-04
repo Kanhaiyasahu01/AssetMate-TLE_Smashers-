@@ -12,6 +12,7 @@ import { DashboardView } from './pages/DashboardView';
 import { AddWarehouse } from './pages/AddWarehouse';
 import { ManageWarehouse } from './pages/ManageWarehouse';
 import { AddNewProduct } from './pages/AddNewProduct';
+import { ManageNewProduct } from './pages/ManageNewProduct';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -57,6 +58,7 @@ function App() {
         <Route path="stock/add-warehouse" element={<AddWarehouse />} />
         <Route path="stock/manage-warehouse" element={<ManageWarehouse />} />
         <Route path="stock/add-product" element={<AddNewProduct />} />
+        <Route path="stock/manage-product" element={<ManageNewProduct />} />
 
       
         {/* <Route path="dashboard/Settings" element={<Settings />} /> */}
