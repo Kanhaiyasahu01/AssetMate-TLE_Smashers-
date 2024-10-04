@@ -39,7 +39,7 @@ exports.createWarehouse = async (req, res) => {
 exports.getAllWarehouses = async (req, res) => {
   try {
     // Fetch all warehouses from the database
-    const warehouses = await Warehouse.find();
+    const warehouses = await Warehouse.find().populate('warehouseProducts');
 
     return res.status(200).json({
       success: true,

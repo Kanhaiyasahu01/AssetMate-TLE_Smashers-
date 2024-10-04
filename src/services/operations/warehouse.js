@@ -14,7 +14,7 @@ const {
 } = warehouseEndpoints
 
 
-export const addWarehouseService = (formData, navigate,token) => {
+export const addWarehouseService = (formData, navigate,token,warehouses) => {
   return async (dispatch) => {
     const toastId = toast.loading("Creating Warehouse..."); 
     dispatch(setLoading(true)); 
@@ -29,13 +29,14 @@ export const addWarehouseService = (formData, navigate,token) => {
       }
 
       // Dispatch the addWarehouse action to update the Redux store
-      dispatch(addWarehouse(response.data.warehouse));
+      if(warehouses.length> 0)
+          dispatch(addWarehouse(response.data.warehouse));
 
       // Show success message
       toast.success("Warehouse created successfully");
 
       // Navigate to manage-warehouse page
-      navigate("stock/manage-warehouse");
+      navigate("/stock/manage-warehouse");
     } catch (error) {
       console.error("Warehouse creation error:", error);
       toast.error("Failed to create warehouse");
@@ -54,12 +55,16 @@ export const addWarehouseService = (formData, navigate,token) => {
 
 export const fetchWarehousesService = (token) => {
   return async (dispatch) => {
+
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector.get("GET",GET_WAREHOUSES,null,{
+      const response = await apiConnector("GET",GET_WAREHOUSES,null,{
         Authorization: `Bearer ${token}`
+
     }); // Replace with your API call
-      dispatch(setWarehouses(response.data)); // Set fetched warehouses in store
+    console.log(response)
+    console.log("AFter response")
+      dispatch(setWarehouses(response.data.warehouses)); // Set fetched warehouses in store
     } catch (error) {
       console.error("Error fetching warehouses:", error);
       toast.error("Failed to fetch warehouses");
