@@ -171,7 +171,7 @@ exports.createClient = async (req, res) => {
         referenceNumber,
         orderDueDate,
         tax,
-        discount,
+        discount, // Now we are using discount
         productList,
         totalTax,
         totalDiscount,
@@ -194,7 +194,7 @@ exports.createClient = async (req, res) => {
         referenceNumber: referenceNumber || "",
         orderDueDate: orderDueDate || new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
         tax: tax || 0,
-        discount: tax || 0,
+        discount: discount || 0, // Now discount is being used
       });
   
       // Step 2: Create Quotation (entry in ClientOrder but treated as a quotation)
@@ -204,7 +204,7 @@ exports.createClient = async (req, res) => {
         invoiceDetails: newInvoice._id, // Reference to the created invoice
         productList,
         totalTax: totalTax || 0,
-        totalDiscount: totalDiscount || 0,
+        totalDiscount: totalDiscount || discount || 0, // Include discount in totalDiscount logic
         shipping: shipping || 0,
         extraDiscount: extraDiscount || 0,
         grandTotal: grandTotal || 0,
@@ -238,6 +238,7 @@ exports.createClient = async (req, res) => {
       });
     }
   };
+  
 
 
   exports.convertToOrder = async (req, res) => {

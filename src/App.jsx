@@ -13,6 +13,12 @@ import { AddWarehouse } from './pages/AddWarehouse';
 import { ManageWarehouse } from './pages/ManageWarehouse';
 import { AddNewProduct } from './pages/AddNewProduct';
 import { ManageNewProduct } from './pages/ManageNewProduct';
+import { AddClient } from './pages/AddClient';
+import { ManageClient } from './pages/ManageClient';
+import { NewInvoice } from './pages/NewInvoice';
+import { ManageInvoice } from './pages/ManageInvoice';
+import { Quotation } from './pages/Quotation';
+import { ManageQuotation } from './pages/ManageQuotation';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -59,6 +65,13 @@ function App() {
         <Route path="stock/manage-warehouse" element={<ManageWarehouse />} />
         <Route path="stock/add-product" element={<AddNewProduct />} />
         <Route path="stock/manage-product" element={<ManageNewProduct />} />
+        <Route path="crm/add-client" element={<AddClient />} />
+        <Route path="crm/manage-client" element={<ManageClient />} />
+        <Route path="sales/new-invoice" element={<NewInvoice />} />
+        <Route path="sales/quotation" element={<Quotation />} />        
+        <Route path="sales/manage-invoice" element={<ManageInvoice />} />        
+        <Route path="sales/manage-quotation" element={<ManageQuotation />} />        
+
 
       
         {/* <Route path="dashboard/Settings" element={<Settings />} /> */}

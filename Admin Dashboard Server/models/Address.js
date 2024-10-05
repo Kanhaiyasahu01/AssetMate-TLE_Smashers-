@@ -1,31 +1,36 @@
 const mongoose = require("mongoose");
 
 const addressSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true,
+    name: {
+        type: String,
+        required: true,
     },
-    company:{
-        type:String,
-        required:true,
+    company: {
+        type: String,
+        required: true,
     },
-    email:{
-        type:String,
-        required:true,
+    phone: {
+        type: String,
+        required: true,
+        maxlength: 20, 
     },
-    address:{
-        type:String,
+    email: {
+        type: String,
+        required: true,
     },
-    city:{
-        type:String,
-        required:true,
+    address: {
+        type: String,
     },
-    country:{
-        type:String,
-        required:true,
+    city: {
+        type: String,
+        required: true,
     },
-    postbox:{
-        type:String,
+    country: {
+        type: String,
+        required: true,
+    },
+    postbox: {
+        type: String,
     },
 });
 

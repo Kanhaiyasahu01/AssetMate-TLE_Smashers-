@@ -14,3 +14,11 @@ export const warehouseEndpoints={
     GET_WAREHOUSES:`${BASE_URL}/warehouse/all`,
     ADD_NEW_PRODUCT:`${BASE_URL}/warehouse/add-product`,
 }
+
+
+export const clientEndPoints = {
+    BILLING_ADDRESS:`${BASE_URL}/supplier/address/create`,
+    SHIPPING_ADDRESS:`${BASE_URL}/supplier/address/create`,
+    ADDITIONAL_DETAILS:`${BASE_URL}/supplier/additional-details/create`,
+    ADD_CLIENT:`${BASE_URL}/client/create`,
+}

@@ -8,43 +8,46 @@ const Product = require("../models/Product");
 
 // Controller for creating a Billing/Shipping Address
 exports.createAddress = async (req, res) => {
-    try {
-      const { name, company, email, address, city, country, postbox} = req.body;
-  
+  console.log("inside create address controller")
+  try {
+      const { name, company, phone, email, address, city, country, postbox } = req.body;
+console.log("inside create address controller")
       // Validate required fields
-      if (!name || !company || !email || !city || !country) {
-        return res.status(400).json({
-          success: false,
-          message: "Name, company, email, city, and country are required fields",
-        });
+      if (!name || !company || !phone || !email || !city || !country) {
+          return res.status(400).json({
+              success: false,
+              message: "Name, company, phone, email, city, and country are required fields",
+          });
       }
-  
+
       // Create the address
       const newAddress = await Address.create({
-        name,
-        company,
-        email,
-        address,
-        city,
-        country,
-        postbox,
+          name,
+          company,
+          phone,
+          email,
+          address,
+          city,
+          country,
+          postbox,
       });
-  
+      console.log("Address created billing")
       // Respond with success
       return res.status(201).json({
-        success: true,
-        message: "Address created successfully",
-        address: newAddress,
+          success: true,
+          message: "Address created successfully",
+          address: newAddress,
       });
-    } catch (error) {
+  } catch (error) {
       console.error("Error creating address:", error);
       return res.status(500).json({
-        success: false,
-        message: "An error occurred while creating the address",
-        error: error.message,
+          success: false,
+          message: "An error occurred while creating the address",
+          error: error.message,
       });
-    }
-  };
+  }
+};
+
 
 
 // Controller for creating Additional Details
