@@ -21,4 +21,8 @@ export const clientEndPoints = {
     SHIPPING_ADDRESS:`${BASE_URL}/supplier/address/create`,
     ADDITIONAL_DETAILS:`${BASE_URL}/supplier/additional-details/create`,
     ADD_CLIENT:`${BASE_URL}/client/create`,
+    GET_ALL_CLIENTS:`${BASE_URL}/client/get-all-clients`,
+    CREATE_QUOTATION:`${BASE_URL}/client/create-quotation`,
 }
+
+

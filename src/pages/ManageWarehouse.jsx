@@ -14,7 +14,6 @@ export const ManageWarehouse = () => {
     if(warehouses.length === 0)
      {
       dispatch(fetchWarehousesService(token));
-      console.log("Called api ad")
      }
 
   }, [dispatch, token]);

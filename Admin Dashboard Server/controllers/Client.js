@@ -300,3 +300,23 @@ exports.createClient = async (req, res) => {
   };
   
   
+  exports.getAllClients = async (req, res) => {
+    try {
+      // Fetch all clients from the database and populate related fields if necessary
+      const clients = await Client.find().populate('billingAddress shippingAddress additionalDetails');
+  
+      return res.status(200).json({
+        success: true,
+        message: "Clients retrieved successfully",
+        clients,
+      });
+    } catch (error) {
+      console.error("Error while fetching clients:", error);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while fetching clients",
+        error: error.message,
+      });
+    }
+  };
+  

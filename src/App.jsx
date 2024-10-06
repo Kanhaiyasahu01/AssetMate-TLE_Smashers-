@@ -19,6 +19,8 @@ import { NewInvoice } from './pages/NewInvoice';
 import { ManageInvoice } from './pages/ManageInvoice';
 import { Quotation } from './pages/Quotation';
 import { ManageQuotation } from './pages/ManageQuotation';
+import PrintDownloadComponent from './pages/PrintDownloadComponent';
+
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -71,6 +73,7 @@ function App() {
         <Route path="sales/quotation" element={<Quotation />} />        
         <Route path="sales/manage-invoice" element={<ManageInvoice />} />        
         <Route path="sales/manage-quotation" element={<ManageQuotation />} />        
+        <Route path="sales/view" element={<PrintDownloadComponent />} />        
 
 
       

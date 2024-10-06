@@ -9,6 +9,8 @@ const {
     ADDITIONAL_DETAILS,
     BILLING_ADDRESS,
     SHIPPING_ADDRESS,
+    GET_ALL_CLIENTS,
+    CREATE_QUOTATION,
 } = clientEndPoints
 
 
@@ -82,6 +84,60 @@ export const addClientService = (token, clients, billingAddress, shippingAddress
       console.log(error.message)
     } finally {
       dispatch(setLoading(false));
+    }
+  };
+};
+
+
+export const fetchClientsService = (token) => {
+  return async (dispatch) => {
+
+    dispatch(setLoading(true));
+    try {
+      const response = await apiConnector("GET", GET_ALL_CLIENTS, null, {
+        Authorization: `Bearer ${token}`,
+      }); // Replace GET_CLIENTS with your API endpoint for fetching clients
+      
+      console.log(response);
+      console.log("After response");
+      
+      dispatch(setClients(response.data.clients)); // Set fetched clients in the store
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+      toast.error("Failed to fetch clients");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+};
+
+
+export const createQuotationService = (token, clientOrderData,navigate) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true)); // Set loading state
+    try {
+      // Make the API call to create a quotation
+      const response = await apiConnector("POST", CREATE_QUOTATION, clientOrderData, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log("Print response",response);
+      // Check if the response has the expected data
+      if (!response?.data?.quotation) {
+        throw new Error("Failed to create quotation");
+        
+      }
+
+      console.log("Quotation created successfully:", response.data.quotation);
+      toast.success("Quotation created successfully");
+      navigate("/sales/view");
+      // Navigate to another route to display the obtained data (assuming you have a way to navigate)
+      // You can use a navigation library like react-router-dom
+      return response.data.quotation; // Return the created quotation for further use (e.g., navigation)
+    } catch (error) {
+      console.error("Error creating quotation:", error);
+      toast.error("Failed to create quotation");
+    } finally {
+      dispatch(setLoading(false)); // Reset loading state
     }
   };
 };
