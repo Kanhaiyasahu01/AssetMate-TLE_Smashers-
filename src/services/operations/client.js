@@ -11,6 +11,7 @@ const {
     SHIPPING_ADDRESS,
     GET_ALL_CLIENTS,
     CREATE_QUOTATION,
+    GET_QUOTATION,
 } = clientEndPoints
 
 
@@ -129,7 +130,7 @@ export const createQuotationService = (token, clientOrderData,navigate) => {
 
       console.log("Quotation created successfully:", response.data.quotation);
       toast.success("Quotation created successfully");
-      navigate("/sales/view");
+      navigate(`/sales/view/${response.data.quotation._id}`);
       // Navigate to another route to display the obtained data (assuming you have a way to navigate)
       // You can use a navigation library like react-router-dom
       return response.data.quotation; // Return the created quotation for further use (e.g., navigation)
@@ -141,3 +142,32 @@ export const createQuotationService = (token, clientOrderData,navigate) => {
     }
   };
 };
+
+export const fetchQuotationService = (token, id, setQuotationData) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true)); 
+    try {
+      // Make the API call to get the quotation data
+      const response = await apiConnector("GET", `${GET_QUOTATION}/${id}`, null, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log("Fetched Quotation Data:", response);
+
+      // Check if the response has the expected data
+      if (!response?.data?.quotation) {
+        throw new Error("Failed to get quotation");
+      }
+
+      // Set the fetched quotation data
+      setQuotationData(response.data.quotation);
+      toast.success("Quotation fetched successfully");
+    } catch (error) {
+      console.error("Error fetching quotation:", error);
+      toast.error("Failed to fetch quotation");
+    } finally {
+      dispatch(setLoading(false)); // Reset loading state
+    }
+  };
+};
+
+

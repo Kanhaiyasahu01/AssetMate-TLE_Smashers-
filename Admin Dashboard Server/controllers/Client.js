@@ -5,6 +5,7 @@ const InvoiceDetails = require("../models/InvoiceDetails");
 const Product = require("../models/Product");
 const ClientOrder = require("../models/ClientOrder");
 
+
 exports.createClient = async (req, res) => {
     try {
       const {billingAddress, shippingAddress, additionalDetails} = req.body;
@@ -315,6 +316,58 @@ exports.createClient = async (req, res) => {
       return res.status(500).json({
         success: false,
         message: "An error occurred while fetching clients",
+        error: error.message,
+      });
+    }
+  };
+
+
+
+  exports.getQuotation = async (req, res) => {
+    try {
+      // Extract the quotation ID from the request URL (req.params)
+      const { id } = req.params;
+  
+      // Check if the ID is provided
+      if (!id) {
+        return res.status(400).json({
+          success: false,
+          message: "Quotation ID is required",
+        });
+      }
+  
+      // Fetch the quotation data and populate the product field inside productList
+      const quotationData = await ClientOrder.findById(id)
+        .populate('client') // Populate client data
+        .populate('warehouse') // Populate warehouse data
+        .populate('invoiceDetails') // Populate invoice details
+        .populate({
+          path: 'productList.product', // Populate product inside productList array
+          model: 'Product',
+        })
+        .lean(); // Use lean for better performance
+  
+      // If no data found, send a 404 response
+      if (!quotationData) {
+        return res.status(404).json({
+          success: false,
+          message: "Quotation not found",
+        });
+      }
+  
+      // Send the quotation data as a response
+      return res.status(200).json({
+        success: true,
+        message: "Quotation retrieved successfully",
+        quotation: quotationData,
+      });
+    } catch (error) {
+      console.error("Error while fetching quotation:", error);
+  
+      // Send a 500 error response with the error details
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while fetching the quotation",
         error: error.message,
       });
     }

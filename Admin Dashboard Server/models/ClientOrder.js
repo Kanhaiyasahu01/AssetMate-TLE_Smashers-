@@ -11,7 +11,7 @@ const clientOrderSchema = new mongoose.Schema({
     },
     invoiceDetails: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "InvoiceDetail",
+        ref: "InvoiceDetails",
     },
     productList: [
         {

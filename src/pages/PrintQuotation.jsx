@@ -1,7 +1,22 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { fetchQuotationService } from '../services/operations/client';
 
 // Quotation component that forwards the ref
 export const PrintQuotation = forwardRef((props, ref) => {
+  const { id } = useParams(); // Extract id from URL params
+  const { token } = useSelector((state) => state.auth); // Get the token from the Redux store
+  const dispatch = useDispatch();
+  const [quotationData, setQuotationData] = useState(null); // Correct useState declaration
+
+  // Fetch quotation data when the component mounts or when id changes
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchQuotationService(token, id, setQuotationData));
+    }
+  }, [id, token, dispatch]); // Add dependencies to re-fetch if these change
+
   return (
     <div ref={ref} style={{ padding: '20px', fontFamily: 'Arial, sans-serif', width: '800px', margin: 'auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
@@ -10,41 +25,43 @@ export const PrintQuotation = forwardRef((props, ref) => {
         <p>Bilaspur Office: Street No. 5, Jora Para, Bilaspur, Chhattisgarh</p>
         <hr />
       </div>
-      <div>
-        <h2>Quotation</h2>
-        <p><strong>To:</strong> JAI BALAJI INDUSTRIES LIMITED, <br />Industrial Growth Centre, Borai</p>
-        <p><strong>Quotation No:</strong> 006/JBI/VS/24-25</p>
-        <p><strong>Date:</strong> 4-Apr-24</p>
-        <hr />
-        <table border="1" width="100%" cellPadding="10">
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>Description</th>
-              <th>UOM</th>
-              <th>Net Price/UOM</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>PBL MAKE GEARED MOTOR AMD25L (FOOT MOUNTED) Ratio 25:1 With 1.5 KW Motor</td>
-              <td>NOS</td>
-              <td>25545</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>PBL MAKE GEAR BOX AMD50L Ratio 50:1 With 1.5 KW Motor (ONLY GEAR BOX)</td>
-              <td>NOS</td>
-              <td>15997</td>
-            </tr>
-          </tbody>
-        </table>
+
+      {/* Check if quotationData is available before rendering */}
+      {quotationData ? (
         <div>
-          <p><strong>Delivery:</strong> 3-4 Weeks</p>
-          <p><strong>Payment Terms:</strong> 100% advance</p>
+          <h2>Quotation</h2>
+          <p><strong>To:</strong> {quotationData.clientName}, <br />{quotationData.clientAddress}</p>
+          <p><strong>Quotation No:</strong> {quotationData.quotationNumber}</p>
+          <p><strong>Date:</strong> {quotationData.date}</p>
+          <hr />
+          <table border="1" width="100%" cellPadding="10">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Description</th>
+                <th>UOM</th>
+                <th>Net Price/UOM</th>
+              </tr>
+            </thead>
+            <tbody>
+              {quotationData.productList.map((item, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{item.description}</td>
+                  <td>{item.quantity}</td>
+                  <td>{item.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div>
+            <p><strong>Delivery:</strong> {quotationData.deliveryTime}</p>
+            <p><strong>Payment Terms:</strong> {quotationData.paymentTerms}</p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <p>Loading Quotation Data...</p>
+      )}
     </div>
   );
 });

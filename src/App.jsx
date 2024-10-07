@@ -73,7 +73,7 @@ function App() {
         <Route path="sales/quotation" element={<Quotation />} />        
         <Route path="sales/manage-invoice" element={<ManageInvoice />} />        
         <Route path="sales/manage-quotation" element={<ManageQuotation />} />        
-        <Route path="sales/view" element={<PrintDownloadComponent />} />        
+        <Route path="sales/view/:id" element={<PrintDownloadComponent />} />        
 
 
       
