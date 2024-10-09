@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AiOutlineRight } from "react-icons/ai"; // Import right arrow icon
 import { sidebarData } from '../../utils/constant';
-import { FaMoneyBill, FaWarehouse, FaUsers, FaTruck, FaBriefcase, FaUserTie, FaTachometerAlt } from "react-icons/fa"; // Section icons
+import { FaMoneyBill, FaWarehouse, FaUsers, FaTruck, FaBriefcase, FaUserTie, FaTachometerAlt, FaFileAlt } from "react-icons/fa"; // Section icons
 
 export const Sidebar = () => {
   const [activeSection, setActiveSection] = useState(null);  // Track active section
@@ -33,6 +33,8 @@ export const Sidebar = () => {
         return <FaUserTie />;
       case 'Dashboard':
         return <FaTachometerAlt />;
+      case 'Term':  // Add the Term section icon
+        return <FaFileAlt />;
       default:
         return null;
     }

@@ -338,14 +338,21 @@ exports.createClient = async (req, res) => {
   
       // Fetch the quotation data and populate the product field inside productList
       const quotationData = await ClientOrder.findById(id)
-        .populate('client') // Populate client data
-        .populate('warehouse') // Populate warehouse data
-        .populate('invoiceDetails') // Populate invoice details
-        .populate({
-          path: 'productList.product', // Populate product inside productList array
-          model: 'Product',
-        })
-        .lean(); // Use lean for better performance
+      .populate({
+        path: "client", // First populate the client object
+        populate: { 
+          path: "billingAddress", // Only populate the billingAddress field
+          model: "Address" 
+        }
+      })
+      .populate("warehouse") // Populate warehouse data
+      .populate("invoiceDetails") // Populate invoice details
+      .populate({
+        path: "productList.product", // Populate product inside productList array
+        model: "Product",
+      })
+      .lean(); // Using lean for better performance
+    
   
       // If no data found, send a 404 response
       if (!quotationData) {

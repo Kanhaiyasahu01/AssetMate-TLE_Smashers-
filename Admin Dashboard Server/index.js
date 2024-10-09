@@ -9,6 +9,7 @@ const userRoutes = require("./routes/User");
 const warehouseRoutes = require("./routes/Warehouse");
 const supplierRoutes = require("./routes/Supplier");
 const clientRoutes = require("./routes/Client");
+const termRoutes = require("./routes/Terms");
 
 // Database connection
 dbConnect();
@@ -42,7 +43,7 @@ app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/warehouse", warehouseRoutes);
 app.use("/api/v1/supplier", supplierRoutes);
 app.use("/api/v1/client", clientRoutes);
-
+app.use("/api/v1/terms",termRoutes)
 // Default route
 app.get("/", (req, res) => {
 	return res.json({

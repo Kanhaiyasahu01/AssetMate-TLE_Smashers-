@@ -60,11 +60,18 @@ export const sidebarData = [
       ],
     },
     {
-        title:"Settings",
-        section:[
-            {name:"Setting", path:"settings/setting"}
-        ]
-    }
+      title: 'Term', // Add the Term section
+      sections: [
+        { name: 'Create Term', path: '/term/create' },
+        { name: 'Update Term', path: '/term/update' }
+      ]
+    },
+    {
+      title:"Settings",
+      section:[
+          {name:"Setting", path:"settings/setting"}
+      ]
+  },
   ];
   
 
