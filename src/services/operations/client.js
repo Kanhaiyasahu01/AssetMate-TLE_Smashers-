@@ -12,6 +12,8 @@ const {
     GET_ALL_CLIENTS,
     CREATE_QUOTATION,
     GET_QUOTATION,
+    CREATE_ORDER,
+    GET_ORDER,
 } = clientEndPoints
 
 
@@ -143,6 +145,8 @@ export const createQuotationService = (token, clientOrderData,navigate) => {
   };
 };
 
+
+// i am thinking to use it for order also
 export const fetchQuotationService = (token, id, setQuotationData) => {
   return async (dispatch) => {
     dispatch(setLoading(true)); 
@@ -171,3 +175,62 @@ export const fetchQuotationService = (token, id, setQuotationData) => {
 };
 
 
+export const createOrderService = (token, clientOrderData,navigate) =>{
+  return async(dispatch)=>{
+    dispatch(setLoading(true)); // Set loading state
+    try {
+      // Make the API call to create a quotation
+      const response = await apiConnector("POST", CREATE_ORDER, clientOrderData, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log("Print order response",response);
+      // Check if the response has the expected data
+      if (!response?.data?.clientOrder) {
+        throw new Error("Failed to create quotation");
+        
+      }
+
+      console.log("Invoice created successfully:", response.data.clientOrder);
+      toast.success("Invoice created successfully");
+      navigate(`/sales/viewOrder/${response.data.clientOrder._id}`);
+      // Navigate to another route to display the obtained data (assuming you have a way to navigate)
+      // You can use a navigation library like react-router-dom
+      return response.data.clientOrder; // Return the created quotation for further use (e.g., navigation)
+    } catch (error) {
+      console.error("Error creating quotation:", error);
+      toast.error("Failed to create quotation");
+    } finally {
+      dispatch(setLoading(false)); // Reset loading state
+    }
+  }
+}
+
+export const fetchOrderService = (token, id, setOrderData) => {
+  return async (dispatch) => {
+    console.log("i am here 1")
+    dispatch(setLoading(true)); 
+    try {
+      // Make the API call to get the quotation data
+      console.log("i am here 2")
+      const response = await apiConnector("GET", `${GET_ORDER}/${id}`, null, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log("Fetched Quotation Data:", response);
+      console.log("i am here 3")
+
+      // Check if the response has the expected data
+      if (!response?.data?.clientOrder) {
+        throw new Error("Failed to get quotation");
+      }
+
+      // Set the fetched quotation data
+      setOrderData(response.data.clientOrder);
+      toast.success("Quotation fetched successfully");
+    } catch (error) {
+      console.error("Error fetching quotation:", error);
+      toast.error("Failed to fetch quotation");
+    } finally {
+      dispatch(setLoading(false)); // Reset loading state
+    }
+  };
+};

@@ -20,6 +20,7 @@ import { ManageInvoice } from './pages/ManageInvoice';
 import { Quotation } from './pages/Quotation';
 import { ManageQuotation } from './pages/ManageQuotation';
 import PrintDownloadComponent from './pages/PrintDownloadComponent';
+import { PrintOrder } from './pages/PrintOrder';
 import TermsForm from './pages/TermsForm';
 function App() {
 
@@ -75,7 +76,8 @@ function App() {
         <Route path="sales/manage-quotation" element={<ManageQuotation />} />        
         <Route path="sales/view/:id" element={<PrintDownloadComponent />} />        
         <Route path="term/create" element={<TermsForm />} />        
-        
+        <Route path="/sales/viewOrder/:id" element={<PrintOrder />} />        
+
         {/* <Route path="dashboard/Settings" element={<Settings />} /> */}
         </Route>
       </Routes>

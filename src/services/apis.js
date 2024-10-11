@@ -23,7 +23,9 @@ export const clientEndPoints = {
     ADD_CLIENT:`${BASE_URL}/client/create`,
     GET_ALL_CLIENTS:`${BASE_URL}/client/get-all-clients`,
     CREATE_QUOTATION:`${BASE_URL}/client/create-quotation`,
-    GET_QUOTATION:`${BASE_URL}/client/get-client-order`
+    GET_QUOTATION:`${BASE_URL}/client/get-client-order`,
+    CREATE_ORDER:`${BASE_URL}/client/create-client-order`,
+    GET_ORDER:`${BASE_URL}/client/get-client-invoice`
 }
 
 export const termsEndPoints = {

@@ -380,3 +380,59 @@ exports.createClient = async (req, res) => {
     }
   };
   
+  exports.getOrder = async (req, res) => {
+    try {
+      // Extract the quotation ID from the request URL (req.params)
+      const { id } = req.params;
+  
+      // Check if the ID is provided
+      if (!id) {
+        return res.status(400).json({
+          success: false,
+          message: "Order ID is required",
+        });
+      }
+  
+      // Fetch the quotation data and populate the product field inside productList
+      const orderData = await ClientOrder.findById(id)
+      .populate({
+        path: "client", // First populate the client object
+        populate: { 
+          path: "billingAddress", // Only populate the billingAddress field
+          model: "Address" 
+        }
+      })
+      .populate("warehouse") // Populate warehouse data
+      .populate("invoiceDetails") // Populate invoice details
+      .populate({
+        path: "productList.product", // Populate product inside productList array
+        model: "Product",
+      })
+      .lean(); // Using lean for better performance
+    
+  
+      // If no data found, send a 404 response
+      if (!orderData) {
+        return res.status(404).json({
+          success: false,
+          message: "order not found",
+        });
+      }
+  
+      // Send the quotation data as a response
+      return res.status(200).json({
+        success: true,
+        message: "order retrieved successfully",
+        clientOrder: orderData,
+      });
+    } catch (error) {
+      console.error("Error while fetching order:", error);
+  
+      // Send a 500 error response with the error details
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while fetching the order",
+        error: error.message,
+      });
+    }
+  };

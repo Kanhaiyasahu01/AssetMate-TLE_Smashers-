@@ -8,7 +8,8 @@ const {
     createQuotation,
     convertToOrder,
     getAllClients,
-    getQuotation
+    getQuotation,
+    getOrder,
 }  = require("../controllers/Client")
 // import middlewares
 const { auth , isAdmin } = require("../middlewares/auth")
@@ -24,5 +25,7 @@ router.put("/convert-to-order",auth,isAdmin,convertToOrder);
 router.get('/get-all-clients',auth,isAdmin,getAllClients);
 
 router.get('/get-client-order/:id',auth,isAdmin,getQuotation);
+
+router.get('/get-client-invoice/:id',auth,isAdmin,getOrder);
 
 module.exports = router;
