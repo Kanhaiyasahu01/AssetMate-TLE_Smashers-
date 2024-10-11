@@ -4,13 +4,18 @@ import { useParams } from 'react-router-dom';
 import { fetchQuotationService } from '../services/operations/client';
 import invoiceHeader from "../assets/invoiceHeader.jpeg";
 import invoiceFooter from "../assets/invoiceFooter.png";
+import { apiConnector } from '../services/apiconnector';
+import { termsEndPoints } from '../services/apis';
 
 // Quotation component that forwards the ref
 export const PrintQuotation = forwardRef((props, ref) => {
+
+  const { GET } = termsEndPoints;
   const { id } = useParams(); // Extract id from URL params
   const { token } = useSelector((state) => state.auth); // Get the token from the Redux store
   const dispatch = useDispatch();
   const [quotationData, setQuotationData] = useState(null); // State to store quotation data
+  const [termsData, setTermsData] = useState(null);
 
   // Fetch quotation data when the component mounts or when id changes
   useEffect(() => {
@@ -18,6 +23,23 @@ export const PrintQuotation = forwardRef((props, ref) => {
       dispatch(fetchQuotationService(token, id, setQuotationData));
     }
   }, [id, token, dispatch]);
+
+  // Fetch terms
+  useEffect(() => {
+    fetchExistingTerms();
+  }, []);
+
+  // Fetch the existing terms
+  const fetchExistingTerms = async () => {
+    try {
+      const response = await apiConnector("GET", GET);
+      if (response.data.term) {
+        setTermsData(response.data.term);
+      }
+    } catch (error) {
+      console.error("Error fetching terms:", error.message);
+    }
+  };
 
   // Check if quotationData is null to show a loading state
   if (!quotationData) {
@@ -27,7 +49,7 @@ export const PrintQuotation = forwardRef((props, ref) => {
   return (
     <div ref={ref} style={{ padding: '20px', fontFamily: 'Arial, sans-serif', width: '800px', margin: 'auto', border: '1px solid #ccc' }}>
       {/* Invoice Header */}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '20px' }} className='border w-full'>
         <img src={invoiceHeader} alt="Invoice Header" style={{ width: '100%' }} />
       </div>
 
@@ -92,14 +114,25 @@ export const PrintQuotation = forwardRef((props, ref) => {
         </table>
       </div>
 
-      {/* Delivery and Payment Terms */}
-      <div style={{ marginBottom: '20px' }}>
-        <p><strong>Delivery:</strong> {quotationData.deliveryTime || 'N/A'}</p>
-        <p><strong>Payment Terms:</strong> {quotationData.paymentOfTerms || 'N/A'}</p>
-      </div>
+      {/* Terms and Conditions */}
+      {termsData && (
+        <div style={{ marginTop: '20px' }}>
+          <h3><strong>Terms and Conditions:</strong></h3>
+          <p><strong>1. Delivery:</strong> {termsData.delivery}</p>
+          <p><strong>2. Payment Terms:</strong> {termsData.paymentTerms}</p>
+          <p><strong>3. GST:</strong> {termsData.gst}</p>
+          <p><strong>4. Packing & Forwarding:</strong> {termsData.packingForwarding || 'N/A'}</p>
+          <p><strong>5. F.O.R:</strong> {termsData.for || 'N/A'}</p>
+          <p><strong>6. Freight & Insurance:</strong> {termsData.freightInsurance || 'N/A'}</p>
+          <p><strong>7. Validity:</strong> {termsData.validity}</p>
+        </div>
+      )}
+
+      {/* Footer Note */}
+      <p>We hope you find our offer in line with your requirement and that you will favor us with your valued purchase order.</p>
 
       {/* Invoice Footer */}
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', marginTop: '40px' }}>
         <img src={invoiceFooter} alt="Invoice Footer" style={{ width: '100%' }} />
       </div>
     </div>

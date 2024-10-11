@@ -74,7 +74,8 @@ function App() {
         <Route path="sales/manage-invoice" element={<ManageInvoice />} />        
         <Route path="sales/manage-quotation" element={<ManageQuotation />} />        
         <Route path="sales/view/:id" element={<PrintDownloadComponent />} />        
-        {/* <Route path="terms/create" element={<TermsForm />} />         */}
+        <Route path="term/create" element={<TermsForm />} />        
+        
         {/* <Route path="dashboard/Settings" element={<Settings />} /> */}
         </Route>
       </Routes>

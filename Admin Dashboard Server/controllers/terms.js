@@ -1,9 +1,17 @@
 const Term = require('../models/Terms'); // Import the Term model
 
-// Create Terms and Conditions
 exports.createTerms = async (req, res) => {
   try {
     const { delivery, paymentTerms, gst, packingForwarding, for: FOR, freightInsurance, validity } = req.body;
+
+    // Check if terms already exist
+    const existingTerms = await Term.findOne();
+    if (existingTerms) {
+      return res.status(400).json({
+        success: false,
+        message: "Only one set of terms is allowed. Please update the existing terms.",
+      });
+    }
 
     // Validate the required fields
     if (!delivery || !paymentTerms || !gst || !validity) {
@@ -30,7 +38,6 @@ exports.createTerms = async (req, res) => {
       terms: newTerms,
     });
   } catch (error) {
-    console.error("Error creating terms:", error);
     return res.status(500).json({
       success: false,
       message: "An error occurred while creating the terms.",
@@ -40,12 +47,11 @@ exports.createTerms = async (req, res) => {
 };
 
 
-
   // Get a specific term by ID
-  exports.getTermById = async (req, res) => {
+  exports.getTerm = async (req, res) => {
     try {
-      const { id } = req.params; // Extract ID from URL params
-      const term = await Term.findById(id); // Find term by ID
+    
+      const term = await Term.findOne(); // Find term by ID
   
       if (!term) {
         return res.status(404).json({

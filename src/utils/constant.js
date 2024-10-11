@@ -63,7 +63,7 @@ export const sidebarData = [
       title: 'Term', // Add the Term section
       sections: [
         { name: 'Create Term', path: '/term/create' },
-        { name: 'Update Term', path: '/term/update' }
+
       ]
     },
     {

@@ -26,4 +26,9 @@ export const clientEndPoints = {
     GET_QUOTATION:`${BASE_URL}/client/get-client-order`
 }
 
-
+export const termsEndPoints = {
+    CREATE:`${BASE_URL}/terms/create-terms`,
+    GET:`${BASE_URL}/terms/terms/get`,
+    UPDATE:`${BASE_URL}/terms/terms`,
+    DELETE:`${BASE_URL}/terms/terms`,
+}
