@@ -22,6 +22,9 @@ import { ManageQuotation } from './pages/ManageQuotation';
 import PrintDownloadComponent from './pages/PrintDownloadComponent';
 import { PrintOrder } from './pages/PrintOrder';
 import TermsForm from './pages/TermsForm';
+import { AddSupplier } from './pages/AddSupplier';
+import { ManageSupplier } from './pages/ManageSupplier';
+import { SupplierOrder } from './pages/SupplierOrder';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -77,6 +80,9 @@ function App() {
         <Route path="sales/view/:id" element={<PrintDownloadComponent />} />        
         <Route path="term/create" element={<TermsForm />} />        
         <Route path="/sales/viewOrder/:id" element={<PrintOrder />} />        
+        <Route path="/supplier/new-supplier" element={<AddSupplier />} />        
+        <Route path="/supplier/manage-supplier" element={<ManageSupplier />} />        
+        <Route path="/supplier/new-order" element={<SupplierOrder />} />        
 
         {/* <Route path="dashboard/Settings" element={<Settings />} /> */}
         </Route>

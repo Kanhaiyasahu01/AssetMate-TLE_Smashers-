@@ -34,3 +34,11 @@ export const termsEndPoints = {
     UPDATE:`${BASE_URL}/terms/terms`,
     DELETE:`${BASE_URL}/terms/terms`,
 }
+
+
+export const supplierEndPoints = {
+    BILLING_ADDRESS:`${BASE_URL}/supplier/address/create`,
+    SHIPPING_ADDRESS:`${BASE_URL}/supplier/address/create`,
+    ADDITIONAL_DETAILS:`${BASE_URL}/supplier/additional-details/create`,
+    ADD_SUPPLIER:`${BASE_URL}/supplier/create`,
+}
