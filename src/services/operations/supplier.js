@@ -8,6 +8,8 @@ const {
     BILLING_ADDRESS,
     SHIPPING_ADDRESS,
     ADD_SUPPLIER,
+    CREATE_SUPPLIER_ORDER,
+    GET_ALL_SUPPLIERS,
 } = supplierEndPoints;
 
 export const addSupplierService = (token, suppliers, billingAddress, shippingAddress, additionalDetails, formData, navigate) => {
@@ -86,6 +88,62 @@ export const addSupplierService = (token, suppliers, billingAddress, shippingAdd
       } finally {
         dispatch(setLoading(false));
         toast.dismiss(toastId);  // Dismiss the loading toast
+      }
+    };
+  };
+
+
+  export const createSupplierOrderService = (token, supplierOrderData, navigate) => {
+    return async (dispatch) => {
+      dispatch(setLoading(true)); // Set loading state
+      try {
+        // Make the API call to create a supplier order
+        const response = await apiConnector("POST", CREATE_SUPPLIER_ORDER, supplierOrderData, {
+          Authorization: `Bearer ${token}`,
+        });
+  
+        console.log("Supplier order response", response);
+  
+        // Check if the response has the expected data
+        if (!response?.data?.supplierOrder) {
+          throw new Error("Failed to create supplier order");
+        }
+  
+        console.log("Supplier order created successfully:", response.data.supplierOrder);
+        toast.success("Supplier order created successfully");
+        navigate(`/supplier/viewSupplierOrder/${response.data.supplierOrder._id}`);
+  
+        // Return the created supplier order for further use (e.g., navigation)
+        return response.data.supplierOrder;
+      } catch (error) {
+        console.error("Error creating supplier order:", error);
+        toast.error("Failed to create supplier order");
+      } finally {
+        dispatch(setLoading(false)); // Reset loading state
+      }
+    };
+  };
+  
+  
+
+//   fetchSupplierService
+export const fetchSuppliersService = (token) => {
+    return async (dispatch) => {
+      dispatch(setLoading(true));
+      try {
+        const response = await apiConnector("GET", GET_ALL_SUPPLIERS, null, {
+          Authorization: `Bearer ${token}`,
+        }); // Replace GET_ALL_SUPPLIERS with your actual API endpoint for fetching suppliers
+        
+        console.log(response);
+        console.log("After response");
+        
+        dispatch(setSuppliers(response.data.suppliers)); // Set fetched suppliers in the store
+      } catch (error) {
+        console.error("Error fetching suppliers:", error);
+        toast.error("Failed to fetch suppliers");
+      } finally {
+        dispatch(setLoading(false));
       }
     };
   };

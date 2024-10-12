@@ -25,6 +25,7 @@ import TermsForm from './pages/TermsForm';
 import { AddSupplier } from './pages/AddSupplier';
 import { ManageSupplier } from './pages/ManageSupplier';
 import { SupplierOrder } from './pages/SupplierOrder';
+import { ViewSupplierOrder } from './pages/ViewSupplierOrder';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -82,7 +83,9 @@ function App() {
         <Route path="/sales/viewOrder/:id" element={<PrintOrder />} />        
         <Route path="/supplier/new-supplier" element={<AddSupplier />} />        
         <Route path="/supplier/manage-supplier" element={<ManageSupplier />} />        
-        <Route path="/supplier/new-order" element={<SupplierOrder />} />        
+        <Route path="/supplier/new-order" element={<SupplierOrder />} />    
+        <Route path="/supplier/viewSupplierOrder/:id" element={<ViewSupplierOrder />} />    
+            
 
         {/* <Route path="dashboard/Settings" element={<Settings />} /> */}
         </Route>

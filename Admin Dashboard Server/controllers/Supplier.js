@@ -168,79 +168,101 @@ exports.createAdditionalDetails = async (req, res) => {
   };
   
 
-// Controller for creating a supplier order
-exports.createSupplierOrder = async (req, res) => {
-  try {
-    const {
-      supplier,
-      warehouse,
-      referenceNumber,
-      orderDueDate,
-      tax,           // Individual tax for the invoice
-      discount,      // Individual discount for the invoice
-      productList,
-      shipping,
-      extraDiscount,
-      grandTotal,
-      paymentOfTerms,
-      isUpdateRequired,
-    } = req.body;
-
-    // Step 1: Create Invoice Details
-    const newInvoice = await InvoiceDetails.create({
-      referenceNumber,
-      orderDueDate,
-      tax,       // Invoice-specific tax
-      discount,  // Invoice-specific discount
-    });
-
-    // Step 2: Create Supplier Order with the invoice ID
-    const newSupplierOrder = await SupplierOrder.create({
-      supplier,
-      warehouse,
-      invoiceDetails: newInvoice._id,  // Reference to the created invoice
-      productList,
-      shipping,
-      extraDiscount,
-      grandTotal,
-      paymentOfTerms,
-      isUpdateRequired,
-    });
-
-    // Step 3: Update Supplier model's supplierOrders array with the new SupplierOrder ID
-    const supplierData = await Supplier.findById(supplier);
-    if (supplierData) {
-      supplierData.supplierOrders.push(newSupplierOrder._id);  // Add the new SupplierOrder ID to the supplierOrders array
-      await supplierData.save();  // Save the updated supplier data
-    } else {
-      return res.status(404).json({
-        success: false,
-        message: "Supplier not found",
+  exports.createSupplierOrder = async (req, res) => {
+    try {
+      const {
+        supplier,
+        warehouse,
+        referenceNumber,
+        orderDueDate,
+        tax,           // Individual tax for the invoice
+        discount,      // Individual discount for the invoice
+        productList,
+        shipping,
+        extraDiscount,
+        grandTotal,
+        paymentOfTerms,
+        isUpdateRequired,
+      } = req.body;
+  
+      // Step 1: Create Invoice Details
+      const newInvoice = await InvoiceDetails.create({
+        referenceNumber,
+        orderDueDate,
+        tax,       // Invoice-specific tax
+        discount,  // Invoice-specific discount
       });
-    }
-
-    // Step 4: Conditionally update stock if `isUpdateRequired` is true
-    if (isUpdateRequired) {
-      for (const item of productList) {
-        const product = await Product.findById(item.product);
-        if (product) {
-          product.stockUnit += item.quantity;  // Update stock based on quantity
-          await product.save();  // Save the updated product
+  
+      // Step 2: Create Supplier Order with the invoice ID
+      const newSupplierOrder = await SupplierOrder.create({
+        supplier,
+        warehouse,
+        invoiceDetails: newInvoice._id,  // Reference to the created invoice
+        productList,
+        shipping,
+        extraDiscount,
+        grandTotal,
+        paymentOfTerms,
+        isUpdateRequired,
+      });
+  
+      // Step 3: Update Supplier model's supplierOrders array with the new SupplierOrder ID
+      const supplierData = await Supplier.findById(supplier);
+      if (supplierData) {
+        supplierData.supplierOrders.push(newSupplierOrder._id);  // Add the new SupplierOrder ID to the supplierOrders array
+        await supplierData.save();  // Save the updated supplier data
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: "Supplier not found",
+        });
+      }
+  
+      // Step 4: Conditionally update stock if `isUpdateRequired` is true
+      if (isUpdateRequired) {
+        for (const item of productList) {
+          const product = await Product.findById(item.product);
+          if (product) {
+            // Ensure that stockUnit and quantity are treated as numbers
+            const updatedStock = Number(product.stockUnit || 0) + Number(item.quantity || 0);
+            product.stockUnit = updatedStock;  // Update stock with the new quantity
+            await product.save();  // Save the updated product
+          }
         }
       }
+  
+      // Step 5: Send response
+      return res.status(201).json({
+        success: true,
+        message: "Supplier order created successfully",
+        supplierOrder: newSupplierOrder,
+      });
+    } catch (error) {
+      console.error("Error creating supplier order:", error);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while creating the supplier order",
+        error: error.message,
+      });
     }
+  };
+  
 
-    // Step 5: Send response
-    return res.status(201).json({
+exports.getAllSuppliers = async (req, res) => {
+  try {
+    // Fetch all suppliers from the database and populate related fields if necessary
+    const suppliers = await Supplier.find().populate('billingAddress shippingAddress additionalDetails');
+    
+    return res.status(200).json({
       success: true,
-      message: "Supplier order created successfully",
-      supplierOrder: newSupplierOrder,
+      message: "Suppliers retrieved successfully",
+      suppliers,
     });
   } catch (error) {
-    console.error("Error creating supplier order:", error);
+    console.error("Error while fetching suppliers:", error);
     return res.status(500).json({
       success: false,
-      message: "An error occurred while creating the supplier order",
+      message: "An error occurred while fetching suppliers",
       error: error.message,
     });
   }

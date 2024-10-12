@@ -41,4 +41,6 @@ export const supplierEndPoints = {
     SHIPPING_ADDRESS:`${BASE_URL}/supplier/address/create`,
     ADDITIONAL_DETAILS:`${BASE_URL}/supplier/additional-details/create`,
     ADD_SUPPLIER:`${BASE_URL}/supplier/create`,
+    CREATE_SUPPLIER_ORDER:`${BASE_URL}/supplier/create-supplier-order`,
+    GET_ALL_SUPPLIERS:`${BASE_URL}/supplier/get-all-suppliers`
 }

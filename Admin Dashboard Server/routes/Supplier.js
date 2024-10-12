@@ -8,6 +8,7 @@ const {
   createAddress,             // Controller to create a billing/shipping address
   createAdditionalDetails,   // Controller to create additional details
   createSupplierOrder,
+  getAllSuppliers,
 } = require("../controllers/Supplier");
 
 const { auth , isAdmin } = require("../middlewares/auth")
@@ -26,5 +27,6 @@ router.post("/additional-details/create", auth,isAdmin,createAdditionalDetails);
 
 router.post('/create-supplier-order',auth,isAdmin,createSupplierOrder);
 // Export the router for use in the main application
+router.get('/get-all-suppliers',auth,isAdmin,getAllSuppliers);
 
 module.exports = router;
