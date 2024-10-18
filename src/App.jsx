@@ -26,6 +26,10 @@ import { AddSupplier } from './pages/AddSupplier';
 import { ManageSupplier } from './pages/ManageSupplier';
 import { SupplierOrder } from './pages/SupplierOrder';
 import { ViewSupplierOrder } from './pages/ViewSupplierOrder';
+import { ManageAccounts } from './pages/ManageAccounts';
+import { Transaction } from './pages/Transaction';
+import { ManageTransaction } from './pages/ManageTransaction';
+import { Accounts } from './pages/Accounts';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -85,7 +89,14 @@ function App() {
         <Route path="/supplier/manage-supplier" element={<ManageSupplier />} />        
         <Route path="/supplier/new-order" element={<SupplierOrder />} />    
         <Route path="/supplier/viewSupplierOrder/:id" element={<ViewSupplierOrder />} />    
-            
+
+        {/* Accounts */}
+        <Route path="/accounts/accounts" element={<Accounts />} />    
+        <Route path="/accounts/manage-accounts" element={<ManageAccounts />} />    
+        <Route path="/accounts/transaction" element={<Transaction />} />    
+        <Route path="/accounts/manage-transaction" element={<ManageTransaction />} />    
+
+          
 
         {/* <Route path="dashboard/Settings" element={<Settings />} /> */}
         </Route>

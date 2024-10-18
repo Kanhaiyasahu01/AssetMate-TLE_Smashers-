@@ -44,3 +44,11 @@ export const supplierEndPoints = {
     CREATE_SUPPLIER_ORDER:`${BASE_URL}/supplier/create-supplier-order`,
     GET_ALL_SUPPLIERS:`${BASE_URL}/supplier/get-all-suppliers`
 }
+
+export const accountsEndPoints={
+    CREATE:`${BASE_URL}/account/create`,
+    UPDATE:`${BASE_URL}/account/update`, // this will include id in api call
+    GET_ACCOUNT:`${BASE_URL}/account/get-account`, // this willl also contain id
+    GET_ALL_ACCOUNT:`${BASE_URL}/account/get-all-accounts`,
+    CREATE_TRANSACTION:`${BASE_URL}/account/create-transaction`,
+}

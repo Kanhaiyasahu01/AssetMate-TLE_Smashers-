@@ -102,8 +102,8 @@ export const fetchClientsService = (token) => {
       }); // Replace GET_CLIENTS with your API endpoint for fetching clients
       
       console.log(response);
-      console.log("After response");
-      
+      console.log("After response client");
+      console.log(response.data.clients);
       dispatch(setClients(response.data.clients)); // Set fetched clients in the store
     } catch (error) {
       console.error("Error fetching clients:", error);

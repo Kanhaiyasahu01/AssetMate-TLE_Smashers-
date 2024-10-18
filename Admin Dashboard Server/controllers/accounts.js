@@ -206,6 +206,7 @@ exports.createTransaction = async (req, res) => {
   
       // Respond with success
       return res.status(201).json({
+        success:true,
         message: 'Transaction created successfully',
         transaction,
       });
