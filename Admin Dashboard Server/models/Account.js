@@ -4,6 +4,7 @@ const accountSchema = new mongoose.Schema({
     accountNo: {
         type: String,
         required: true,
+        unique:true,
     },
     name: {
         type: String,
@@ -16,12 +17,20 @@ const accountSchema = new mongoose.Schema({
     accountType: {
         type: String,
         enum: ["Savings", "Checking", "Current", "Other"],
+        required:true,
     },
-    transactions: [
+    // Add separate arrays for client and supplier transactions
+    clientTransactions: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Transaction",
-        }
+            ref: "ClientTransaction",
+        },
+    ],
+    supplierTransactions: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "SupplierTransaction",
+        },
     ],
     sale: {
         type: Number,
@@ -31,6 +40,7 @@ const accountSchema = new mongoose.Schema({
         type: Number,
         default: 0.0,
     },
+    
 }, { timestamps: true });
 
 module.exports = mongoose.model("Account", accountSchema);

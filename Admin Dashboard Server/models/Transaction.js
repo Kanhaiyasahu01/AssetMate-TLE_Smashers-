@@ -1,29 +1,82 @@
 const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid"); // To generate unique order IDs using UUID
 
-const transactionSchema = new mongoose.Schema({
-    transactionType: {
-        type: String,
-        enum: ["Credit", "Debit"],
-        required: true,
-    },
-    orderId: {
-        type: String,
-        unique: true, // Ensures the orderId is unique
-    },
-    amount: {
-        type: Number,
-        required: true,
-        default: 0.0,
-    },
+// Client Transaction Schema
+const clientTransactionSchema = new mongoose.Schema({
+  careOf: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Client",
+    required: true,
+  },
+  toAccount: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Account",
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  transactionType: {
+    type: String,
+    enum: ['SALE', 'EXPENSE'],
+    required: true,
+  },
+  method: {
+    type: String,
+    enum: ['CASH', 'CREDIT'],
+    required: true,
+  },
+  note: {
+    type: String,
+  },
 }, { timestamps: true });
 
-// Auto-generate orderId before saving the transaction
-transactionSchema.pre('save', function (next) {
-    if (!this.orderId) {
-        this.orderId = `ORD-${uuidv4()}`; // Generating a unique orderId
-    }
-    next();
-});
+// Supplier Transaction Schema
+const supplierTransactionSchema = new mongoose.Schema({
+  careOf: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Supplier",
+    required: true,
+  },
+  toAccount: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Account",
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  transactionType: {
+    type: String,
+    enum: ['SALE', 'EXPENSE'],
+    required: true,
+  },
+  method: {
+    type: String,
+    enum: ['CASH', 'CREDIT'],
+    required: true,
+  },
+  note: {
+    type: String,
+  },
+}, { timestamps: true });
 
-module.exports = mongoose.model("Transaction", transactionSchema);
+// Ensure proper export for both schemas
+const ClientTransaction = mongoose.model("ClientTransaction", clientTransactionSchema);
+const SupplierTransaction = mongoose.model("SupplierTransaction", supplierTransactionSchema);
+
+module.exports = {
+  ClientTransaction,
+  SupplierTransaction,
+};
