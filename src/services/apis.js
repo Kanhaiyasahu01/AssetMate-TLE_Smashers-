@@ -13,6 +13,8 @@ export const warehouseEndpoints={
     ADD_WAREHOUSE:`${BASE_URL}/warehouse/create`,
     GET_WAREHOUSES:`${BASE_URL}/warehouse/all`,
     ADD_NEW_PRODUCT:`${BASE_URL}/warehouse/add-product`,
+    UPDATE_WAREHOUSE:`${BASE_URL}/warehouse/update`,
+    DELETE_WAREHOUSE:`${BASE_URL}/warehouse/delete`,
 }
 
 

@@ -17,16 +17,16 @@ const { auth , isAdmin } = require("../middlewares/auth")
 //                                      Supplier Routes
 // ********************************************************************************************************
 // Route for creating a supplier (without orders)
-router.post("/create",auth,isAdmin,createSupplier);
+router.post("/create",createSupplier);
 
 // Route for creating a billing or shipping address
-router.post("/address/create", auth,isAdmin,createAddress);
+router.post("/address/create",createAddress);
 
 // Route for creating additional details
-router.post("/additional-details/create", auth,isAdmin,createAdditionalDetails);
+router.post("/additional-details/create",createAdditionalDetails);
 
-router.post('/create-supplier-order',auth,isAdmin,createSupplierOrder);
+router.post('/create-supplier-order',createSupplierOrder);
 // Export the router for use in the main application
-router.get('/get-all-suppliers',auth,isAdmin,getAllSuppliers);
+router.get('/get-all-suppliers',getAllSuppliers);
 
 module.exports = router;

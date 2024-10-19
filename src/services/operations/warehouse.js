@@ -5,13 +5,15 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { addWarehouse, setLoading } from "../../slice/warehouse"; // Import actions
 
 
-import { setWarehouses } from "../../slice/warehouse"; // Import actions
+import { setWarehouses ,updateWarehouse,deleteWarehouse} from "../../slice/warehouse"; // Import actions
 
 
 const {
     ADD_WAREHOUSE,
     GET_WAREHOUSES,
     ADD_NEW_PRODUCT,
+    UPDATE_WAREHOUSE,
+    DELETE_WAREHOUSE,
 } = warehouseEndpoints
 
 
@@ -102,3 +104,72 @@ export const addNewProduct = (formData,navigate,token) => {
 
 
 
+// update warehouse.
+// update warehouse service
+export const updateWarehouseService = (token, formData) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true)); // Indicate loading state
+
+    try {
+      const response = await apiConnector(
+        'PUT',
+        UPDATE_WAREHOUSE,
+        formData,
+        { Authorization: `Bearer ${token}` } // Set the authorization header with the token
+      );
+
+      console.log("response", response);
+      // Check if the response is successful
+      if (response?.data?.success) {
+        // Update the warehouse state with the returned warehouse ID and data
+        dispatch(
+          updateWarehouse({
+            id: response.data?.warehouse_id, // Send the warehouse ID
+            data: formData, // Send the updated data
+          })
+        );
+        toast.success("Warehouse updated successfully!");
+      } else {
+        throw new Error("Failed to update warehouse");
+      }
+    } catch (error) {
+      console.error("Error updating warehouse:", error);
+      toast.error("Failed to update warehouse");
+    } finally {
+      dispatch(setLoading(false)); // End loading state
+    }
+  };
+};
+
+
+
+export const deleteWarehouseService = (token, warehouseId) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true)); // Indicate loading state
+    console.log("Warehouse to delete:", warehouseId);
+
+    try {
+      const response = await apiConnector(
+        'DELETE',
+        DELETE_WAREHOUSE,
+        { id: warehouseId }, // Pass the warehouse ID directly here
+        { Authorization: `Bearer ${token}` } // Set the authorization header with the token
+      );
+
+      console.log("Response:", response);
+      // Check if the response is successful
+      if (response?.data?.success) {
+        // Update the state by dispatching the deleteWarehouse action
+        dispatch(deleteWarehouse(warehouseId)); // Dispatch the warehouse ID directly
+        toast.success("Warehouse deleted successfully!");
+      } else {
+        throw new Error("Failed to delete warehouse");
+      }
+    } catch (error) {
+      console.error("Error deleting warehouse:", error);
+      toast.error("Failed to delete warehouse");
+    } finally {
+      dispatch(setLoading(false)); // End loading state
+    }
+  };
+};
