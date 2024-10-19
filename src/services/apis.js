@@ -29,7 +29,11 @@ export const clientEndPoints = {
     CREATE_QUOTATION:`${BASE_URL}/client/create-quotation`,
     GET_QUOTATION:`${BASE_URL}/client/get-client-order`,
     CREATE_ORDER:`${BASE_URL}/client/create-client-order`,
-    GET_ORDER:`${BASE_URL}/client/get-client-invoice`
+    GET_ORDER:`${BASE_URL}/client/get-client-invoice`,
+    GET_ALL_ORDER:`${BASE_URL}/client/get-all-orders`,
+    GET_ALL_QUOTATION:`${BASE_URL}/client/get-all-quotation`,
+    DELETE_ORDER_ID:`${BASE_URL}/client/delete-order`,
+    DELETE_QUOTATION_ID:`${BASE_URL}/client/delete-order`,
 }
 
 export const termsEndPoints = {

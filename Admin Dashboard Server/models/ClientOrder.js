@@ -58,6 +58,10 @@ const clientOrderSchema = new mongoose.Schema({
         type:String,
         enum:["CASH","CREDIT"],
     },
+    orderType:{
+        type:String,
+        enum:["QUOTE","SALE"],
+    }
 },
 {
     timestamps: true

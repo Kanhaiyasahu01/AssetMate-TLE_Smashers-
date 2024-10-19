@@ -112,6 +112,7 @@ exports.createClient = async (req, res) => {
         extraDiscount,
         grandTotal,
         paymentOfTerms,
+        orderType:"SALE",
       });
   
       // Step 3: Update Client model's clientOrders array with the new ClientOrder ID
@@ -210,6 +211,7 @@ exports.createClient = async (req, res) => {
         extraDiscount: extraDiscount || 0,
         grandTotal: grandTotal || 0,
         paymentOfTerms: paymentOfTerms || "CASH",
+        orderType:"QUOTE",
       });
   
       // Step 3: Add Quotation ID to Client's quotations array
@@ -433,6 +435,144 @@ exports.createClient = async (req, res) => {
         success: false,
         message: "An error occurred while fetching the order",
         error: error.message,
+      });
+    }
+  };
+
+
+  exports.fetchAllOrder = async (req, res) => {
+    try {
+      const allOrders = await ClientOrder.find({ orderType: "SALE" })
+      .populate({
+        path: "client", 
+        populate: { 
+          path: "billingAddress",
+          model: "Address" 
+        }
+      })
+      .populate("warehouse") // Populate warehouse data
+      .populate("invoiceDetails") // Populate invoice details
+      .populate({
+        path: "productList.product", // Populate product inside productList array
+        model: "Product",
+      })
+      .lean(); // Us
+  
+      if (!allOrders || allOrders.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No orders found",
+        });
+      }
+  
+      return res.status(200).json({
+        success: true,
+        message: "Fetched all orders",
+        allOrders,
+      });
+  
+    } catch (err) {
+      console.error("Error fetching orders:", err);  // Add error logging
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error while fetching all orders",
+      });
+    }
+  };
+  
+  exports.fetchAllQuotation = async (req, res) => {
+    try {
+      const allQuotation = await ClientOrder.find({ orderType: "QUOTE" })
+      .populate({
+        path: "client", // First populate the client object
+        populate: { 
+          path: "billingAddress", // Only populate the billingAddress field
+          model: "Address" 
+        }
+      })
+      .populate("warehouse") // Populate warehouse data
+      .populate("invoiceDetails") // Populate invoice details
+      .populate({
+        path: "productList.product", // Populate product inside productList array
+        model: "Product",
+      })
+      .lean(); 
+  
+      if (!allQuotation || allQuotation.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No orders found",
+        });
+      }
+  
+      return res.status(200).json({
+        success: true,
+        message: "Fetched all quotation",
+        allQuotation,
+      });
+  
+    } catch (err) {
+      console.error("Error fetching orders:", err);  // Add error logging
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error while fetching all quotation",
+      });
+    }
+  };
+
+
+exports.deleteOrderById = async (req, res) => {
+    try {
+      const { orderId, clientId } = req.body;
+  
+      // Validate input
+      if (!orderId || !clientId) {
+        return res.status(400).json({
+          success: false,
+          message: "Order ID and Client ID are required",
+        });
+      }
+  
+      // Delete the order
+      const deletedOrder = await ClientOrder.findByIdAndDelete(orderId);
+  
+      if (!deletedOrder) {
+        return res.status(404).json({
+          success: false,
+          message: "Order not found or not able to delete",
+        });
+      }
+  
+      // Update the client to remove the deleted order
+      const updatedClient = await Client.findByIdAndUpdate(
+        clientId,
+        {
+          $pull: { clientOrders: orderId }, // Ensure you're pulling the correct order ID
+        },
+        { new: true } // Return the updated client document
+      );
+  
+      if (!updatedClient) {
+        return res.status(404).json({
+          success: false,
+          message: "Client not found or unable to update",
+        });
+      }
+  
+      // Respond with success
+      return res.status(200).json({
+        success: true,
+        message: "Order deleted successfully",
+        deletedOrder,
+        updatedClient, // Optionally include the updated client data in the response
+      });
+  
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while deleting the order",
+        error: err.message,
       });
     }
   };

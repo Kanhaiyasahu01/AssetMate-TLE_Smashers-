@@ -31,6 +31,7 @@ import { Transaction } from './pages/Transaction';
 import { ManageTransaction } from './pages/ManageTransaction';
 import { Accounts } from './pages/Accounts';
 import { UpdateProduct } from './components/manage product/UpdateProduct';
+import { ManageInvoice1 } from './pages/ManageInvoice1';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -81,7 +82,7 @@ function App() {
         <Route path="crm/manage-client" element={<ManageClient />} />
         <Route path="sales/new-invoice" element={<NewInvoice />} />
         <Route path="sales/quotation" element={<Quotation />} />        
-        <Route path="sales/manage-invoice" element={<ManageInvoice />} />        
+        <Route path="sales/manage-invoice" element={<ManageInvoice1 />} />        
         <Route path="sales/manage-quotation" element={<ManageQuotation />} />        
         <Route path="sales/view/:id" element={<PrintDownloadComponent />} />        
         <Route path="term/create" element={<TermsForm />} />        

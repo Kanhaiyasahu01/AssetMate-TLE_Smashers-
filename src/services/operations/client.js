@@ -14,6 +14,9 @@ const {
     GET_QUOTATION,
     CREATE_ORDER,
     GET_ORDER,
+    GET_ALL_ORDER,
+    GET_ALL_QUOTATION,
+    DELETE_ORDER_ID
 } = clientEndPoints
 
 
@@ -207,16 +210,13 @@ export const createOrderService = (token, clientOrderData,navigate) =>{
 
 export const fetchOrderService = (token, id, setOrderData) => {
   return async (dispatch) => {
-    console.log("i am here 1")
     dispatch(setLoading(true)); 
     try {
       // Make the API call to get the quotation data
-      console.log("i am here 2")
       const response = await apiConnector("GET", `${GET_ORDER}/${id}`, null, {
         Authorization: `Bearer ${token}`,
       });
       console.log("Fetched Quotation Data:", response);
-      console.log("i am here 3")
 
       // Check if the response has the expected data
       if (!response?.data?.clientOrder) {
@@ -229,6 +229,114 @@ export const fetchOrderService = (token, id, setOrderData) => {
     } catch (error) {
       console.error("Error fetching quotation:", error);
       toast.error("Failed to fetch quotation");
+    } finally {
+      dispatch(setLoading(false)); // Reset loading state
+    }
+  };
+};
+
+
+export const fetchAllOrdersService = (token,setOrders) =>{
+  return async(dispatch)=>{
+    dispatch(setLoading(true));
+    try{
+      const response = await apiConnector("GET", GET_ALL_ORDER, null, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log("Fetched Orders Data:", response);
+
+      // Check if the response has the expected data
+      if (!response?.data?.allOrders) {
+        throw new Error("Failed to get all orders");
+      }
+
+      // Set the fetched quotation data
+      setOrders(response.data.allOrders);
+      toast.success("orders fetched successfully");
+    }catch(err){
+
+    }
+  }
+}
+
+
+export const deleteOrderByIdService = (token, formData) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true)); // Start loading
+    
+    try {
+      const response = await apiConnector("DELETE", DELETE_ORDER_ID, formData, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log("Deleted Orders Data:", response);
+
+      // Check if the response has the expected data
+      if (!response?.data?.deletedOrder) {
+        throw new Error("Failed to delete the order");
+      }
+
+      // Optionally, you might want to return the deleted order ID or other data
+      // return response.data.deletedOrder;
+
+      toast.success("Order deleted successfully");
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      toast.error("Failed to delete order"); // Show error toast
+    } finally {
+      dispatch(setLoading(false)); // Reset loading state
+    }
+  };
+};
+
+
+export const fetchAllQuotationsService = (token, setQuotations) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true)); // Start loading
+    try {
+      const response = await apiConnector("GET", GET_ALL_QUOTATION, null, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log("Fetched Quotations Data:", response);
+
+      // Check if the response has the expected data
+      if (!response?.data?.allQuotation) {
+        throw new Error("Failed to get all quotations");
+      }
+
+      // Set the fetched quotation data
+      setQuotations(response.data.allQuotation);
+      toast.success("Quotations fetched successfully");
+    } catch (error) {
+      console.error("Error fetching quotations:", error);
+      toast.error("Failed to fetch quotations"); // Show error toast
+    } finally {
+      dispatch(setLoading(false)); // Reset loading state
+    }
+  };
+};
+
+
+
+export const deleteQuotationByIdService = (token, formData) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true)); // Start loading
+
+    try {
+      const response = await apiConnector("DELETE", DELETE_QUOTATION_ID, formData, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log("Deleted Quotation Data:", response);
+
+      // Check if the response has the expected data
+      if (!response?.data?.deletedQuotation) {
+        throw new Error("Failed to delete the quotation");
+      }
+
+
+      toast.success("Quotation deleted successfully");
+    } catch (error) {
+      console.error("Error deleting quotation:", error);
+      toast.error("Failed to delete quotation"); // Show error toast
     } finally {
       dispatch(setLoading(false)); // Reset loading state
     }

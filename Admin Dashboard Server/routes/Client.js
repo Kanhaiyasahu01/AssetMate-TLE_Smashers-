@@ -10,7 +10,12 @@ const {
     getAllClients,
     getQuotation,
     getOrder,
+    fetchAllOrder,
+    deleteOrderById,
+    fetchAllQuotation,
 }  = require("../controllers/Client")
+
+
 // import middlewares
 const { auth , isAdmin } = require("../middlewares/auth")
 // create request
@@ -27,5 +32,11 @@ router.get('/get-all-clients',auth,isAdmin,getAllClients);
 router.get('/get-client-order/:id',auth,isAdmin,getQuotation);
 
 router.get('/get-client-invoice/:id',auth,isAdmin,getOrder);
+
+router.get('/get-all-orders',auth,isAdmin,fetchAllOrder);
+
+router.get('/get-all-quotation',auth,isAdmin,fetchAllQuotation);
+
+router.delete('/delete-order',auth,isAdmin,deleteOrderById);
 
 module.exports = router;

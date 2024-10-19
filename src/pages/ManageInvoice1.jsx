@@ -1,10 +1,10 @@
 import React from 'react'
 import { ManageDocument } from '../components/sales/ManageDocument'
-export const ManageQuotation = () => {
-  const type = "quotation"
+export const ManageInvoice1 = () => {
+    const type = "invoice"
   return (
     <div>
-    <ManageDocument type={type}/>
+        <ManageDocument type={type}/>
     </div>
   )
 }
