@@ -2,7 +2,7 @@ import { apiConnector } from "../apiconnector";
 import { warehouseEndpoints } from "../apis";
 import {toast} from "react-hot-toast";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { addWarehouse, setLoading } from "../../slice/warehouse"; // Import actions
+import { addWarehouse, setLoading, updateWarehouseProducts,deleteProductStore } from "../../slice/warehouse"; // Import actions
 
 
 import { setWarehouses ,updateWarehouse,deleteWarehouse} from "../../slice/warehouse"; // Import actions
@@ -14,6 +14,8 @@ const {
     ADD_NEW_PRODUCT,
     UPDATE_WAREHOUSE,
     DELETE_WAREHOUSE,
+    UPDATE_PRODUCT,
+    DELETE_PRODUCT,
 } = warehouseEndpoints
 
 
@@ -146,7 +148,6 @@ export const updateWarehouseService = (token, formData) => {
 export const deleteWarehouseService = (token, warehouseId) => {
   return async (dispatch) => {
     dispatch(setLoading(true)); // Indicate loading state
-    console.log("Warehouse to delete:", warehouseId);
 
     try {
       const response = await apiConnector(
@@ -168,6 +169,84 @@ export const deleteWarehouseService = (token, warehouseId) => {
     } catch (error) {
       console.error("Error deleting warehouse:", error);
       toast.error("Failed to delete warehouse");
+    } finally {
+      dispatch(setLoading(false)); // End loading state
+    }
+  };
+};
+
+
+export const updateProducts = (token,productDetails,warehouseId,navigate) =>{
+  return async (dispatch)=>{
+    dispatch(setLoading(true));
+
+    try {
+      const response = await apiConnector(
+        'PUT',
+        UPDATE_PRODUCT,
+        productDetails, // Pass the warehouse ID directly here
+        { Authorization: `Bearer ${token}` } // Set the authorization header with the token
+      );
+
+      console.log("Response:", response);
+      // Check if the response is successful
+      if (response?.data?.success) {
+        // Update the state by dispatching the deleteWarehouse action
+        // dispatch update warehoues here
+        const payloadData = {
+          warehouseId:warehouseId,
+          newProduct:response?.data?.product,
+        } 
+        console.log("print payload data",payloadData);
+
+        dispatch(updateWarehouseProducts(payloadData));
+        toast.success("Product updated successfully!");
+        navigate("/stock/manage-product");
+      } else {
+        throw new Error("Failed to update product");
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+      toast.error("Failed to update product");
+    } finally {
+      dispatch(setLoading(false)); // End loading state
+    }
+  }
+}
+
+
+export const deleteProduct = (productIdToDelete, token, warehouseId) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true));
+    const formData = {
+      productId: productIdToDelete,
+      warehouseId,
+    };
+    
+    console.log("Form data before deletion:", formData); // Log form data
+
+    try {
+      const response = await apiConnector(
+        'DELETE',
+        DELETE_PRODUCT,
+        formData, 
+        { Authorization: `Bearer ${token}` }
+      );
+
+      console.log("API Response:", response); // Log API response
+
+      if (response?.data?.success) {
+        // Dispatch the action to update the store
+        dispatch(deleteProductStore(formData));
+        console.log("Product deletion dispatched to store:", formData); // Log data sent to store
+
+        toast.success("Product deleted successfully!");
+      } else {
+        throw new Error("Failed to delete product");
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product");
     } finally {
       dispatch(setLoading(false)); // End loading state
     }

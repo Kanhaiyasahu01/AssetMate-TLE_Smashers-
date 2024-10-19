@@ -15,6 +15,8 @@ export const warehouseEndpoints={
     ADD_NEW_PRODUCT:`${BASE_URL}/warehouse/add-product`,
     UPDATE_WAREHOUSE:`${BASE_URL}/warehouse/update`,
     DELETE_WAREHOUSE:`${BASE_URL}/warehouse/delete`,
+    UPDATE_PRODUCT:`${BASE_URL}/warehouse/update-product`,
+    DELETE_PRODUCT:`${BASE_URL}/warehouse/delete-product`,
 }
 
 

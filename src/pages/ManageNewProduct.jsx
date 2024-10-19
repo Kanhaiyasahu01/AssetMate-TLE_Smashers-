@@ -2,21 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchWarehousesService } from '../services/operations/warehouse';
-// get the list of warehouse, 
-// show a list of warehouse in the dropdown menu
-// after selecting warehouse ,get its all product list and show it in tables,
-// also give search feature for various products 
-// also give update and delete product feature for it, in update create another route where retialPrice , etc will get updated. 
-// and in delete product will get deleted.
+// import { deleteProduct } from '../services/operations/product'; // Import your deleteProduct service
+import { ConfirmationModal } from '../components/common/ConfirmationModel';
+import { deleteProduct } from '../services/operations/warehouse';
 export const ManageNewProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
   const { warehouses } = useSelector((state) => state.warehouse);
+  
   const [selectedWarehouse, setSelectedWarehouse] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-
-  const [products,setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+  
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState(null);
 
   useEffect(() => {
     if (warehouses.length === 0) {
@@ -24,15 +25,42 @@ export const ManageNewProduct = () => {
     }
   }, [warehouses, dispatch, token]);
 
-  // const handleWarehouseChange = (e) => {
-  //   const warehouseId = e.target.value;
-  //   setSelectedWarehouse(warehouseId);
-  //   dispatch(fetchProductsByWarehouse(warehouseId, token)); // Fetch products by selected warehouse
-  // };
+  const handleWarehouseChange = (e) => {
+    const warehouseId = e.target.value;
+    setSelectedWarehouse(warehouseId);
+    const selectedWarehouseData = warehouses.find(warehouse => warehouse._id === warehouseId);
+    setProducts(selectedWarehouseData ? selectedWarehouseData.warehouseProducts : []);
+  };
 
-  // const filteredProducts = products.filter(product =>
-  //   product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
+  const openConfirmationModal = (productId) => {
+    setProductIdToDelete(productId);
+    setIsModalOpen(true);
+  };
+  
+  const handleDeleteProduct = async () => {
+    if (productIdToDelete) {
+      try {
+        // Dispatch delete product action
+        await dispatch(deleteProduct(productIdToDelete, token, selectedWarehouse));
+  
+        // Update the local state to reflect the product deletion
+        setProducts((prevProducts) => 
+          prevProducts.filter(product => product._id !== productIdToDelete)
+        );
+  
+        // Close the modal after deletion
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error('Failed to delete product:', error);
+        // Optionally handle error state here, e.g., showing an error message
+        setIsModalOpen(false); // Close the modal on error
+      }
+    }
+  };
+  
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="container mx-auto p-6 w-full border rounded-lg shadow-lg">
@@ -71,35 +99,44 @@ export const ManageNewProduct = () => {
           </tr>
         </thead>
         <tbody>
-          {warehouses?.products.map(product => (
-            <tr key={product._id}>
-              <td className="border border-gray-300 px-4 py-2">{product.name}</td>
-              <td className="border border-gray-300 px-4 py-2">{product.retailPrice}</td>
-              <td className="border border-gray-300 px-4 py-2">{product.stockUnit}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                <button
-                  className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                  onClick={() => navigate(`/update-product/${product._id}`)} // Navigate to update product route
-                >
-                  Update
-                </button>
-                <button
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                  onClick={() => handleDeleteProduct(product._id)}
-                >
-                  Delete
-                </button>
-              </td>
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map(product => (
+              <tr key={product._id}>
+                <td className="border border-gray-300 px-4 py-2">{product.name}</td>
+                <td className="border border-gray-300 px-4 py-2">{product.retailPrice}</td>
+                <td className="border border-gray-300 px-4 py-2">{product.stockUnit}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <button
+                    className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+                    onClick={() => navigate(`/stock/update-product/${product._id}`, { state: { product, warehouseId: selectedWarehouse } })}
+                  >
+                    Update
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    onClick={() => openConfirmationModal(product._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4" className="border border-gray-300 px-4 py-2 text-center">No products found</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        title="Confirm Deletion"
+        message="Are you sure you want to delete this product?"
+        onConfirm={handleDeleteProduct}
+        onCancel={() => setIsModalOpen(false)}
+      />
     </div>
   );
-}
-// "retailPrice": 100,
-// "purchaseOrderPrice": 30,
-// "stockUnit": 50,
-// "alertQuantity": 5,
-// "tax": 4,
-// "discount": 2,
+};

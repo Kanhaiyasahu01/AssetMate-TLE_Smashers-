@@ -30,6 +30,7 @@ import { ManageAccounts } from './pages/ManageAccounts';
 import { Transaction } from './pages/Transaction';
 import { ManageTransaction } from './pages/ManageTransaction';
 import { Accounts } from './pages/Accounts';
+import { UpdateProduct } from './components/manage product/UpdateProduct';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -96,7 +97,11 @@ function App() {
         <Route path="/accounts/transaction" element={<Transaction />} />    
         <Route path="/accounts/manage-transaction" element={<ManageTransaction />} />    
 
-          
+
+        {/* Products */}
+        <Route path="/stock/update-product/:id" element={<UpdateProduct />} />    
+
+        
 
         {/* <Route path="dashboard/Settings" element={<Settings />} /> */}
         </Route>

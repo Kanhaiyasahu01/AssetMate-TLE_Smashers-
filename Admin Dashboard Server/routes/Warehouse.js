@@ -11,7 +11,9 @@ const {
 } = require("../controllers/warehouse/warehouse");
 
 const {
-  addProductToWarehouse
+  addProductToWarehouse,
+  updateProducts,
+  deleteProduct
 } = require("../controllers/Product");
 
 const { auth , isAdmin } = require("../middlewares/auth")
@@ -35,4 +37,8 @@ router.delete("/delete",deleteWarehouse);
 
 router.post("/add-product",addProductToWarehouse);
 // Export the router for use in the main application
+router.put("/update-product",updateProducts);
+
+
+router.delete("/delete-product",deleteProduct);
 module.exports = router;
