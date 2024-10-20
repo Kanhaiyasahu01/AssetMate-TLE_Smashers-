@@ -98,22 +98,23 @@ export const addClientService = (token, clients, billingAddress, shippingAddress
 
 export const fetchClientsService = (token) => {
   return async (dispatch) => {
-
-    dispatch(setLoading(true));
+    const toastId = toast.loading("Loading client service...")
     try {
       const response = await apiConnector("GET", GET_ALL_CLIENTS, null, {
         Authorization: `Bearer ${token}`,
       }); // Replace GET_CLIENTS with your API endpoint for fetching clients
-      
-      console.log(response);
-      console.log("After response client");
-      console.log(response.data.clients);
-      dispatch(setClients(response.data.clients)); // Set fetched clients in the store
+      if(response.data.success)
+        if(response.data.clients.length > 0){
+          dispatch(setClients(response.data.clients)); // Set fetched clients in the store
+        }
+        else{
+          toast.error("No client exists");
+        }
     } catch (error) {
       console.error("Error fetching clients:", error);
       toast.error("Failed to fetch clients");
     } finally {
-      dispatch(setLoading(false));
+      toast.dismiss(toastId);
     }
   };
 };

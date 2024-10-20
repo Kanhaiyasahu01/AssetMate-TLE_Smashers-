@@ -252,7 +252,7 @@ exports.getAllSuppliers = async (req, res) => {
   try {
     // Fetch all suppliers from the database and populate related fields if necessary
     const suppliers = await Supplier.find().populate('billingAddress shippingAddress additionalDetails');
-    
+  
     return res.status(200).json({
       success: true,
       message: "Suppliers retrieved successfully",

@@ -60,10 +60,14 @@ export const supplierEndPoints = {
 
 export const accountsEndPoints={
     CREATE:`${BASE_URL}/account/create`,
-    UPDATE:`${BASE_URL}/account/update`, // this will include id in api call
-    GET_ACCOUNT:`${BASE_URL}/account/get-account`, // this willl also contain id
+    UPDATE:`${BASE_URL}/account/update`, 
+    GET_ACCOUNT:`${BASE_URL}/account/get-account`,
     GET_ALL_ACCOUNT:`${BASE_URL}/account/get-all-accounts`,
     CREATE_TRANSACTION:`${BASE_URL}/account/create-transaction`,
     DELETE_ACCOUNT:`${BASE_URL}/account/delete`,
+    CLIENT_TRANSACTION:`${BASE_URL}/account/client-transactions`,
+    SUPPLIER_TRANSACTION:`${BASE_URL}/account/supplier-transactions`,
+    DELETE_CLIENT_TRANSACTION:`${BASE_URL}/account/delete-client-transaction`,
+    DELETE_SUPPLIER_TRANSACTION:`${BASE_URL}/account/delete-supplier-transaction`,
 
 }

@@ -9,6 +9,10 @@ const {
     getAccountById,
     deleteAccount,
     createTransaction,
+    getAllClientTransaction,
+    getAllSupplierTransaction,
+    deleteClientTransaction,
+    deleteSupplierTransaction
 
 } = require("../controllers/accounts")
 
@@ -25,4 +29,10 @@ router.delete('/delete/:accountId',deleteAccount);
 
 router.post('/create-transaction', createTransaction);
 
+router.get('/client-transactions',getAllClientTransaction);
+
+router.get('/supplier-transactions',getAllSupplierTransaction);
+
+router.delete('/delete-client-transaction/:transactionId',deleteClientTransaction);
+router.delete('/delete-supplier-transaction/:transactionId',deleteSupplierTransaction);
 module.exports = router;

@@ -133,21 +133,26 @@ export const addSupplierService = (token, suppliers, billingAddress, shippingAdd
 //   fetchSupplierService
 export const fetchSuppliersService = (token) => {
     return async (dispatch) => {
-      dispatch(setLoading(true));
+      const toastId = toast.loading("Loading supplier service...")
+
       try {
         const response = await apiConnector("GET", GET_ALL_SUPPLIERS, null, {
           Authorization: `Bearer ${token}`,
         }); // Replace GET_ALL_SUPPLIERS with your actual API endpoint for fetching suppliers
         
-        console.log(response);
-        console.log("After response");
-        
-        dispatch(setSuppliers(response.data.suppliers)); // Set fetched suppliers in the store
+        if(response?.data?.success)
+        {
+          if(response.data.suppliers.length > 0)
+            dispatch(setSuppliers(response.data.suppliers));
+          else
+            toast.error("Supplier doest not exists , please create")
+        }
+          
       } catch (error) {
         console.error("Error fetching suppliers:", error);
         toast.error("Failed to fetch suppliers");
       } finally {
-        dispatch(setLoading(false));
+        toast.dismiss(toastId);
       }
     };
   };
@@ -258,7 +263,7 @@ export const fetchSuppliersService = (token) => {
         console.error("Error deleting supplier order:", error);
         toast.error("Failed to delete supplier order"); // Show error toast
       } finally {
-        dispatch(setLoading(false)); // Reset loading state
+        toast.dismiss(toastId);
       }
     }
   }

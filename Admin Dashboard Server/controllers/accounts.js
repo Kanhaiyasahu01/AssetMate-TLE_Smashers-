@@ -296,3 +296,124 @@ exports.getAccountById = async (req, res) => {
     }
   };
   
+  exports.getAllClientTransaction = async (req, res) => {
+    try {
+      const allClientTransactions = await ClientTransaction.find()
+      .populate({
+        path:"careOf",
+        populate:{
+          path:"billingAddress",
+        }
+      })
+      .populate("toAccount")
+      .exec();
+
+
+      return res.status(200).json({
+        success: true,
+        message: "Transactions fetched successfully",
+        allClientTransactions,
+      });
+    } catch (err) {
+      console.error("Error fetching client transactions:", err);
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+        error: err.message,
+      });
+    }
+  };
+
+
+  exports.getAllSupplierTransaction = async (req, res) => {
+    try {
+      const allSupplierTransactions = await SupplierTransaction.find({})
+                                          .populate({
+                                            path:"careOf",
+                                            populate:{
+                                              path:"billingAddress",
+                                            }
+                                          })
+                                          .populate("toAccount")
+                                          .exec();
+  
+      return res.status(200).json({
+        success: true,
+        message: "Transactions fetched successfully",
+        allSupplierTransactions,
+      });
+    } catch (err) {
+      console.error("Error fetching supplier transactions:", err);
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+        error: err.message,
+      });
+    }
+  };
+
+
+exports.deleteClientTransaction = async(req,res)=>{
+  try{
+    const {transactionId} = req.params;
+    if(!transactionId){
+      return res.status(400).json({
+        success:false,
+        message:"Transaction does not exists",
+      })
+    }
+    const clientDeletedTransaction = await ClientTransaction.findByIdAndDelete(transactionId);
+
+    if(!clientDeletedTransaction){
+      return res.status(400).json({
+        success:false,
+        message:"Unable to delete transaction"
+      })
+    }
+
+    return res.status(200).json({
+      success:true,
+      message:"Successfully deleted",
+      clientDeletedTransaction
+    })
+  }catch(err){
+    return res.status(500).json({
+      success:false,
+      message:"Internal server error while deleting transaction"
+      
+    })
+  }
+}
+
+
+exports.deleteSupplierTransaction = async(req,res)=>{
+  try{
+    const {transactionId} = req.params;
+    if(!transactionId){
+      return res.status(400).json({
+        success:false,
+        message:"Transaction does not exists",
+      })
+    }
+    const supplierDeletedTransaction = await SupplierTransaction.findByIdAndDelete(transactionId);
+
+    if(!supplierDeletedTransaction){
+      return res.status(400).json({
+        success:false,
+        message:"Unable to delete transaction"
+      })
+    }
+
+    return res.status(200).json({
+      success:true,
+      message:"Successfully deleted",
+      clientDeletedTransaction
+    })
+  }catch(err){
+    return res.status(500).json({
+      success:false,
+      message:"Internal server error while deleting transaction"
+      
+    })
+  }
+}

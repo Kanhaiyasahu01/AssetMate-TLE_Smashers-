@@ -4,6 +4,15 @@ require("dotenv").config();
 const dbConnect = require("./config/database");
 const cors = require('cors');
 const cookieParser = require("cookie-parser")
+
+const corsOptions = {
+	origin: '*', // This will allow all origins
+	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+	preflightContinue: false,
+	optionsSuccessStatus: 204
+  };
+  
+  app.use(cors(corsOptions));
 // Importing routes
 const userRoutes = require("./routes/User");
 const warehouseRoutes = require("./routes/Warehouse");
