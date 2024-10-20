@@ -4,7 +4,7 @@ const {CustomField,AdditionalDetails} = require("../models/AdditionalDetails")
 const InvoiceDetails = require("../models/InvoiceDetails");
 const Product = require("../models/Product");
 const ClientOrder = require("../models/ClientOrder");
-
+const mongoose = require('mongoose');
 
 exports.createClient = async (req, res) => {
     try {
@@ -305,23 +305,32 @@ exports.createClient = async (req, res) => {
   
   exports.getAllClients = async (req, res) => {
     try {
-      // Fetch all clients from the database and populate related fields if necessary
-      const clients = await Client.find().populate('billingAddress shippingAddress additionalDetails');
-  
-      return res.status(200).json({
-        success: true,
-        message: "Clients retrieved successfully",
-        clients,
-      });
+        // Fetch all clients and populate related fields, including customFields inside additionalDetails
+        const clients = await Client.find({})
+            .populate("billingAddress")
+            .populate("shippingAddress")
+            .populate({
+              path:"additionalDetails",
+              populate:{
+                path:"customFields"
+              }
+            })
+            .exec();
+
+        return res.status(200).json({
+            success: true,
+            message: "Clients retrieved successfully",
+            clients,
+        });
     } catch (error) {
-      console.error("Error while fetching clients:", error);
-      return res.status(500).json({
-        success: false,
-        message: "An error occurred while fetching clients",
-        error: error.message,
-      });
+        console.error("Error while fetching clients:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching clients",
+            error: error.message,
+        });
     }
-  };
+};
 
 
 
@@ -576,3 +585,129 @@ exports.deleteOrderById = async (req, res) => {
       });
     }
   };
+
+
+  // exports.updateClient = async (req, res) => {
+  //   try {
+  //     const {_id,billingAddress, shippingAddress, additionalDetails,clientOrders,transactions,quotation} = req.body;
+  
+  //     // Check if required fields are provided
+  //     if(!_id){
+  //       return res.status(400).json({
+  //         success:false,
+  //         message:"Client doest not exists",
+  //       })
+  //     }
+  //     if (!billingAddress || !shippingAddress || !additionalDetails) {
+  //       return res.status(400).json({
+  //         success: false,
+  //         message: "Billing address, shipping address, and additional details are required",
+  //       });
+  //     }
+
+      
+  
+  //     // Ensure that the provided IDs exist in their respective collections
+  //     const billingAddressExists = await Address.findById(billingAddress);
+  //     const shippingAddressExists = await Address.findById(shippingAddress);
+  //     const additionalDetailsExists = await AdditionalDetails.findById(additionalDetails);
+  
+  //     if (!billingAddressExists || !shippingAddressExists || !additionalDetailsExists) {
+  //       return res.status(400).json({
+  //         success: false,
+  //         message: "Invalid billing address, shipping address, or additional details",
+  //       });
+  //     }
+  
+  //     // Create the client
+  //     const newClient = await Client.findByIdAndUpdate(_id,{
+  //       billingAddress,
+  //       shippingAddress,
+  //       additionalDetails,
+  //       clientOrders: ,
+  //       transactions:[],
+  //       quotation:[]
+  //        // Initialize without orders
+  //     });
+  
+  //     // Populate the necessary fields in the newly created client
+  //     const populatedClient = await Client.findById(newClient._id)
+  //       .populate('billingAddress')
+  //       .populate('shippingAddress')
+  //       .populate(
+  //           {
+  //               path:"additionalDetails",
+  //               populate:{
+  //                   path:"customFields"
+  //               }
+  //           }
+  //       )
+  //       .lean(); // Optional: use lean for better performance
+  
+  //     // Respond with success and populated data
+  //     return res.status(201).json({
+  //       success: true,
+  //       message: "Client created successfully",
+  //       client: populatedClient,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error creating client:", error);
+  //     return res.status(500).json({
+  //       success: false,
+  //       message: "An error occurred while creating the client",
+  //       error: error.message,
+  //     });
+  //   }
+  // };
+
+
+
+
+  exports.deleteClients = async (req, res) => {
+    try {
+      const { id } = req.body;
+  console.log("body",id)
+      // Check if the id is provided
+      if (!id) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide a client ID.",
+        });
+      }
+  
+      // Validate the ObjectId format
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid client ID format.",
+        });
+      }
+  
+      // Find the client by ID and delete it
+      const deletedClient = await Client.findByIdAndDelete(id);
+  
+      // If client was not found or couldn't be deleted
+      if (!deletedClient) {
+        return res.status(400).json({
+          success: false,
+          message: "Unable to delete client. Client not found.",
+        });
+      }
+  
+      // Successfully deleted
+      return res.status(200).json({
+        success: true,
+        message: "Client deleted successfully.",
+      });
+  
+    } catch (err) {
+      // Error handling
+      console.error("Error deleting client:", err);
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while deleting the client.",
+      });
+    }
+  };
+  
+  

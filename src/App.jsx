@@ -25,13 +25,14 @@ import TermsForm from './pages/TermsForm';
 import { AddSupplier } from './pages/AddSupplier';
 import { ManageSupplier } from './pages/ManageSupplier';
 import { SupplierOrder } from './pages/SupplierOrder';
-import { ViewSupplierOrder } from './pages/ViewSupplierOrder';
+// import { ViewSupplierOrder } from './pages/ViewSupplierOrder';
 import { ManageAccounts } from './pages/ManageAccounts';
 import { Transaction } from './pages/Transaction';
 import { ManageTransaction } from './pages/ManageTransaction';
 import { Accounts } from './pages/Accounts';
 import { UpdateProduct } from './components/manage product/UpdateProduct';
 import { ManageInvoice1 } from './pages/ManageInvoice1';
+import { ManageSupplierOrder } from './pages/ManageSupplierOrder';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -90,7 +91,7 @@ function App() {
         <Route path="/supplier/new-supplier" element={<AddSupplier />} />        
         <Route path="/supplier/manage-supplier" element={<ManageSupplier />} />        
         <Route path="/supplier/new-order" element={<SupplierOrder />} />    
-        <Route path="/supplier/viewSupplierOrder/:id" element={<ViewSupplierOrder />} />    
+        {/* <Route path="/supplier/viewSupplierOrder/:id" element={<ViewSupplierOrder />} />     */}
 
         {/* Accounts */}
         <Route path="/accounts/accounts" element={<Accounts />} />    
@@ -100,7 +101,12 @@ function App() {
 
 
         {/* Products */}
-        <Route path="/stock/update-product/:id" element={<UpdateProduct />} />    
+        <Route path="/stock/update-product/:id" element={<UpdateProduct />} />  
+
+
+        <Route path="/supplier/manage-order" element={<ManageSupplierOrder />} />    
+
+          
 
         
 

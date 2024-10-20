@@ -2,7 +2,7 @@ import { apiConnector } from "../apiconnector";
 import { toast } from "react-hot-toast";
 import { setClients, setLoading } from "../../slice/clientSlice";
 import { clientEndPoints } from "../apis"
-
+import { deleteClient } from "../../slice/clientSlice";
 
 const {
     ADD_CLIENT,
@@ -16,7 +16,8 @@ const {
     GET_ORDER,
     GET_ALL_ORDER,
     GET_ALL_QUOTATION,
-    DELETE_ORDER_ID
+    DELETE_ORDER_ID,
+    DELETE_CLIENT
 } = clientEndPoints
 
 
@@ -342,3 +343,35 @@ export const deleteQuotationByIdService = (token, formData) => {
     }
   };
 };
+
+export const deleteClientService = (token, id) => {
+  return async (dispatch) => {
+    console.log(id);
+    dispatch(setLoading(true));
+
+    try {
+      const response = await apiConnector("DELETE", DELETE_CLIENT, { id }, {
+        Authorization: `Bearer ${token}`,
+      });
+      console.log("Deleted client Data:", response);
+
+      // Check if deletion was successful
+      if (!response?.data?.success) {
+        throw new Error("Unable to delete client");
+      }
+
+      // Show success toast
+      toast.success("Client deleted successfully");
+
+      // Dispatch success action with only the ID
+      dispatch(deleteClient(id));
+
+    } catch (error) {
+      console.error("Error deleting client:", error);
+      toast.error("Failed to delete client");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+};
+

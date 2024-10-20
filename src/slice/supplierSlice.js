@@ -25,7 +25,7 @@ const supplierSlice = createSlice({
     // Remove a supplier by ID
     deleteSupplier(state, action) {
       state.suppliers = state.suppliers.filter(
-        (supplier) => supplier.id !== action.payload
+        (supplier) => supplier._id !== action.payload
       );
     },
     // Set loading state

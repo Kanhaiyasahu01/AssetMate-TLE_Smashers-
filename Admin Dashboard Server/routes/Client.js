@@ -13,11 +13,12 @@ const {
     fetchAllOrder,
     deleteOrderById,
     fetchAllQuotation,
+    deleteClients
 }  = require("../controllers/Client")
 
 
 // import middlewares
-const { auth , isAdmin } = require("../middlewares/auth")
+const { auth , isAdmin } = require("../middlewares/auth");
 // create request
 router.post('/create',auth,isAdmin,createClient);
 
@@ -27,7 +28,7 @@ router.post("/create-quotation",auth,isAdmin,createQuotation);
 
 router.put("/convert-to-order",auth,isAdmin,convertToOrder);
 
-router.get('/get-all-clients',auth,isAdmin,getAllClients);
+router.get('/get-all-clients',getAllClients);
 
 router.get('/get-client-order/:id',auth,isAdmin,getQuotation);
 
@@ -39,4 +40,5 @@ router.get('/get-all-quotation',auth,isAdmin,fetchAllQuotation);
 
 router.delete('/delete-order',auth,isAdmin,deleteOrderById);
 
+router.delete('/delete-client',auth, isAdmin,deleteClients);
 module.exports = router;

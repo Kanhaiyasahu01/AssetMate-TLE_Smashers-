@@ -9,6 +9,7 @@ const {
   createAdditionalDetails,   // Controller to create additional details
   createSupplierOrder,
   getAllSuppliers,
+  deleteSupplier,
 } = require("../controllers/Supplier");
 
 const { auth , isAdmin } = require("../middlewares/auth")
@@ -29,4 +30,5 @@ router.post('/create-supplier-order',createSupplierOrder);
 // Export the router for use in the main application
 router.get('/get-all-suppliers',getAllSuppliers);
 
+router.delete('/delete-supplier',deleteSupplier)
 module.exports = router;

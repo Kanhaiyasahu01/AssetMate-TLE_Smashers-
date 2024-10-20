@@ -5,7 +5,7 @@ const {CustomField,AdditionalDetails} = require("../models/AdditionalDetails")
 const SupplierOrder = require("../models/SupplierOrder");
 const InvoiceDetails = require("../models/InvoiceDetails");
 const Product = require("../models/Product");
-
+const mongoose = require('mongoose');
 // Controller for creating a Billing/Shipping Address
 exports.createAddress = async (req, res) => {
   console.log("inside create address controller")
@@ -264,6 +264,152 @@ exports.getAllSuppliers = async (req, res) => {
       success: false,
       message: "An error occurred while fetching suppliers",
       error: error.message,
+    });
+  }
+};
+
+
+
+exports.updateAddress = async (req, res) => {
+  try {
+    const { _id, name, company, phone, email, address, city, country, postbox } = req.body;
+    
+    // Validate required fields
+    if (!_id || !name || !company || !phone || !email || !city || !country) {
+      return res.status(400).json({
+        success: false,
+        message: "Id, Name, company, phone, email, city, and country are required fields",
+      });
+    }
+
+    // Find and update the address
+    const updatedAddress = await Address.findByIdAndUpdate(
+      _id,
+      { name, company, phone, email, address, city, country, postbox },
+      { new: true } // Return the updated document
+    );
+
+    // Respond with success
+    return res.status(200).json({
+      success: true,
+      message: "Address updated successfully",
+      address: updatedAddress,
+    });
+  } catch (error) {
+    console.error("Error updating address:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the address",
+      error: error.message,
+    });
+  }
+};
+
+
+exports.updateAdditionalDetails = async (req, res) => {
+  try {
+    const { _id, tax, discount, documentId, customFields } = req.body;
+
+    // Validate required fields
+    if (!_id || !documentId) {
+      return res.status(400).json({
+        success: false,
+        message: "ID and Document ID are required",
+      });
+    }
+
+    // Check if customFields array is provided, and update the fields
+    let customFieldIds = [];
+    if (customFields && customFields.length > 0) {
+      // Update each custom field and store its ID in the customFieldIds array
+      customFieldIds = await Promise.all(
+        customFields.map(async (field) => {
+          const updatedCustomField = await CustomField.findByIdAndUpdate(
+            field._id,
+            {
+              name: field.name,
+              description: field.description,
+            },
+            { new: true }
+          );
+          return updatedCustomField._id;
+        })
+      );
+    }
+
+    // Update additional details with the custom field references
+    const updatedAdditionalDetails = await AdditionalDetails.findByIdAndUpdate(
+      _id,
+      {
+        tax,
+        discount,
+        documentId,
+        customFields: customFieldIds,
+      },
+      { new: true }
+    );
+
+    // Respond with success
+    return res.status(200).json({
+      success: true,
+      message: "Additional details updated successfully",
+      additionalDetails: updatedAdditionalDetails,
+    });
+  } catch (error) {
+    console.error("Error updating additional details:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating additional details",
+      error: error.message,
+    });
+  }
+};
+
+
+exports.deleteSupplier = async (req, res) => {
+  try {
+    const { id } = req.body;
+    console.log("Received body:", id); // Log the entire request body
+
+    // Check if the id is provided
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a supplier ID.",
+      });
+    }
+
+    // Validate the ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid supplier ID format.", // Corrected 'client' to 'supplier'
+      });
+    }
+
+    // Find the supplier by ID and delete it
+    const deletedSupplier = await Supplier.findByIdAndDelete(id);
+
+    // If supplier was not found or couldn't be deleted
+    if (!deletedSupplier) {
+      return res.status(404).json({ // Changed to 404 for not found
+        success: false,
+        message: "Unable to delete supplier. Supplier not found.",
+      });
+    }
+
+    // Successfully deleted
+    return res.status(200).json({
+      success: true,
+      message: "Supplier deleted successfully.",
+    });
+
+  } catch (err) {
+    // Error handling
+    console.error("Error deleting Supplier:", err);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting the supplier.",
     });
   }
 };

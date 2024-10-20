@@ -34,6 +34,7 @@ export const clientEndPoints = {
     GET_ALL_QUOTATION:`${BASE_URL}/client/get-all-quotation`,
     DELETE_ORDER_ID:`${BASE_URL}/client/delete-order`,
     DELETE_QUOTATION_ID:`${BASE_URL}/client/delete-order`,
+    DELETE_CLIENT:`${BASE_URL}/client/delete-client`,
 }
 
 export const termsEndPoints = {
@@ -50,7 +51,8 @@ export const supplierEndPoints = {
     ADDITIONAL_DETAILS:`${BASE_URL}/supplier/additional-details/create`,
     ADD_SUPPLIER:`${BASE_URL}/supplier/create`,
     CREATE_SUPPLIER_ORDER:`${BASE_URL}/supplier/create-supplier-order`,
-    GET_ALL_SUPPLIERS:`${BASE_URL}/supplier/get-all-suppliers`
+    GET_ALL_SUPPLIERS:`${BASE_URL}/supplier/get-all-suppliers`,
+    DELETE_SUPPLIER :`${BASE_URL}/supplier/delete-supplier`,
 }
 
 export const accountsEndPoints={

@@ -25,7 +25,7 @@ const clientSlice = createSlice({
     // Remove a client by ID
     deleteClient(state, action) {
       state.clients = state.clients.filter(
-        (client) => client.id !== action.payload
+        (client) => client._id !== action.payload
       );
     },
     // Set loading state

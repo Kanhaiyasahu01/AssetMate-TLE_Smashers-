@@ -2,7 +2,7 @@ import { apiConnector } from "../apiconnector";
 import { toast } from "react-hot-toast";
 import { supplierEndPoints } from "../apis";
 import { setSuppliers,setLoading } from "../../slice/supplierSlice";
-
+import { deleteSupplier } from "../../slice/supplierSlice";
 const {
     ADDITIONAL_DETAILS,
     BILLING_ADDRESS,
@@ -10,6 +10,7 @@ const {
     ADD_SUPPLIER,
     CREATE_SUPPLIER_ORDER,
     GET_ALL_SUPPLIERS,
+    DELETE_SUPPLIER,
 } = supplierEndPoints;
 
 export const addSupplierService = (token, suppliers, billingAddress, shippingAddress, additionalDetails, formData, navigate) => {
@@ -142,6 +143,38 @@ export const fetchSuppliersService = (token) => {
       } catch (error) {
         console.error("Error fetching suppliers:", error);
         toast.error("Failed to fetch suppliers");
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+  };
+  
+
+  export const deleteSupplierService = (token, id) => {
+    return async (dispatch) => {
+      console.log("Deleting supplier ID:", id);
+      dispatch(setLoading(true));
+  
+      try {
+        const response = await apiConnector("DELETE", DELETE_SUPPLIER, { id }, {
+          Authorization: `Bearer ${token}`,
+        });
+        console.log("Deleted supplier Data:", response);
+  
+        // Check if deletion was successful
+        if (!response?.data?.success) {
+          throw new Error("Unable to delete supplier");
+        }
+  
+        // Show success toast
+        toast.success("Supplier deleted successfully");
+  
+        // Dispatch success action with only the ID
+        dispatch(deleteSupplier(id)); // Dispatch the delete action for supplier
+  
+      } catch (error) {
+        console.error("Error deleting supplier:", error);
+        toast.error("Failed to delete supplier");
       } finally {
         dispatch(setLoading(false));
       }
