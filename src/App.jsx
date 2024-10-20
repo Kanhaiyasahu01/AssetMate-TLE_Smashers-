@@ -25,7 +25,6 @@ import TermsForm from './pages/TermsForm';
 import { AddSupplier } from './pages/AddSupplier';
 import { ManageSupplier } from './pages/ManageSupplier';
 import { SupplierOrder } from './pages/SupplierOrder';
-// import { ViewSupplierOrder } from './pages/ViewSupplierOrder';
 import { ManageAccounts } from './pages/ManageAccounts';
 import { Transaction } from './pages/Transaction';
 import { ManageTransaction } from './pages/ManageTransaction';
@@ -33,6 +32,7 @@ import { Accounts } from './pages/Accounts';
 import { UpdateProduct } from './components/manage product/UpdateProduct';
 import { ManageInvoice1 } from './pages/ManageInvoice1';
 import { ManageSupplierOrder } from './pages/ManageSupplierOrder';
+import { ViewSupplierOrder } from './pages/ViewSupplerOrder';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -105,10 +105,10 @@ function App() {
 
 
         <Route path="/supplier/manage-order" element={<ManageSupplierOrder />} />    
+        <Route path="/supplier/viewOrder/:orderId" element={<ViewSupplierOrder />} />    
 
           
-
-        
+          
 
         {/* <Route path="dashboard/Settings" element={<Settings />} /> */}
         </Route>

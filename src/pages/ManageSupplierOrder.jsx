@@ -1,7 +1,206 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllSupplierOrdersService, deleteSupplierOrderByIdService } from '../services/operations/supplier';
+import { useNavigate } from 'react-router-dom';
+import { ConfirmationModal } from '../components/common/ConfirmationModel';
 
 export const ManageSupplierOrder = () => {
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [supplierName, setSupplierName] = useState('');
+  const [orderNumber, setOrderNumber] = useState('');
+  const [orders, setOrders] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState(null);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+
+  // Fetch all supplier orders and set them in both orders and filteredOrders
+  useEffect(() => {
+    dispatch(fetchAllSupplierOrdersService(token, setOrders));
+  }, [dispatch, token]);
+
+  // Automatically filter orders when any search field changes
+  useEffect(() => {
+    let filtered = [...orders];
+
+    // Filter by supplier name
+    if (supplierName.trim() !== '') {
+      filtered = filtered.filter((order) =>
+        order.supplier?.billingAddress?.company?.toLowerCase().includes(supplierName.toLowerCase())
+      );
+    }
+
+    // Filter by order number
+    if (orderNumber.trim() !== '') {
+      filtered = filtered.filter((order) =>
+        order.orderNumber?.toLowerCase().includes(orderNumber.toLowerCase())
+      );
+    }
+
+    // Filter by date range
+    const fromDateObj = fromDate ? new Date(fromDate) : null;
+    const toDateObj = toDate ? new Date(toDate) : null;
+
+    if (toDateObj) {
+      toDateObj.setHours(23, 59, 59, 999); // Set time to the end of the day
+    }
+
+    filtered = filtered.filter((order) => {
+      const orderDate = new Date(order.createdAt);
+      const isAfterFromDate = fromDateObj ? orderDate >= fromDateObj : true;
+      const isBeforeToDate = toDateObj ? orderDate <= toDateObj : true;
+
+      return isAfterFromDate && isBeforeToDate;
+    });
+
+    setFilteredOrders(filtered);
+  }, [supplierName, orderNumber, fromDate, toDate, orders]);
+
+  const handleViewOrder = (orderId) => {
+    console.log(`Viewing order ${orderId}`);
+    navigate(`/supplier/viewOrder/${orderId}`);
+  };
+
+  const openDeleteModal = (orderId,supplierId) => {
+    setOrderToDelete({orderId,supplierId}); // Store the order ID for deletion
+    setIsModalOpen(true); // Open the confirmation modal
+  };
+
+  const handleDeleteOrder = async () => {
+    if (orderToDelete) {
+      const {orderId, supplierId} = orderToDelete;
+
+      try {
+        const formData = {
+          orderId,
+          supplierId,
+        }
+        await dispatch(deleteSupplierOrderByIdService(token, formData));
+
+        // Update UI to remove the deleted order
+        setFilteredOrders((prev) => prev.filter((order) => order._id !== orderToDelete.orderId));
+        setOrders((prev) => prev.filter((order) => order._id !== orderToDelete.orderId));
+      } catch (error) {
+        console.error(`Failed to delete order ${orderToDelete.orderId}:`, error);
+      }
+      setIsModalOpen(false); // Close the modal after deletion
+      setOrderToDelete(null); // Reset the order info
+    }
+  };
+
   return (
-    <div>ManageSupplierOrder</div>
-  )
-}
+    <div className="manage-supplier-order-container p-6">
+      <h1 className="text-2xl font-bold mb-6">Manage Supplier Orders</h1>
+
+      {/* Add new order button */}
+      <div className="mb-4">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Add New Order
+        </button>
+      </div>
+
+      {/* Search form */}
+      <div className="flex gap-4 mb-6">
+        <div>
+          <label className="block mb-2 font-semibold">From Date</label>
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+            className="border px-2 py-1 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-2 font-semibold">To Date</label>
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+            className="border px-2 py-1 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-2 font-semibold">Supplier Name</label>
+          <input
+            type="text"
+            value={supplierName}
+            onChange={(e) => setSupplierName(e.target.value)}
+            placeholder="Search by Supplier Name"
+            className="border px-2 py-1 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-2 font-semibold">Order Number</label>
+          <input
+            type="text"
+            value={orderNumber}
+            onChange={(e) => setOrderNumber(e.target.value)}
+            placeholder="Enter Order Number"
+            className="border px-2 py-1 rounded"
+          />
+        </div>
+      </div>
+
+      {/* Orders table */}
+      <table className="min-w-full table-auto border-collapse border border-gray-300">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="border px-4 py-2">S/N</th>
+            <th className="border px-4 py-2">Supplier Name</th>
+            <th className="border px-4 py-2">Date</th>
+            <th className="border px-4 py-2">Total Amount</th>
+            <th className="border px-4 py-2">Settings</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredOrders.length > 0 ? (
+            filteredOrders.map((order, index) => (
+              <tr key={order._id}>
+                <td className="border px-4 py-2">{index + 1}</td>
+                <td className="border px-4 py-2">{order.supplier.billingAddress.company}</td>
+                <td className="border px-4 py-2">{new Date(order.createdAt).toLocaleDateString('en-US')}</td>
+                <td className="border px-4 py-2">{order.grandTotal}</td>
+                <td className="border px-4 py-2">
+                  <button
+                    className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-700 mr-2"
+                    onClick={() => handleViewOrder(order._id)}
+                  >
+                    View
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
+                    onClick={() => openDeleteModal(order._id,order.supplier._id)} // Open modal with order ID
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center border px-4 py-2">
+                No orders found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        title="Delete Order"
+        message="Are you sure you want to delete this order? This action cannot be undone."
+        onConfirm={handleDeleteOrder}
+        onCancel={() => setIsModalOpen(false)} // Close the modal without action
+      />
+    </div>
+  );
+};

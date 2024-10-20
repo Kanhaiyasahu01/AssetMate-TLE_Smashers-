@@ -10,6 +10,9 @@ const {
   createSupplierOrder,
   getAllSuppliers,
   deleteSupplier,
+  fetchAllSupplierOrders,
+  deleteSupplierOrderById,
+  getSupplierOrderById
 } = require("../controllers/Supplier");
 
 const { auth , isAdmin } = require("../middlewares/auth")
@@ -31,4 +34,10 @@ router.post('/create-supplier-order',createSupplierOrder);
 router.get('/get-all-suppliers',getAllSuppliers);
 
 router.delete('/delete-supplier',deleteSupplier)
+
+router.get('/get-all-orders',fetchAllSupplierOrders)
+
+router.delete('/delete-order',deleteSupplierOrderById)
+
+router.get('/get-order-details/:id',getSupplierOrderById)
 module.exports = router;

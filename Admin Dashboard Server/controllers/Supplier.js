@@ -413,3 +413,146 @@ exports.deleteSupplier = async (req, res) => {
     });
   }
 };
+
+exports.fetchAllSupplierOrders = async (req, res) => {
+  try {
+    const allSupplierOrders = await SupplierOrder.find()
+      .populate({
+        path:"supplier",
+        populate:{
+          path:"supplierOrders"
+        }
+      })
+      .populate({
+        path:"supplier",
+        populate:{
+          path:"billingAddress",
+        }
+      }) // Populate supplier data
+      .populate("warehouse") // Populate warehouse data
+      // .populate("invoiceDetails") // Populate invoice details
+      .populate({
+        path: "productList.product", // Populate product inside productList array
+        model: "Product",
+      })
+      .lean(); // Use lean to get plain JavaScript objects
+
+    if (!allSupplierOrders || allSupplierOrders.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No supplier orders found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Fetched all supplier orders",
+      allSupplierOrders,
+    });
+  } catch (err) {
+    console.error("Error fetching supplier orders:", err);  // Add error logging
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error while fetching supplier orders",
+    });
+  }
+};
+
+exports.deleteSupplierOrderById = async (req, res) => {
+  try {
+    const { orderId, supplierId } = req.body;
+
+    // Validate input
+    if (!orderId || !supplierId) {
+      return res.status(400).json({
+        success: false,
+        message: "Order ID and Supplier ID are required",
+      });
+    }
+
+    // Delete the supplier order
+    const deletedOrder = await SupplierOrder.findByIdAndDelete(orderId);
+
+    if (!deletedOrder) {
+      return res.status(404).json({
+        success: false,
+        message: "Supplier order not found or not able to delete",
+      });
+    }
+
+    // Update the supplier to remove the deleted order
+    const updatedSupplier = await Supplier.findByIdAndUpdate(
+      supplierId,
+      {
+        $pull: { supplierOrders: orderId }, // Ensure you're pulling the correct order ID
+      },
+      { new: true } // Return the updated supplier document
+    );
+
+    if (!updatedSupplier) {
+      return res.status(404).json({
+        success: false,
+        message: "Supplier not found or unable to update",
+      });
+    }
+
+    // Respond with success
+    return res.status(200).json({
+      success: true,
+      message: "Supplier order deleted successfully",
+      deletedOrder,
+      updatedSupplier, // Optionally include the updated supplier data in the response
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting the supplier order",
+      error: err.message,
+    });
+  }
+};
+
+
+exports.getSupplierOrderById = async (req, res) => {
+  try {
+    const { id } = req.params; // Use req.params to get the ID from the URL
+    const orderDetails = await SupplierOrder.findById(id)
+    .populate({
+      path: "supplier", // First populate the client object
+      populate: { 
+        path: "billingAddress", // Only populate the billingAddress field
+        model: "Address" 
+      }
+    })
+    .populate("warehouse") // Populate warehouse data
+    .populate({
+      path: "productList.product", // Populate product inside productList array
+      model: "Product",
+    })
+    .lean(); 
+    
+    console.log("inside backend", id);
+
+    if (!orderDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "Order details not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Order details fetched successfully",
+      orderDetails,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching order details",
+    });
+  }
+};
+

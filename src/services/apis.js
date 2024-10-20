@@ -53,6 +53,9 @@ export const supplierEndPoints = {
     CREATE_SUPPLIER_ORDER:`${BASE_URL}/supplier/create-supplier-order`,
     GET_ALL_SUPPLIERS:`${BASE_URL}/supplier/get-all-suppliers`,
     DELETE_SUPPLIER :`${BASE_URL}/supplier/delete-supplier`,
+    GET_ALL_ORDER:`${BASE_URL}/supplier/get-all-orders`,
+    DELETE_ORDER:`${BASE_URL}/supplier/delete-order`,
+    GET_ORDER:`${BASE_URL}/supplier/get-order-details`,
 }
 
 export const accountsEndPoints={

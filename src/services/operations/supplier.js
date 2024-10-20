@@ -11,6 +11,9 @@ const {
     CREATE_SUPPLIER_ORDER,
     GET_ALL_SUPPLIERS,
     DELETE_SUPPLIER,
+    GET_ALL_ORDER,
+    DELETE_ORDER,
+    GET_ORDER,
 } = supplierEndPoints;
 
 export const addSupplierService = (token, suppliers, billingAddress, shippingAddress, additionalDetails, formData, navigate) => {
@@ -112,7 +115,7 @@ export const addSupplierService = (token, suppliers, billingAddress, shippingAdd
   
         console.log("Supplier order created successfully:", response.data.supplierOrder);
         toast.success("Supplier order created successfully");
-        navigate(`/supplier/viewSupplierOrder/${response.data.supplierOrder._id}`);
+        navigate(`/supplier/viewOrder/${response.data.supplierOrder._id}`);
   
         // Return the created supplier order for further use (e.g., navigation)
         return response.data.supplierOrder;
@@ -181,3 +184,81 @@ export const fetchSuppliersService = (token) => {
     };
   };
   
+  export const fetchAllSupplierOrdersService = (token, setSupplierOrders) => {
+    return async (dispatch) => {
+      dispatch(setLoading(true));
+      try {
+        const response = await apiConnector("GET", GET_ALL_ORDER, null, {
+          Authorization: `Bearer ${token}`,
+        });
+        console.log("Fetched Supplier Orders Data:", response);
+  
+        // Check if the response has the expected data
+        if (!response?.data?.allSupplierOrders) {
+          throw new Error("Failed to get all supplier orders");
+        }
+  
+        // Set the fetched supplier order data
+        setSupplierOrders(response.data.allSupplierOrders);
+        toast.success("Supplier orders fetched successfully");
+      } catch (err) {
+        console.error("Error fetching supplier orders:", err);
+        toast.error("Failed to fetch supplier orders");
+      } finally {
+        dispatch(setLoading(false)); // Ensure loading state is reset
+      }
+    };
+  };
+  
+
+  export const deleteSupplierOrderByIdService = (token, formData) => {
+    return async (dispatch) => {
+      dispatch(setLoading(true)); // Start loading
+  
+      try {
+        const response = await apiConnector("DELETE", DELETE_ORDER, formData, {
+          Authorization: `Bearer ${token}`,
+        });
+        console.log("Deleted Supplier Order Data:", response);
+  
+        // Check if the response has the expected data
+        if (!response?.data?.deletedOrder) {
+          throw new Error("Failed to delete the supplier order");
+        }
+  
+        toast.success("Supplier order deleted successfully");
+      } catch (error) {
+        console.error("Error deleting supplier order:", error);
+        toast.error("Failed to delete supplier order"); // Show error toast
+      } finally {
+        dispatch(setLoading(false)); // Reset loading state
+      }
+    };
+  };
+  
+
+  export const fetchOrderById = (token,id,setOrderDetails)=>{
+    return async(dispatch)=>{
+      dispatch(setLoading(true));
+      console.log("id",id)
+      try {
+        const response = await apiConnector("GET", `${GET_ORDER}/${id}`, null, {
+          Authorization: `Bearer ${token}`,
+        });
+        console.log("Order details fetched", response);
+  
+        // Check if the response has the expected data
+        if (!response?.data?.orderDetails) {
+          throw new Error("Failed to delete the supplier order");
+        }
+        setOrderDetails(response.data.orderDetails);
+  
+        toast.success("Supplier order deleted successfully");
+      } catch (error) {
+        console.error("Error deleting supplier order:", error);
+        toast.error("Failed to delete supplier order"); // Show error toast
+      } finally {
+        dispatch(setLoading(false)); // Reset loading state
+      }
+    }
+  }
