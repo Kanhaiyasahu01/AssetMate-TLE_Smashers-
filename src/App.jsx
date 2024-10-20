@@ -33,6 +33,8 @@ import { UpdateProduct } from './components/manage product/UpdateProduct';
 import { ManageInvoice1 } from './pages/ManageInvoice1';
 import { ManageSupplierOrder } from './pages/ManageSupplierOrder';
 import { ViewSupplierOrder } from './pages/ViewSupplerOrder';
+import { AccountDetail } from './components/accounts/AccountDetail';
+
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -97,7 +99,9 @@ function App() {
         <Route path="/accounts/accounts" element={<Accounts />} />    
         <Route path="/accounts/manage-accounts" element={<ManageAccounts />} />    
         <Route path="/accounts/transaction" element={<Transaction />} />    
-        <Route path="/accounts/manage-transaction" element={<ManageTransaction />} />    
+        <Route path="/accounts/manage-transaction" element={<ManageTransaction />} />
+        <Route path="/accounts/:id" element={<AccountDetail />} />
+
 
 
         {/* Products */}

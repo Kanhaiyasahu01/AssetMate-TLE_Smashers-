@@ -64,4 +64,6 @@ export const accountsEndPoints={
     GET_ACCOUNT:`${BASE_URL}/account/get-account`, // this willl also contain id
     GET_ALL_ACCOUNT:`${BASE_URL}/account/get-all-accounts`,
     CREATE_TRANSACTION:`${BASE_URL}/account/create-transaction`,
+    DELETE_ACCOUNT:`${BASE_URL}/account/delete`,
+
 }

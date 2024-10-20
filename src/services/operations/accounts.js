@@ -2,11 +2,12 @@ import { toast } from "react-hot-toast";
 import { apiConnector } from "../apiconnector";
 import { accountsEndPoints } from "../apis";
 import { setLoading } from "../../slice/authSlice";
-import { setAccounts } from "../../slice/accountSlice";
+import { deleteAccount, setAccounts } from "../../slice/accountSlice";
 const {
     CREATE,
     GET_ALL_ACCOUNT,
     CREATE_TRANSACTION,
+    DELETE_ACCOUNT,
 } = accountsEndPoints;
 
 export const createAccountService = (token, formData, navigate) => {
@@ -92,3 +93,29 @@ export const createTransactionService = (token,formData)=>{
         }
     }
 }
+
+
+export const deleteAccountService = (token, accountId) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await apiConnector("DELETE", `${DELETE_ACCOUNT}/${accountId}`, null, {
+        Authorization: `Bearer ${token}`,
+      });
+
+      console.log("Account deleted successfully: ", response);
+      if (response?.data?.success) {
+        // Dispatch action to remove the account from the state
+        dispatch(deleteAccount(accountId));
+        toast.success("Account deleted successfully");
+      } else {
+        toast.error("Error while deleting account");
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      toast.error("Failed to delete the account");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+};

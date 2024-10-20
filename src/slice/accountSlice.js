@@ -25,7 +25,7 @@ const accountSlice = createSlice({
     // Remove an account by ID
     deleteAccount(state, action) {
       state.accounts = state.accounts.filter(
-        (account) => account.id !== action.payload
+        (account) => account._id !== action.payload
       );
     },
     // Set loading state

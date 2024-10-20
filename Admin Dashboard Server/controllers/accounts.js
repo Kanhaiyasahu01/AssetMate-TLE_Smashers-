@@ -225,7 +225,23 @@ exports.createTransaction = async (req, res) => {
 // Controller to get all accounts
 exports.getAllAccounts = async (req, res) => {
   try {
-    const accounts = await Account.find();
+    const accounts = await Account.find()
+                          .populate({
+                            path:"clientTransactions",
+                            populate:{
+                              path:"careOf",
+                              populate:{
+                                path:"billingAddress",
+                              }
+                            }
+                          })
+                          .populate({
+                            path:"supplierTransactions",
+                            populate:{
+                              path:"careOf"
+                            }
+                          })
+                          .exec();
     if (!accounts || accounts.length === 0) {
       return res.status(404).json({ 
         success:false,

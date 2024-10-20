@@ -21,7 +21,7 @@ router.get('/get-all-accounts',getAllAccounts);
 
 router.get('/get-account/:accountId',getAccountById);
 
-router.delete('/delete',deleteAccount);
+router.delete('/delete/:accountId',deleteAccount);
 
 router.post('/create-transaction', createTransaction);
 
