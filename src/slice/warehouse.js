@@ -83,6 +83,22 @@ const warehouseSlice = createSlice({
         state.warehouses[index] = updatedWarehouse;
       }
     },
+    addProductToWarehouse(state, action) {
+      const { warehouseId, newProduct } = action.payload; // Destructure the payload
+      console.log("actions",action.payload);
+      // Find the index of the warehouse by its ID
+      const warehouseIndex = state.warehouses.findIndex(
+        (warehouse) => warehouse._id === warehouseId
+      );
+    
+      if (warehouseIndex !== -1) {
+        // Push the new product into the warehouse's products
+        state.warehouses[warehouseIndex].warehouseProducts.push(newProduct);
+      } else {
+        console.warn(`Warehouse with ID ${warehouseId} not found.`);
+      }
+    },
+    
     deleteProductStore: (state, action) => {
       const { productId, warehouseId } = action.payload;
       console.log("Action payload in reducer:", action.payload); // Log payload received in reducer
@@ -124,7 +140,9 @@ export const {
   setWarehouses,
   updateWarehouseProducts,
   deleteProductStore,
-  pushUpdatedWarehouseAfterDeletingProduct
+  pushUpdatedWarehouseAfterDeletingProduct,
+  addProductToWarehouse
+
 } = warehouseSlice.actions;
 
 export default warehouseSlice.reducer;

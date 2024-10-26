@@ -2,7 +2,7 @@ import { apiConnector } from "../apiconnector";
 import { warehouseEndpoints } from "../apis";
 import {toast} from "react-hot-toast";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { addWarehouse, setLoading, updateWarehouseProducts,deleteProductStore } from "../../slice/warehouse"; // Import actions
+import { addWarehouse, setLoading, updateWarehouseProducts,deleteProductStore, addProductToWarehouse } from "../../slice/warehouse"; // Import actions
 
 
 import { setWarehouses ,updateWarehouse,deleteWarehouse} from "../../slice/warehouse"; // Import actions
@@ -18,7 +18,7 @@ const {
     DELETE_PRODUCT,
 } = warehouseEndpoints
 
-
+// ok 
 export const addWarehouseService = (formData, navigate,token,warehouses) => {
   return async (dispatch) => {
     const toastId = toast.loading("Creating Warehouse..."); 
@@ -53,6 +53,7 @@ export const addWarehouseService = (formData, navigate,token,warehouses) => {
     }
   };
 };
+
 
 
 
@@ -93,6 +94,15 @@ export const addNewProduct = (formData,navigate,token) => {
     if(response.data.success)
     {
       toast.success("Product added successfully");
+      console.log(response.data.product);
+
+      const newProduct = {
+        warehouseId:formData.warehouseId,
+        newProduct:response.data.product
+      }
+      console.log(newProduct);
+      console.log("form",formData);
+      dispatch(addProductToWarehouse(newProduct));
       navigate('/stock/manage-product');
     }
     } catch (error) {

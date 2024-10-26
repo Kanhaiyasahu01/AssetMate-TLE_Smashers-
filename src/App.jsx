@@ -75,7 +75,7 @@ function App() {
               <Dashboard/>
             }
           >
-        <Route path="dashboard/my-profile" element={<MyProfile />} />
+        <Route path="dashboard/my-profile" element={<DashboardView />} />
         <Route path="dashboard/view" element={<DashboardView />} />
         <Route path="stock/add-warehouse" element={<AddWarehouse />} />
         <Route path="stock/manage-warehouse" element={<ManageWarehouse />} />

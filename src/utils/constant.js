@@ -52,13 +52,7 @@ export const sidebarData = [
         { name: "Manage Transaction", path: "accounts/manage-transaction" },
       ],
     },
-    {
-      title: "HRM",
-      sections: [
-        { name: "Employee", path: "hrm/employee" },
-        { name: "Manage Employee", path: "hrm/manage-employee" },
-      ],
-    },
+   
     {
       title: 'Term', // Add the Term section
       sections: [
@@ -75,28 +69,3 @@ export const sidebarData = [
   ];
   
 
-//   import { createStore, combineReducers, applyMiddleware } from 'redux';
-// import thunk from 'redux-thunk'; // For asynchronous actions
-// import { authReducer } from './reducers/authReducer';
-// import { profileReducer } from './reducers/profileReducer';
-// import { warehouseReducer } from './reducers/warehouseReducer';
-// import { supplierReducer } from './reducers/supplierReducer';
-// import { orderReducer } from './reducers/orderReducer';
-// import { productReducer } from './reducers/productReducer';
-// import { clientReducer } from './reducers/clientReducer';
-// import { quotationReducer } from './reducers/quotationReducer';
-
-// const rootReducer = combineReducers({
-//   auth: authReducer,
-//   profile: profileReducer,
-//   warehouse: warehouseReducer,
-//   supplier: supplierReducer,
-//   order: orderReducer,
-//   product: productReducer,
-//   client: clientReducer,
-//   quotation: quotationReducer,
-// });
-
-// const store = createStore(rootReducer, applyMiddleware(thunk));
-
-// export default store;
