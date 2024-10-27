@@ -1,35 +1,38 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { ProfileDropdown } from './ProfileDropdown';
 import { Link } from 'react-router-dom';
-import logo from "../../assets/Logo.png"
+import logo from "../../assets/Logo.png";
 
 export default function Navbar() {
-
   const { token } = useSelector((state) => state.auth);
 
   return (
-    <div className="w-full flex flex-row justify-between items-center bg-gray-800 text-white py-2 px-6 border-b-2 border-black">
+    <div className="w-full flex justify-between items-center bg-richblue-600 text-white p-2 shadow-lg border-b-2 border-richblack-25">
 
       {/* LOGO Section */}
-      <div className="flex items-center gap-1">
-        <img src={logo} alt="LOGO" className="w-12 h-12" />
-        <p className="text-red-500 text-4xl">
-          Vinayak Sales
+      <div className="flex items-center gap-2">
+        <img 
+          src={logo} 
+          alt="LOGO" 
+          className="w-10 h-10 transition-transform transform hover:scale-110" // Bold effect on hover
+        />
+        <p className="font-inter text-2xl font-bold tracking-wide ">
+          <span className="text-3xl">V</span>INAYAK <span className="text-3xl">S</span>ALES
         </p>
       </div>
 
       {/* Login / Signup / Profile */}
-      <div className="flex flex-row gap-4">
+      <div className="flex gap-4">
         {token === null ? (
           <>
             <Link to="/login">
-              <button className="hover:underline">
+              <button className="font-medium text-lg px-4 py-1 rounded-md bg-blue-200 text-blue-800 hover:bg-blue-300 transition duration-200">
                 Log in
               </button>
             </Link>
             <Link to="/signup">
-              <button className="hover:underline">
+              <button className="font-medium text-lg px-4 py-1 rounded-md bg-blue-200 text-blue-800 hover:bg-blue-300 transition duration-200">
                 Sign up
               </button>
             </Link>

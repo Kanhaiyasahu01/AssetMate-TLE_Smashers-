@@ -9,7 +9,9 @@ export default {
       inter: ["Inter", "sans-serif"],
       "edu-sa": ["Edu SA Beginner", "cursive"],
       mono: ["Roboto Mono", "monospace"],
+      roboto: ['Roboto', 'sans-serif']
     },
+    
     colors: {
       white: "#fff",
       black: "#000",
@@ -28,8 +30,8 @@ export default {
         800: "#161D29",
         900: "#000814",
       },
-      gray:{
-        800:"#434D69"
+      gray: {
+        800: "#434D69",
       },
       richblue: {
         5: "#ECF5FF",
@@ -60,20 +62,19 @@ export default {
         900: "#001B1D",
       },
       red: {
-          5: "#FFEAEA",
-          25: "#FFB4B4",
-          50: "#FF7E7E",
-          100: "#FF4747",
-          200: "#FF1010",
-          300: "#E10E0E",
-          400: "#C20C0C",
-          500: "#A30A0A",
-          600: "#850707",
-          700: "#660505",
-          800: "#470303",
-          900: "#290101",
-        },
-
+        5: "#FFEAEA",
+        25: "#FFB4B4",
+        50: "#FF7E7E",
+        100: "#FF4747",
+        200: "#FF1010",
+        300: "#E10E0E",
+        400: "#C20C0C",
+        500: "#A30A0A",
+        600: "#850707",
+        700: "#660505",
+        800: "#470303",
+        900: "#290101",
+      },
       caribbeangreen: {
         5: "#C1FFFD",
         25: "#83F1DE",
@@ -88,7 +89,7 @@ export default {
         800: "#01321F",
         900: "#001B0D",
       },
-      green:{
+      green: {
         5: "#C1FFFD",
         25: "#83F1DE",
         50: "#44E4BF",

@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux'; // To dispatch actions
-import { useNavigate } from 'react-router-dom'; // For navigation
-import { addWarehouseService } from '../services/operations/warehouse'; // Import service for adding warehouse
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { addWarehouseService } from '../services/operations/warehouse';
 
 export const AddWarehouse = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Hook to navigate
-  const { token } = useSelector((state) => state.auth)
-  const {warehouses} = useSelector((state)=> state.warehouse);
+  const navigate = useNavigate();
+  const { token } = useSelector((state) => state.auth);
+  const { warehouses } = useSelector((state) => state.warehouse);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     location: '',
   });
 
-
-  // Handle form change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -25,20 +21,30 @@ export const AddWarehouse = () => {
     });
   };
 
-  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Dispatch the addWarehouseService, passing the form data and navigate function
-    dispatch(addWarehouseService(formData, navigate,token , warehouses));
+    dispatch(addWarehouseService(formData, navigate, token, warehouses));
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Add Warehouse</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div className="flex flex-col items-center justify-center p-6">
+      {/* Heading Card */}
+      <div className="w-full bg-white shadow-2xl shadow-richblack-300 p-6 mb-6">
+        <h1 className="text-3xl font-bold text-center text-blue-600">Warehouse Management</h1>
+        <p className="text-gray-600 text-center">
+          Add a new warehouse to the system by filling out the details below.
+        </p>
+      </div>
+
+      {/* Form Card */}
+      <div className="w-full bg-white shadow-2xl p-8">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          <span className="text-blue-600">Add </span>
+          <span className="text-blue-600">Warehouse</span>
+        </h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Warehouse Name */}
-          <div className="form-group flex flex-col">
+          <div className="flex flex-col">
             <label htmlFor="name" className="mb-2 text-gray-700 font-medium">Warehouse Name</label>
             <input
               type="text"
@@ -46,28 +52,28 @@ export const AddWarehouse = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 p-3 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter warehouse name"
               required
             />
           </div>
 
           {/* Description */}
-          <div className="form-group flex flex-col">
+          <div className="flex flex-col">
             <label htmlFor="description" className="mb-2 text-gray-700 font-medium">Description</label>
-            <input
-              type="text"
+            <textarea
               id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 p-3 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter warehouse description"
+              rows="3"
             />
           </div>
 
           {/* Location */}
-          <div className="form-group flex flex-col">
+          <div className="flex flex-col">
             <label htmlFor="location" className="mb-2 text-gray-700 font-medium">Location</label>
             <input
               type="text"
@@ -75,7 +81,7 @@ export const AddWarehouse = () => {
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 p-3 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter warehouse location"
               required
             />
@@ -84,7 +90,7 @@ export const AddWarehouse = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
+            className="w-full bg-blue-500 text-white py-3 rounded-md font-semibold hover:bg-blue-600 transition duration-200"
           >
             Add Warehouse
           </button>

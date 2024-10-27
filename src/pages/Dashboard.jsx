@@ -2,11 +2,10 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from '../components/common/Sidebar'
-export const Dashboard = () => {
 
+export const Dashboard = () => {
     const { loading: profileLoading } = useSelector((state) => state.profile)
     const { loading: authLoading } = useSelector((state) => state.auth)
-
 
     if (profileLoading || authLoading) {
         return (
@@ -14,16 +13,19 @@ export const Dashboard = () => {
             <div className="spinner">Loading...</div>
           </div>
         )
-      }
+    }
   
-      return (
+    return (
         <div className="relative flex min-h-[calc(100vh-3.5rem)]">
-          <Sidebar />
-          <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto">
-            <div className="mx-auto w-11/12 max-w-[1000px] py-10">
+          <Sidebar className="w-1/4" /> {/* Example fixed width for sidebar */}
+          <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto bg-richblack-25">
+            <div className="w-full p-8"> {/* Full width with padding */}
               <Outlet />
             </div>
           </div>
         </div>
-      )
+    )
 }
+
+
+

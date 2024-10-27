@@ -41,7 +41,7 @@ function App() {
 
 
   return (
-    <div className='w-full h-screen min-h-screen flex flex-col'>
+    <div className='w-full h-screen min-h-screen flex flex-col font-roboto'>
       <Navbar/>
 
       <Routes>
