@@ -16,6 +16,12 @@ export default {
       white: "#fff",
       black: "#000",
       transparent: "#ffffff00",
+      white: {
+        DEFAULT: "#FFFFFF", // Standard white
+        100: "#F9FAFB",     // Very light white
+        200: "#F3F4F6",     // Lighter white
+        300: "#E5E7EB",     // Light grayish white
+      },
       richblack: {
         5: "#F1F2FF",
         25: "#DBDDEA",

@@ -18,7 +18,7 @@ export const Dashboard = () => {
     return (
         <div className="relative flex min-h-[calc(100vh-3.5rem)]">
           <Sidebar className="w-1/4" /> {/* Example fixed width for sidebar */}
-          <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto bg-richblack-25">
+          <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto bg-white-300">
             <div className="w-full p-8"> {/* Full width with padding */}
               <Outlet />
             </div>

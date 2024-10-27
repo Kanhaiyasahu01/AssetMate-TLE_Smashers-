@@ -27,10 +27,10 @@ export const AddWarehouse = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-6">
+    <div className="flex flex-col items-center justify-center ">
       {/* Heading Card */}
-      <div className="w-full bg-white shadow-2xl shadow-richblack-300 p-6 mb-6">
-        <h1 className="text-3xl font-bold text-center text-blue-600">Warehouse Management</h1>
+      <div className="w-full bg-white shadow-2xl shadow-richblack-100 p-6 mb-6">
+        <h1 className="text-3xl font-bold text-center text-blue-600">Add your warehouse</h1>
         <p className="text-gray-600 text-center">
           Add a new warehouse to the system by filling out the details below.
         </p>
@@ -41,11 +41,12 @@ export const AddWarehouse = () => {
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           <span className="text-blue-600">Add </span>
           <span className="text-blue-600">Warehouse</span>
+          <hr />
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Warehouse Name */}
           <div className="flex flex-col">
-            <label htmlFor="name" className="mb-2 text-gray-700 font-medium">Warehouse Name</label>
+            <label htmlFor="name" className="mb-2 text-gray-700 font-medium">Warehouse Name <span className='text-red-200 text-lg'>*</span></label>
             <input
               type="text"
               id="name"
@@ -53,7 +54,7 @@ export const AddWarehouse = () => {
               value={formData.name}
               onChange={handleChange}
               className="border border-gray-300 p-3 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter warehouse name"
+              placeholder="Main Warehouse"
               required
             />
           </div>
@@ -67,7 +68,7 @@ export const AddWarehouse = () => {
               value={formData.description}
               onChange={handleChange}
               className="border border-gray-300 p-3 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter warehouse description"
+              placeholder="This is the main warehouse"
               rows="3"
             />
           </div>
@@ -82,7 +83,7 @@ export const AddWarehouse = () => {
               value={formData.location}
               onChange={handleChange}
               className="border border-gray-300 p-3 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter warehouse location"
+              placeholder="Bilaspur chhattisgarh"
               required
             />
           </div>
