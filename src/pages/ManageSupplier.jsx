@@ -39,7 +39,9 @@ export const ManageSupplier = () => {
 
   return (
     <div className="container mx-auto mt-10">
-      <h2 className="text-2xl font-bold mb-5 text-center">Suppliers List</h2>
+      <div className="w-full bg-white shadow-xl p-4 mb-4 rounded-lg">
+        <h1 className="text-3xl font-bold text-center text-blue-600">Supplier List</h1>
+      </div>
       
       {/* Loading state */}
       {(authLoading || supplierLoading) ? (
@@ -49,7 +51,7 @@ export const ManageSupplier = () => {
         <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200">
           {suppliers && suppliers.length > 0 ? (
             <table className="min-w-full bg-white border border-gray-200 rounded-md shadow-inner">
-              <thead>
+              <thead className='bg-blue-600 text-white'>
                 <tr className="bg-gray-100 text-gray-700 text-left">
                   <th className="py-3 px-4 border-b">S. No</th>
                   <th className="py-3 px-4 border-b">Company</th>

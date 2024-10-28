@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { ProfileDropdown } from './ProfileDropdown';
 import { Link } from 'react-router-dom';
-import logo from "../../assets/Logo.png";
+import logo from "../../assets/logo-white.jpg";
 
 export default function Navbar() {
   const { token } = useSelector((state) => state.auth);
@@ -11,11 +11,11 @@ export default function Navbar() {
     <div className="w-full flex justify-between items-center bg-richblue-600 text-white p-2 shadow-lg border-b-2 border-richblack-25">
 
       {/* LOGO Section */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 ">
         <img 
           src={logo} 
           alt="LOGO" 
-          className="w-10 h-10 transition-transform transform hover:scale-110" // Bold effect on hover
+          className="w-10 h-10 transition-transform transform hover:scale-110 rounded-full" // Bold effect on hover
         />
         <p className="font-inter text-2xl font-bold tracking-wide ">
           <span className="text-3xl">V</span>INAYAK <span className="text-3xl">S</span>ALES

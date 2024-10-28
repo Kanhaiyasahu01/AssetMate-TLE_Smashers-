@@ -62,7 +62,7 @@ export const Sidebar = () => {
               <>
                 <button
                   className={`font-medium text-lg py-3 px-4 rounded-md w-full flex justify-between items-center transition duration-200 shadow-sm ${
-                    activeSection === index ? 'border-2 border-green-500' : 'border border-richblack-25'
+                    activeSection === index ? 'border-2 border-green-500' : 'border-b-2 border-richblack-25'
                   }`}
                   onClick={() => handleToggle(index)}
                 >

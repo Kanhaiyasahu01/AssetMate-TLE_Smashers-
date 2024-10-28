@@ -59,7 +59,9 @@ const submitHandler =  () => {
 
 return (
   <div>
-    <div className="text-3xl text-left my-4">Create New Invoice</div>
+   <div className="w-full bg-white rounded-sm shadow-2xl shadow-richblack-100 p-3 mb-4">
+        <h1 className="text-3xl font-bold text-center text-blue-600">New Invoice</h1>
+      </div>    
     <div>
       {/* Pass formData, setFormData, and submitHandler as props to OrderForm */}
       <OrderForm formData={formData} setFormData={setFormData} onSubmit={submitHandler} />

@@ -12,7 +12,6 @@ export const Transaction = () => {
   const { clients } = useSelector((state) => state.client);
   const { accounts, loading: accountsLoading } = useSelector((state) => state.account); 
 
-  // Unified form state to manage all input fields
   const [formData, setFormData] = useState({
     careOf: '',
     toAccount: '',
@@ -46,8 +45,6 @@ export const Transaction = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Ensure amount is a positive number
     if (parseFloat(formData.amount) <= 0) {
       alert('Amount must be a positive number');
       return;
@@ -55,7 +52,7 @@ export const Transaction = () => {
 
     const transactionData = {
       ...formData,
-      amount: parseFloat(formData.amount), // Ensuring the amount is a number
+      amount: parseFloat(formData.amount), 
       date: new Date(formData.date),
       isClient: isClient,
     };
@@ -64,28 +61,30 @@ export const Transaction = () => {
   };
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-bold">{isClient ? 'Client' : 'Supplier'} Transaction</h3>
+    <div className="bg-white  shadow-lg shadow-richblack-100 rounded-lg p-8 mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-2xl font-semibold text-gray-700">
+          {isClient ? 'Client' : 'Supplier'} Transaction
+        </h3>
         <div className="flex items-center">
-          <span className={`mr-2 ${isClient ? 'font-bold' : ''}`}>Client</span>
-          <label className="switch">
-            <input type="checkbox" checked={!isClient} onChange={() => setIsClient(!isClient)} />
-            <span className="slider round"></span>
+          <span className={`mr-3 text-gray-600 ${isClient ? 'font-semibold' : ''}`}>Client</span>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" checked={!isClient} onChange={() => setIsClient(!isClient)} className="sr-only peer" />
+            <div className="w-11 h-6 bg-richblack-300 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:bg-green-500"></div>
           </label>
-          <span className={`ml-2 ${!isClient ? 'font-bold' : ''}`}>Supplier</span>
+          <span className={`ml-3 text-gray-600 ${!isClient ? 'font-semibold' : ''}`}>Supplier</span>
         </div>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
-            <label className="block font-semibold mb-2">{isClient ? 'Client' : 'Supplier'}</label>
+            <label className="block text-gray-700 font-semibold mb-2">{isClient ? 'Client' : 'Supplier'}</label>
             <select
               name="careOf"
               value={formData.careOf}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-green-500 focus:border-green-500"
               required
             >
               <option value="">Select {isClient ? 'Client' : 'Supplier'}</option>
@@ -98,12 +97,12 @@ export const Transaction = () => {
           </div>
 
           <div>
-            <label className="block font-semibold mb-2">To Account</label>
+            <label className="block text-gray-700 font-semibold mb-2">To Account</label>
             <select
               name="toAccount"
               value={formData.toAccount}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-green-500 focus:border-green-500"
               required
             >
               <option value="">Select Account</option>
@@ -118,41 +117,43 @@ export const Transaction = () => {
               )}
             </select>
           </div>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
-            <label className="block font-semibold mb-2">Amount</label>
+            <label className="block text-gray-700 font-semibold mb-2">Amount</label>
             <input
               type="number"
               name="amount"
               value={formData.amount}
               onChange={handleChange}
               placeholder="Enter Amount"
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-green-500 focus:border-green-500"
               required
             />
           </div>
-        </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <label className="block font-semibold mb-2">Date</label>
+            <label className="block text-gray-700 font-semibold mb-2">Date</label>
             <input
               type="date"
               name="date"
               value={formData.date}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-green-500 focus:border-green-500"
               required
             />
           </div>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
-            <label className="block font-semibold mb-2">Transaction Type</label>
+            <label className="block text-gray-700 font-semibold mb-2">Transaction Type</label>
             <select
               name="transactionType"
               value={formData.transactionType}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-green-500 focus:border-green-500"
               required
             >
               <option value="">Select Type</option>
@@ -162,12 +163,12 @@ export const Transaction = () => {
           </div>
 
           <div>
-            <label className="block font-semibold mb-2">Payment Method</label>
+            <label className="block text-gray-700 font-semibold mb-2">Payment Method</label>
             <select
               name="method"
               value={formData.method}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-green-500 focus:border-green-500"
               required
             >
               <option value="">Select Method</option>
@@ -177,19 +178,19 @@ export const Transaction = () => {
           </div>
         </div>
 
-        <div className="mb-4">
-          <label className="block font-semibold mb-2">Note</label>
+        <div className="mb-6">
+          <label className="block text-gray-700 font-semibold mb-2">Note</label>
           <textarea
             name="note"
             value={formData.note}
             onChange={handleChange}
             placeholder="Enter any notes"
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-green-500 focus:border-green-500"
             rows="4"
           ></textarea>
         </div>
 
-        <button type="submit" className="bg-caribbeangreen-400 text-white px-4 py-2 rounded">
+        <button type="submit" className="bg-green-500 text-white font-semibold px-6 py-2 rounded hover:bg-green-600 transition duration-200">
           Submit Transaction
         </button>
       </form>

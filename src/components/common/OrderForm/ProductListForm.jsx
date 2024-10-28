@@ -152,7 +152,7 @@ export const ProductListForm = ({ products, onProductListChange }) => {
       </h3>
 
       <table className="min-w-full table-auto border-collapse border border-gray-300">
-        <thead className="bg-gray-100">
+        <thead className="bg-blue-600 text-white">
           <tr>
             <th className="px-4 py-2 border">Product Name</th>
             <th className="px-4 py-2 border">Quantity</th>

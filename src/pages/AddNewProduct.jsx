@@ -52,7 +52,12 @@ console.log(warehouses);
 
   return (
     <div className="container mx-auto p-6 w-full border rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Add New Product to Warehouse</h2>
+        {/* make it a card */}
+      <div>      
+        <h2 className="text-2xl font-bold mb-4">Add New Product to Warehouse</h2>
+      </div>
+
+ {/* rest will be same , just change the input field design to make it more osm */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-row w-full items-center gap-3">
           {/* Product Name */}

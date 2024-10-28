@@ -41,9 +41,9 @@ export const ManageWarehouse = () => {
   return (
     <div className="container mx-auto">
       {/* Card for Manage Warehouse Title */}
-      <div className="w-full bg-white shadow-2xl p-6 mb-6 rounded-lg">
+      <div className="w-full bg-white shadow-xl p-6 mb-6 rounded-lg">
         <h1 className="text-3xl font-bold text-center text-blue-600">Warehouse Management</h1>
-        <p className="text-gray-600 text-center">Manage Your Warehouse here</p>
+        <p className="text-pure-greys-500 text-center">Manage Your Warehouse here</p>
       </div>
 
       {/* Loading State */}
@@ -67,7 +67,7 @@ export const ManageWarehouse = () => {
                 warehouses.map((warehouse, index) => (
                   <div
                     key={index}
-                    className="flex justify-between items-center border border-gray-300 p-4 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg bg-white"
+                    className="flex justify-between items-center border border-richblack-25 p-4 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg bg-white"
                   >
                     <div className="flex-1 text-center">
                       <span className="font-bold">{index + 1}</span>
@@ -78,19 +78,19 @@ export const ManageWarehouse = () => {
                     <div className="flex-1 text-center">
                       <span>{warehouse?.warehouseProducts?.length || 0}</span>
                     </div>
-                    <div className="flex-1 text-center">
+                    <div className="flex-1 gap-2 text-center">
                       <button
                         className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-lg transition duration-200"
                         onClick={() => handleEdit(warehouse)}
                       >
                         Edit
                       </button>
-                      <button
+                      {/* <button
                         className="bg-red-400 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg transition duration-200"
                         onClick={() => handleDeleteClick(warehouse._id)}
                       >
                         Delete
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 ))

@@ -98,19 +98,27 @@ const PrintDownloadComponent = () => {
   return (
     <div>
       {/* Button to trigger print */}
-      <div className="flex justify-center space-x-4 my-5">
-        <button 
-          onClick={handlePrint} 
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          Print Quotation
-        </button>
-        <button 
-          onClick={handleDownloadPdf} 
-          className="bg-caribbeangreen-400 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-        >
-          Download as PDF
-        </button>
+      <div className=" p-4 mb-4 w-full flex justify-center">
+
+      <div className="w-[800px] bg-white shadow-xl p-6 rounded-lg">
+      <div className="flex justify-center gap-4">
+          <button 
+            onClick={handlePrint} 
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Print Quotation
+          </button>
+          <button 
+            onClick={handleDownloadPdf} 
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Download as PDF
+          </button>
+        </div>
+
+      </div>
+
+        
       </div>
 
       {/* Render the PrintQuotation component and pass the ref */}

@@ -61,24 +61,23 @@ export const ManageSupplierOrder = () => {
   }, [supplierName, orderNumber, fromDate, toDate, orders]);
 
   const handleViewOrder = (orderId) => {
-    console.log(`Viewing order ${orderId}`);
     navigate(`/supplier/viewOrder/${orderId}`);
   };
 
-  const openDeleteModal = (orderId,supplierId) => {
-    setOrderToDelete({orderId,supplierId}); // Store the order ID for deletion
-    setIsModalOpen(true); // Open the confirmation modal
+  const openDeleteModal = (orderId, supplierId) => {
+    setOrderToDelete({ orderId, supplierId });
+    setIsModalOpen(true);
   };
 
   const handleDeleteOrder = async () => {
     if (orderToDelete) {
-      const {orderId, supplierId} = orderToDelete;
+      const { orderId, supplierId } = orderToDelete;
 
       try {
         const formData = {
           orderId,
           supplierId,
-        }
+        };
         await dispatch(deleteSupplierOrderByIdService(token, formData));
 
         // Update UI to remove the deleted order
@@ -87,111 +86,120 @@ export const ManageSupplierOrder = () => {
       } catch (error) {
         console.error(`Failed to delete order ${orderToDelete.orderId}:`, error);
       }
-      setIsModalOpen(false); // Close the modal after deletion
-      setOrderToDelete(null); // Reset the order info
+      setIsModalOpen(false);
+      setOrderToDelete(null);
     }
   };
 
   return (
     <div className="manage-supplier-order-container p-6">
-      <h1 className="text-2xl font-bold mb-6">Manage Supplier Orders</h1>
 
-      {/* Add new order button */}
-      <div className="mb-4">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-          Add New Order
-        </button>
+      {/* Header */}
+      <div className="w-full bg-white shadow-xl p-4 mb-4 rounded-lg">
+        <h1 className="text-3xl font-bold text-center text-blue-600">
+          Manage Supplier Orders
+        </h1>
       </div>
 
-      {/* Search form */}
-      <div className="flex gap-4 mb-6">
-        <div>
-          <label className="block mb-2 font-semibold">From Date</label>
-          <input
-            type="date"
-            value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
-            className="border px-2 py-1 rounded"
-          />
-        </div>
+      {/* Search Form Card */}
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4">Search Supplier Orders</h2>
+        <div className="flex gap-4 mb-6 flex-wrap">
+          <div>
+            <label className="block mb-2 font-semibold">From Date</label>
+            <input
+              type="date"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              className="border px-2 py-1 rounded"
+            />
+          </div>
 
-        <div>
-          <label className="block mb-2 font-semibold">To Date</label>
-          <input
-            type="date"
-            value={toDate}
-            onChange={(e) => setToDate(e.target.value)}
-            className="border px-2 py-1 rounded"
-          />
-        </div>
+          <div>
+            <label className="block mb-2 font-semibold">To Date</label>
+            <input
+              type="date"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              className="border px-2 py-1 rounded"
+            />
+          </div>
 
-        <div>
-          <label className="block mb-2 font-semibold">Supplier Name</label>
-          <input
-            type="text"
-            value={supplierName}
-            onChange={(e) => setSupplierName(e.target.value)}
-            placeholder="Search by Supplier Name"
-            className="border px-2 py-1 rounded"
-          />
-        </div>
+          <div>
+            <label className="block mb-2 font-semibold">Supplier Name</label>
+            <input
+              type="text"
+              value={supplierName}
+              onChange={(e) => setSupplierName(e.target.value)}
+              placeholder="Search by Supplier Name"
+              className="border px-2 py-1 rounded"
+            />
+          </div>
 
-        <div>
-          <label className="block mb-2 font-semibold">Order Number</label>
-          <input
-            type="text"
-            value={orderNumber}
-            onChange={(e) => setOrderNumber(e.target.value)}
-            placeholder="Enter Order Number"
-            className="border px-2 py-1 rounded"
-          />
+          <div>
+            <label className="block mb-2 font-semibold">Order Number</label>
+            <input
+              type="text"
+              value={orderNumber}
+              onChange={(e) => setOrderNumber(e.target.value)}
+              placeholder="Enter Order Number"
+              className="border px-2 py-1 rounded"
+            />
+          </div>
         </div>
       </div>
 
-      {/* Orders table */}
-      <table className="min-w-full table-auto border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border px-4 py-2">S/N</th>
-            <th className="border px-4 py-2">Supplier Name</th>
-            <th className="border px-4 py-2">Date</th>
-            <th className="border px-4 py-2">Total Amount</th>
-            <th className="border px-4 py-2">Settings</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order, index) => (
-              <tr key={order._id}>
-                <td className="border px-4 py-2">{index + 1}</td>
-                <td className="border px-4 py-2">{order.supplier.billingAddress.company}</td>
-                <td className="border px-4 py-2">{new Date(order.createdAt).toLocaleDateString('en-US')}</td>
-                <td className="border px-4 py-2">{order.grandTotal}</td>
-                <td className="border px-4 py-2">
-                  <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-700 mr-2"
-                    onClick={() => handleViewOrder(order._id)}
-                  >
-                    View
-                  </button>
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
-                    onClick={() => openDeleteModal(order._id,order.supplier._id)} // Open modal with order ID
-                  >
-                    Delete
-                  </button>
+      {/* Orders Table Card */}
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4">Supplier Orders List</h2>
+        <table className="min-w-full table-auto border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-blue-600 text-white">
+              <th className="border border-black px-4 py-2">S/N</th>
+              <th className="border border-black px-4 py-2">Supplier Name</th>
+              <th className="border border-black px-4 py-2">Date</th>
+              <th className="border border-black px-4 py-2">Total Amount</th>
+              <th className="border border-black px-4 py-2">Settings</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredOrders.length > 0 ? (
+              filteredOrders.map((order, index) => (
+                <tr key={order._id}>
+                  <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {order.supplier.billingAddress.company}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {new Date(order.createdAt).toLocaleDateString('en-US')}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">{order.grandTotal}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button
+                      className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-700 mr-2"
+                      onClick={() => handleViewOrder(order._id)}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
+                      onClick={() => openDeleteModal(order._id, order.supplier._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center border px-4 py-2">
+                  No supplier orders found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="text-center border px-4 py-2">
-                No orders found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {/* Confirmation Modal */}
       <ConfirmationModal
@@ -199,7 +207,7 @@ export const ManageSupplierOrder = () => {
         title="Delete Order"
         message="Are you sure you want to delete this order? This action cannot be undone."
         onConfirm={handleDeleteOrder}
-        onCancel={() => setIsModalOpen(false)} // Close the modal without action
+        onCancel={() => setIsModalOpen(false)}
       />
     </div>
   );

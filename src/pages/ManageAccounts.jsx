@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAccountsService ,deleteAccountService} from '../services/operations/accounts';
+import { fetchAccountsService, deleteAccountService } from '../services/operations/accounts';
 import { useNavigate } from 'react-router-dom';
-import { ConfirmationModal } from '../components/common/ConfirmationModel';
 
 export const ManageAccounts = () => {
-  const { token } = useSelector(state => state.auth);
-  const { accounts } = useSelector(state => state.account);
+  const { token } = useSelector((state) => state.auth);
+  const { accounts, loading } = useSelector((state) => state.account);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,69 +27,82 @@ export const ManageAccounts = () => {
     setIsModalOpen(false);
   };
 
-  const cancelDelete = () => {
-    setIsModalOpen(false);
-    setSelectedAccountId(null);
-  };
-
   const handleView = (account) => {
-    // Pass the account object in the state when navigating
     navigate(`/accounts/${account._id}`, { state: { account } });
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Manage Accounts</h1>
-      {accounts.length === 0 ? (
-        <p>No accounts available.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300">
-            <thead>
-              <tr>
-                <th className="border-b-2 border-gray-300 p-3 text-left">Account No</th>
-                <th className="border-b-2 border-gray-300 p-3 text-left">Name</th>
-                <th className="border-b-2 border-gray-300 p-3 text-left">Balance</th>
-                <th className="border-b-2 border-gray-300 p-3 text-left">Account Type</th>
-                <th className="border-b-2 border-gray-300 p-3 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {accounts.map((account) => (
-                <tr key={account._id}>
-                  <td className="border-b p-3">{account.accountNo}</td>
-                  <td className="border-b p-3">{account.name}</td>
-                  <td className="border-b p-3">{account.balance.toFixed(2)}</td>
-                  <td className="border-b p-3">{account.accountType}</td>
-                  <td className="border-b p-3 flex space-x-2">
-                    <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded"
-                      onClick={() => handleView(account)}
-                    >
-                      View
-                    </button>
-                    <button
-                      className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
-                      onClick={() => handleDelete(account._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+    <div className="container mx-auto p-6 min-h-screen">
+      {/* Card for Manage Accounts Title */}
+      <div className="w-full bg-white shadow-xl p-6 mb-6 rounded-lg">
+        <h1 className="text-3xl font-bold text-center text-blue-600">Manage Accounts</h1>
+        <p className="text-gray-500 text-center">Manage all registered accounts here</p>
+      </div>
 
-      {/* Confirmation Modal for Delete */}
-      <ConfirmationModal
+      {/* Card for Accounts Table */}
+      <div className="bg-white shadow-lg p-6 rounded-lg min-h-[200px]">
+        {/* Show Loading State within the Card */}
+        {loading ? (
+          <div className="text-center py-4 text-gray-500">Loading accounts...</div>
+        ) : (
+          <>
+            {/* Heading Row */}
+            <div className="flex justify-between items-center bg-blue-600 text-white p-4 rounded-lg shadow-md">
+              <div className="flex-1 text-center font-bold">Account No</div>
+              <div className="flex-1 text-center font-bold">Name</div>
+              <div className="flex-1 text-center font-bold">Balance</div>
+              <div className="flex-1 text-center font-bold">Account Type</div>
+              <div className="flex-1 text-center font-bold">Actions</div>
+            </div>
+
+            {/* List of Accounts */}
+            <div className="space-y-4 mt-4">
+              {accounts && accounts.length > 0 ? (
+                accounts.map((account, index) => (
+                  <div
+                    key={account._id}
+                    className="flex justify-between items-center p-4 rounded-lg shadow-md shadow-richblack-100 transition-shadow duration-300 hover:shadow-lg bg-white"
+                  >
+                    <div className="flex-1 text-center text-gray-800">
+                      <span>{account.accountNo}</span>
+                    </div>
+                    <div className="flex-1 text-center text-gray-800">
+                      <span>{account.name}</span>
+                    </div>
+                    <div className="flex-1 text-center text-gray-800">
+                      <span>${account.balance.toFixed(2)}</span>
+                    </div>
+                    <div className="flex-1 text-center text-gray-800">
+                      <span>{account.accountType}</span>
+                    </div>
+                    <div className="flex-1 text-center space-x-2">
+                      <button
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-lg transition duration-200"
+                        onClick={() => handleView(account)}
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-4 text-gray-600">
+                  No accounts available.
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Confirmation Modal */}
+      {/* <ConfirmationModal
         isOpen={isModalOpen}
-        title="Confirm Delete"
+        title="Confirm Deletion"
         message="Are you sure you want to delete this account?"
         onConfirm={confirmDelete}
-        onCancel={cancelDelete}
-      />
+        onCancel={() => setIsModalOpen(false)}
+      /> */}
     </div>
   );
 };

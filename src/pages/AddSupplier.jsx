@@ -100,7 +100,7 @@ export const AddSupplier = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-2xl">
+      <div className="bg-white shadow-md rounded-lg p-8 w-full ">
         <div className="flex justify-start mb-6">
           <div className="text-3xl font-bold text-gray-800">
             Add New Supplier

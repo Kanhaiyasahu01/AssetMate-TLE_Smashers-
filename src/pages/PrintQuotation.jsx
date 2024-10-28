@@ -47,23 +47,23 @@ export const PrintQuotation = forwardRef((props, ref) => {
   }
 
   return (
-    <div ref={ref} style={{ padding: '20px', fontFamily: 'Arial, sans-serif', width: '800px', margin: 'auto', border: '1px solid #ccc' }}>
+    <div ref={ref} style={{ padding: '20px', fontFamily: 'Arial, sans-serif', width: '800px', margin: 'auto', border: '1px solid #ccc' }} className='bg-white'>
       {/* Invoice Header */}
       <div style={{ textAlign: 'center', marginBottom: '20px' }} className='border w-full'>
         <img src={invoiceHeader} alt="Invoice Header" style={{ width: '100%' }} />
       </div>
 
       {/* Quotation Title */}
-      <h2 style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '24px', marginBottom: '20px' }}>Quotation</h2>
+      <h2 style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '24px', marginBottom: '20px' }} >Quotation</h2>
 
       {/* Client and Quotation Details Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
         {/* Client Billing Address on the Left */}
         <div style={{ width: '48%' }}>
           <p><strong>To:</strong></p>
-          <p>{quotationData.client?.billingAddress?.company || 'No company available'}</p>
-          <p>{quotationData.client?.billingAddress?.address || 'No Address available'}</p>
-          <p>
+          <p className='pl-6'>{quotationData.client?.billingAddress?.company || 'No company available'}</p>
+          <p className='pl-6'>{quotationData.client?.billingAddress?.address || 'No Address available'}</p>
+          <p className='pl-6'>
             {quotationData.client?.billingAddress?.city || 'City'}, 
             {quotationData.client?.billingAddress?.country || 'Country'}, 
             {quotationData.client?.billingAddress?.postbox || 'Postbox'}
@@ -80,15 +80,15 @@ export const PrintQuotation = forwardRef((props, ref) => {
       {/* Reference Section */}
       <div style={{ marginBottom: '20px' }}>
         <p><strong>Ref:</strong> Through Mail</p>
-        <p>Dear Sir,</p>
-        <p>Thank you for your enquiry. We are pleased to quote you the following:</p>
+        <p className='pl-6'>Dear Sir,</p>
+        <p className='pl-6'>Thank you for your enquiry. We are pleased to quote you the following:</p>
       </div>
 
       {/* Product List Table */}
       <div style={{ marginBottom: '20px' }}>
         <table border="1" width="100%" cellPadding="10" cellSpacing="0" style={{ borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
           <thead>
-            <tr style={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+            <tr style={{ fontWeight: 'bold' }} className='bg-blue-600 text-white'>
               <th style={{ padding: '10px', textAlign: 'center', border: '1px solid #ccc' }}>S.No</th>
               <th style={{ padding: '10px', textAlign: 'left', border: '1px solid #ccc' }}>Product Name</th>
               <th style={{ padding: '10px', textAlign: 'center', border: '1px solid #ccc' }}>Quantity</th>
