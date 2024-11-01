@@ -5,7 +5,6 @@ import { sidebarData } from '../../utils/constant';
 import { FaMoneyBill, FaWarehouse, FaUsers, FaTruck, FaBriefcase, FaUserTie, FaTachometerAlt, FaFileAlt } from "react-icons/fa"; // Section icons
 import { FaUserGear } from "react-icons/fa6";
 
-
 export const Sidebar = () => {
   const [activeSection, setActiveSection] = useState(null);  // Track active section
   const [activeSubsection, setActiveSubsection] = useState(null); // Track active subsection
@@ -48,7 +47,8 @@ export const Sidebar = () => {
 
   return (
     <div className="w-1/6 bg-white text-gray-800 min-h-screen p-2 shadow-lg flex flex-col justify-between">
-      <ul className="space-y-4">
+      {/* Apply flex-grow and overflow for scrollable content */}
+      <ul className="space-y-4 flex-grow overflow-y-auto">
         {sidebarData.map((menu, index) => (
           <li key={index}>
             {menu.title === 'Dashboard' ? ( // Direct link for Dashboard

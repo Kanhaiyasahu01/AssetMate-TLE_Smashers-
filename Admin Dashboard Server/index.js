@@ -20,6 +20,7 @@ const supplierRoutes = require("./routes/Supplier");
 const clientRoutes = require("./routes/Client");
 const termRoutes = require("./routes/Terms");
 const accountRoutes = require("./routes/Account");
+const enquiryRoutes = require("./routes/Enquiry");
 // Database connection
 dbConnect();
 
@@ -54,6 +55,7 @@ app.use("/api/v1/supplier", supplierRoutes);
 app.use("/api/v1/client", clientRoutes);
 app.use("/api/v1/terms",termRoutes)
 app.use("/api/v1/account",accountRoutes);
+app.use('/api/v1/enquiry',enquiryRoutes);
 // Default route
 app.get("/", (req, res) => {
 	return res.json({

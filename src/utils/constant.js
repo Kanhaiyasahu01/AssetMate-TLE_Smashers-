@@ -12,6 +12,8 @@ export const sidebarData = [
     {
       title: "Sales",
       sections: [
+        { name: "New Enquiry", path: "sales/new-enquiry" },
+        { name: "Manage Enquiry", path: "sales/manage-enquiry" },
         { name: "New Invoice", path: "sales/new-invoice" },
         { name: "Manage Invoice", path: "sales/manage-invoice" },
         { name: "Quotation", path: "sales/quotation" },

@@ -71,3 +71,11 @@ export const accountsEndPoints={
     DELETE_SUPPLIER_TRANSACTION:`${BASE_URL}/account/delete-supplier-transaction`,
 
 }
+
+
+export const enquiryEndPoints = {
+    CREATE:`${BASE_URL}/enquiry/create`,
+    GET_ALL_ENQUIRIES:`${BASE_URL}/enquiry/all-enqueries`,
+    GET_ENQUIRY:`${BASE_URL}/enquiry/get-enquiry`,
+    UPDATE:`${BASE_URL}/enquiry/update`,
+}

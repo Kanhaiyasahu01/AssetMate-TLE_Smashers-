@@ -34,7 +34,12 @@ import { ManageInvoice1 } from './pages/ManageInvoice1';
 import { ManageSupplierOrder } from './pages/ManageSupplierOrder';
 import { ViewSupplierOrder } from './pages/ViewSupplerOrder';
 import { AccountDetail } from './components/accounts/AccountDetail';
-
+import { Enquiry } from './pages/Enquiry';
+import { ManageEnquiry } from './pages/ManageEnquiry';
+import { Settings } from './pages/Settings';
+import { EnquiryDetails } from './pages/EnquiryDetails';
+import { UpdateEnquiry } from './pages/UpdateEnquiry';
+import { Landing } from './pages/Landing';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -43,6 +48,7 @@ function App() {
   return (
     <div className='w-full h-screen min-h-screen flex flex-col font-roboto'>
       <Navbar/>
+      <Landing/>
 
       <Routes>
           <Route
@@ -109,12 +115,14 @@ function App() {
 
 
         <Route path="/supplier/manage-order" element={<ManageSupplierOrder />} />    
-        <Route path="/supplier/viewOrder/:orderId" element={<ViewSupplierOrder />} />    
+        <Route path="/supplier/viewOrder/:orderId" element={<ViewSupplierOrder />} />  
 
-          
-          
+        <Route path="/sales/new-enquiry" element={<Enquiry />} />    
+        <Route path="/sales/manage-enquiry" element={<ManageEnquiry />} />    
+        <Route path="/sales/enquiries/view/:id" element={<EnquiryDetails />} />    
+        <Route path="/sales/enquiries/update/:id" element={<UpdateEnquiry />} />
 
-        {/* <Route path="dashboard/Settings" element={<Settings />} /> */}
+        <Route path="dashboard/my-profile" element={<Settings />} />
         </Route>
       </Routes>
     </div>
