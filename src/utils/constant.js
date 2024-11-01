@@ -64,7 +64,7 @@ export const sidebarData = [
     },
     {
       title:"Settings",
-      section:[
+      sections:[
           {name:"Setting", path:"settings/setting"}
       ]
   },

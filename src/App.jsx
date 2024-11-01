@@ -40,6 +40,8 @@ import { Settings } from './pages/Settings';
 import { EnquiryDetails } from './pages/EnquiryDetails';
 import { UpdateEnquiry } from './pages/UpdateEnquiry';
 import { Landing } from './pages/Landing';
+import { ForgetPassword } from './components/profile/ForgetPassword';
+import UpdatePassword from './components/profile/UpdatePassword';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -48,8 +50,6 @@ function App() {
   return (
     <div className='w-full h-screen min-h-screen flex flex-col font-roboto'>
       <Navbar/>
-      <Landing/>
-
       <Routes>
           <Route
               path="signup"
@@ -64,6 +64,22 @@ function App() {
               element={
                 <OpenRoute>
                   <Login />
+                </OpenRoute>
+              }
+          />
+          <Route
+              path="forgot-password"
+              element={
+                <OpenRoute>
+                  <ForgetPassword />
+                </OpenRoute>
+              }
+          />
+          <Route
+              path="update-password/:id"
+              element={
+                <OpenRoute>
+                  <UpdatePassword />
                 </OpenRoute>
               }
           />
@@ -122,7 +138,7 @@ function App() {
         <Route path="/sales/enquiries/view/:id" element={<EnquiryDetails />} />    
         <Route path="/sales/enquiries/update/:id" element={<UpdateEnquiry />} />
 
-        <Route path="dashboard/my-profile" element={<Settings />} />
+        <Route path="/settings/setting" element={<Settings />} />
         </Route>
       </Routes>
     </div>
