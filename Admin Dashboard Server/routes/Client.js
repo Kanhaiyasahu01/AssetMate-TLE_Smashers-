@@ -20,25 +20,25 @@ const {
 // import middlewares
 const { auth , isAdmin } = require("../middlewares/auth");
 // create request
-router.post('/create',createClient);
+router.post('/create',auth,isAdmin,createClient);
 
-router.post("/create-client-order",createClientOrder);
+router.post("/create-client-order",auth,isAdmin,createClientOrder);
 
-router.post("/create-quotation",createQuotation);
+router.post("/create-quotation",auth,isAdmin,createQuotation);
 
-router.put("/convert-to-order",convertToOrder);
+router.put("/convert-to-order",auth,isAdmin,convertToOrder);
 
-router.get('/get-all-clients',getAllClients);
+router.get('/get-all-clients',auth,isAdmin,getAllClients);
 
-router.get('/get-client-order/:id',getQuotation);
+router.get('/get-client-order/:id',auth,isAdmin,getQuotation);
 
-router.get('/get-client-invoice/:id',getOrder);
+router.get('/get-client-invoice/:id',auth,isAdmin,getOrder);
 
-router.get('/get-all-orders',fetchAllOrder);
+router.get('/get-all-orders',auth,isAdmin,fetchAllOrder);
 
-router.get('/get-all-quotation',fetchAllQuotation);
+router.get('/get-all-quotation',auth,isAdmin,fetchAllQuotation);
 
-router.delete('/delete-order',deleteOrderById);
+router.delete('/delete-order',auth,isAdmin,deleteOrderById);
 
-router.delete('/delete-client',deleteClients);
+router.delete('/delete-client',auth,isAdmin,deleteClients);
 module.exports = router;

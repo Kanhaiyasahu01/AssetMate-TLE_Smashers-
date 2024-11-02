@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 // import { logout, updateProfile } from '../actions/userActions';
 import { updateProfile } from '../services/operations/authAPI';
-
+import { logoutService } from '../services/operations/authAPI';
+import { useNavigate } from 'react-router-dom';
 export const Settings = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.profile);
   const {token} = useSelector(state => state.auth);
@@ -27,7 +29,7 @@ export const Settings = () => {
   };
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logoutService(navigate));
   };
 
   const handleCancelEdit = () => {

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { termsEndPoints } from "../services/apis";
 import { apiConnector } from "../services/apiconnector";
 import toast, { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const TermsForm = () => {
   const { CREATE, UPDATE, GET, DELETE } = termsEndPoints;
-
+  const {token} = useSelector(state=> state.auth);
   const [termsData, setTermsData] = useState({
     delivery: "",
     paymentTerms: "",
@@ -24,7 +25,9 @@ const TermsForm = () => {
 
   const fetchExistingTerms = async () => {
     try {
-      const response = await apiConnector("GET", GET);
+      const response = await apiConnector("GET", GET,null,{
+        Authorization: `Bearer ${token}`,
+      });
       if (response.data.term) {
         setExistingTerms(response.data.term);
         setTermsData(response.data.term);
@@ -45,10 +48,14 @@ const TermsForm = () => {
     e.preventDefault();
     try {
       if (isUpdateMode) {
-        await apiConnector("PUT", `${UPDATE}/${existingTerms._id}`, termsData);
+        await apiConnector("PUT", `${UPDATE}/${existingTerms._id}`, termsData,{
+          Authorization: `Bearer ${token}`,
+        });
         toast.success("Terms updated successfully!");
       } else {
-        await apiConnector("POST", CREATE, termsData);
+        await apiConnector("POST", CREATE, termsData,{
+          Authorization: `Bearer ${token}`,
+        });
         toast.success("Terms created successfully!");
       }
 
@@ -63,7 +70,9 @@ const TermsForm = () => {
   const handleDelete = async () => {
     if (!existingTerms) return;
     try {
-      await apiConnector("DELETE", `${DELETE}/${existingTerms._id}`);
+      await apiConnector("DELETE", `${DELETE}/${existingTerms._id}`,null,{
+        Authorization: `Bearer ${token}`,
+      });
       toast.success("Terms deleted successfully!");
       setExistingTerms(null);
       setTermsData({

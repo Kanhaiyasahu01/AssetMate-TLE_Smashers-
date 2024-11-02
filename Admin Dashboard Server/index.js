@@ -21,6 +21,7 @@ const clientRoutes = require("./routes/Client");
 const termRoutes = require("./routes/Terms");
 const accountRoutes = require("./routes/Account");
 const enquiryRoutes = require("./routes/Enquiry");
+const bodyParser = require('body-parser');
 // Database connection
 dbConnect();
 
@@ -29,7 +30,7 @@ const PORT = process.env.PORT || 8080;
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-
+app.use(bodyParser.json());
 // CORS configuration
 const allowedOrigins = [
 	'http://localhost:5173',  // Vite development server URL

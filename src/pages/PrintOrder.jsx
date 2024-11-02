@@ -3,15 +3,13 @@ import html2pdf from 'html2pdf.js';
 import { PrintOrderComponent } from './PrintOrderComponent';
 
 export const PrintOrder = () => {
-  const componentRef = useRef(null);  // Initialize the reference
+  const componentRef = useRef(null);
 
-  // Function to print the component
   const handlePrint = () => {
-    const printContent = componentRef.current.cloneNode(true); // Clone the component content
-    const printWindow = window.open('', '', 'width=800,height=600'); // Open a new print window
+    const printContent = componentRef.current.cloneNode(true);
+    const printWindow = window.open('', '', 'width=800,height=600');
 
     if (printWindow) {
-      // Function to handle image loading and ensure print happens after images are loaded
       const waitForImagesToLoad = (content, callback) => {
         const images = content.querySelectorAll('img');
         let loadedImagesCount = 0;
@@ -19,26 +17,25 @@ export const PrintOrder = () => {
 
         if (totalImages === 0) {
           callback();
-          return;  // If no images, trigger print immediately
+          return;
         }
 
         images.forEach((img) => {
           img.onload = () => {
             loadedImagesCount++;
             if (loadedImagesCount === totalImages) {
-              callback();  // Trigger the callback once all images are loaded
+              callback();
             }
           };
           img.onerror = () => {
             loadedImagesCount++;
             if (loadedImagesCount === totalImages) {
-              callback();  // Continue even if an image fails to load
+              callback();
             }
           };
         });
       };
 
-      // Inject the content into the print window and wait for images to load
       printWindow.document.write(`
         <html>
           <head>
@@ -66,26 +63,24 @@ export const PrintOrder = () => {
         </html>
       `);
 
-      // Wait for images to load before triggering the print dialog
       waitForImagesToLoad(printWindow.document, () => {
-        printWindow.document.close();  // Close the document stream
-        printWindow.focus();           // Focus on the new window
-        printWindow.print();           // Trigger the print dialog
-        printWindow.close();           // Close the print window after printing
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
       });
     } else {
       console.error('Failed to open print window.');
     }
   };
 
-  // Function to download the component as PDF
   const handleDownloadPdf = () => {
     const element = componentRef.current;
     const opt = {
       filename: 'order.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },  // Ensure high-quality rendering with CORS enabled for images
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },  // Adjusted for A4 paper
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
     };
 
     if (element) {
@@ -97,23 +92,27 @@ export const PrintOrder = () => {
 
   return (
     <div>
-      {/* Button to trigger print */}
-      <div className="flex justify-center space-x-4 my-5">
-        <button 
-          onClick={handlePrint} 
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          Print Order
-        </button>
-        <button 
-          onClick={handleDownloadPdf} 
-          className="bg-caribbeangreen-400 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-        >
-          Download as PDF
-        </button>
+      {/* Button container */}
+      <div className="p-4 mb-4 w-full flex justify-center">
+        <div className="w-[800px] bg-white shadow-xl p-6 rounded-lg">
+          <div className="flex justify-center gap-4">
+            <button 
+              onClick={handlePrint} 
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Print Order
+            </button>
+            <button 
+              onClick={handleDownloadPdf} 
+              className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg"
+            >
+              Download as PDF
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Render the PrintOrderComponent and pass the ref */}
+      {/* Render the PrintOrderComponent with the ref */}
       <div ref={componentRef}>
         <PrintOrderComponent />
       </div>

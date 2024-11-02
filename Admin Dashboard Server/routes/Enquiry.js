@@ -9,12 +9,12 @@ const {createEnquiry,
 } = require("../controllers/Enquiry");
 
 
-router.post('/create',createEnquiry);
+router.post('/create',auth,isAdmin,createEnquiry);
 
-router.put('/update/:id',updateEnquiry);
+router.put('/update/:id',auth,isAdmin,updateEnquiry);
 
-router.get('/all-enqueries' , getAllEnquiries);
+router.get('/all-enqueries' , auth,isAdmin,getAllEnquiries);
 
-router.get('/get-enquiry/:id',getEnquiry);
+router.get('/get-enquiry/:id',auth,isAdmin,getEnquiry);
 
 module.exports = router;

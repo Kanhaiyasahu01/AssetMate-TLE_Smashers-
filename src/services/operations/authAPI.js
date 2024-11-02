@@ -97,7 +97,6 @@ export function login(email, password, navigate) {
               email,
               password,
           });
-
           console.log("LOGIN API RESPONSE............", response);
 
           if (!response.data.success) {
@@ -198,16 +197,13 @@ export function getPasswordResetToken(email , setEmailSent) {
     }
   }
 
-  export function updateProfile(formData, token) {
+export function updateProfile(formData, token) {
     return async (dispatch) => {
       const toastId = toast.loading("Updating profile...");
-  
       try {
         // API request to update profile, including the token in headers
         const response = await apiConnector("PUT", UPDATE_PROFILE, formData, {
-          headers: {
             Authorization: `Bearer ${token}`, // Include the token for authentication
-          },
         });
   
         console.log("UPDATE PROFILE RESPONSE:", response);
@@ -231,4 +227,17 @@ export function getPasswordResetToken(email , setEmailSent) {
         toast.dismiss(toastId);
       }
     };
+}
+
+
+export function logoutService(navigate) {
+    return (dispatch) => {
+      dispatch(setToken(null))
+      dispatch(setUser(null))
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      toast.success("Logged Out")
+      navigate("/login")
+    }
   }
+  

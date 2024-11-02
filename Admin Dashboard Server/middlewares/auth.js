@@ -9,13 +9,10 @@ dotenv.config();
 // Middleware to authenticate user requests
 exports.auth = async (req, res, next) => {
 	try {
-		// Extract JWT from request cookies, body, or header
 		const token =
 			req.cookies.token ||
 			req.body.token ||
 			req.headers.authorization?.replace("Bearer ", ""); // Safe access to Authorization header
-		console.log("token",token);
-		console.log(req);
 		// If JWT is missing, return 401 Unauthorized response
 		if (!token) {
 			return res.status(401).json({
@@ -28,7 +25,6 @@ exports.auth = async (req, res, next) => {
 		const decoded = jwt.verify(token, process.env.JWT_SECRET);
 		// Store the decoded JWT payload in the request object for further use
 		req.user = decoded;
-		console.log("req.user",req.user);
 		// Move on to the next middleware or request handler
 		next();
 	} catch (error) {

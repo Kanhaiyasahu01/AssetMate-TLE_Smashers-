@@ -21,23 +21,23 @@ const { auth , isAdmin } = require("../middlewares/auth")
 //                                      Supplier Routes
 // ********************************************************************************************************
 // Route for creating a supplier (without orders)
-router.post("/create",createSupplier);
+router.post("/create",auth,isAdmin,createSupplier);
 
 // Route for creating a billing or shipping address
-router.post("/address/create",createAddress);
+router.post("/address/create",auth,isAdmin,createAddress);
 
 // Route for creating additional details
-router.post("/additional-details/create",createAdditionalDetails);
+router.post("/additional-details/create",auth,isAdmin,createAdditionalDetails);
 
-router.post('/create-supplier-order',createSupplierOrder);
+router.post('/create-supplier-order',auth,isAdmin,createSupplierOrder);
 // Export the router for use in the main application
-router.get('/get-all-suppliers',getAllSuppliers);
+router.get('/get-all-suppliers',auth,isAdmin,getAllSuppliers);
 
-router.delete('/delete-supplier',deleteSupplier)
+router.delete('/delete-supplier',auth,isAdmin,deleteSupplier)
 
-router.get('/get-all-orders',fetchAllSupplierOrders)
+router.get('/get-all-orders',auth,isAdmin,fetchAllSupplierOrders)
 
-router.delete('/delete-order',deleteSupplierOrderById)
+router.delete('/delete-order',auth,isAdmin,deleteSupplierOrderById)
 
-router.get('/get-order-details/:id',getSupplierOrderById)
+router.get('/get-order-details/:id',auth,isAdmin,getSupplierOrderById)
 module.exports = router;

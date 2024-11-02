@@ -17,7 +17,6 @@ export const Login = () => {
     
     const { email, password } = formData;
 
-    // Handle input changes
     const handleOnChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -25,65 +24,66 @@ export const Login = () => {
             [name]: value,
         }));
     };
-    
-    // Handle form submission
+
     const handleOnSubmit = (e) => {
         e.preventDefault();
         dispatch(login(email, password, navigate));
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
-            <div className="text-2xl font-semibold mb-4">Login</div>
-            <form onSubmit={handleOnSubmit} className="mt-6 w-full max-w-sm flex flex-col gap-y-4">
-                <label className="w-full">
-                    <p className="mb-1 text-sm leading-tight">
-                        Email Address <sup className="text-pink-200">*</sup>
-                    </p>
-                    <input
-                        required
-                        type="email"
-                        name="email"
-                        value={email}
-                        onChange={handleOnChange}
-                        placeholder="Enter email address"
-                        className="w-full rounded-lg p-2 shadow-inner border border-gray-300 focus:outline-none focus:ring focus:ring-yellow-300"
-                    />
-                </label>
-                <label className="relative">
-                    <p className="mb-1 text-sm leading-tight">
-                        Password <sup className="text-pink-200">*</sup>
-                    </p>
-                    <input
-                        required
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        value={password}
-                        onChange={handleOnChange}
-                        placeholder="Enter Password"
-                        className="w-full rounded-lg p-2 shadow-inner border border-gray-300 focus:outline-none focus:ring focus:ring-yellow-300"
-                    />
-                    <span
-                        onClick={() => setShowPassword((prev) => !prev)}
-                        className="absolute right-3 top-[38px] z-10 cursor-pointer"
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-green-300 to-blue-300">
+            <div className="w-full max-w-xl bg-white rounded-lg shadow-lg p-8 space-y-6">
+                <h1 className="text-3xl font-bold text-center text-gray-800">Welcome Back</h1>
+                <p className="text-sm text-gray-600 text-center">Login to continue</p>
+                <form onSubmit={handleOnSubmit} className="space-y-4">
+                    <label className="block">
+                        <p className="mb-1 text-sm text-gray-700">
+                            Email Address <sup className="text-red-500">*</sup>
+                        </p>
+                        <input
+                            required
+                            type="email"
+                            name="email"
+                            value={email}
+                            onChange={handleOnChange}
+                            placeholder="Enter email address"
+                            className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </label>
+                    <label className="relative block">
+                        <p className="mb-1 text-sm text-gray-700">
+                            Password <sup className="text-red-500">*</sup>
+                        </p>
+                        <input
+                            required
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            value={password}
+                            onChange={handleOnChange}
+                            placeholder="Enter password"
+                            className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        <span
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            className="absolute right-3 top-9 cursor-pointer text-gray-500"
+                        >
+                            {showPassword ? <AiOutlineEyeInvisible size={24} /> : <AiOutlineEye size={24} />}
+                        </span>
+                        <Link to="/forgot-password" className="mt-1 text-xs text-right text-blue-600 block hover:underline">
+                            Forgot Password?
+                        </Link>
+                    </label>
+                    <button
+                        type="submit"
+                        className="w-full py-2 px-4 text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition"
                     >
-                        {showPassword ? (
-                            <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
-                        ) : (
-                            <AiOutlineEye fontSize={24} fill="#AFB2BF" />
-                        )}
-                    </span>
-                    <Link to="/forgot-password">
-                        <p className="mt-1 ml-auto text-xs text-blue-600 hover:underline">Forgot Password?</p>
-                    </Link>
-                </label>
-                <button
-                    type="submit"
-                    className="mt-6 rounded-lg bg-yellow-50 py-2 px-4 font-medium text-richblack-900 transition duration-200 hover:bg-yellow-100"
-                >
-                    Sign In
-                </button>
-            </form>
+                        Sign In
+                    </button>
+                </form>
+                <div className="text-center">
+                    <p className="text-gray-600">Don't have an account? <Link to="/signup" className="text-blue-600 hover:underline">Sign Up</Link></p>
+                </div>
+            </div>
         </div>
     );
 };

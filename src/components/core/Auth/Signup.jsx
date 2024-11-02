@@ -3,10 +3,9 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { ROLE } from '../../../utils/constant';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 import { setSignupData } from '../../../slice/authSlice';
 import { sendOtp } from '../../../services/operations/authAPI';
-import {toast} from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 export const Signup = () => {
   const [formData, setFormData] = useState({
@@ -18,13 +17,12 @@ export const Signup = () => {
     address: '',
   });
   
-  const dispatch = useDispatch(); // Initialize dispatch
-  const navigate = useNavigate(); 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const role = ROLE.ADMIN;
 
-  // Handle input fields when some value changes
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -41,7 +39,6 @@ export const Signup = () => {
       role,
     };
 
-    // Dispatching actions for OTP verification and setting signup data
     dispatch(setSignupData(signupData));
     dispatch(sendOtp(formData.email, navigate));
 
@@ -57,13 +54,12 @@ export const Signup = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleOnSubmit} className="flex w-full flex-col gap-y-4">
-        <div className="flex gap-x-4 flex-col">
-          <label>
-            <p>
-              Name <sup>*</sup>
-            </p>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-300 to-green-300">
+      <div className="w-full max-w-2xl mt-4  bg-white rounded-lg shadow-md p-8 space-y-6">
+        <h1 className="text-3xl font-bold text-center text-gray-800">Create Account</h1>
+        <form onSubmit={handleOnSubmit} className="space-y-4">
+          <label className="block">
+            <p className="text-sm font-medium text-gray-700 mb-2">Name <sup className="text-red-500">*</sup></p>
             <input
               required
               type="text"
@@ -71,27 +67,25 @@ export const Signup = () => {
               value={formData.name}
               onChange={handleOnChange}
               placeholder="Enter your name"
+              className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </label>
 
-          <label>
-            <p>
-              Email <sup>*</sup>
-            </p>
+          <label className="block">
+            <p className="text-sm font-medium text-gray-700 mb-2">Email <sup className="text-red-500">*</sup></p>
             <input
               required
-              type="text"
+              type="email"
               name="email"
               value={formData.email}
               onChange={handleOnChange}
               placeholder="Enter your email"
+              className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </label>
 
-          <label>
-            <p>
-              Password <sup>*</sup>
-            </p>
+          <label className="relative block">
+            <p className="text-sm font-medium text-gray-700 mb-2">Password <sup className="text-red-500">*</sup></p>
             <input
               required
               type={showPassword ? 'text' : 'password'}
@@ -99,66 +93,62 @@ export const Signup = () => {
               value={formData.password}
               onChange={handleOnChange}
               placeholder="Enter your password"
+              className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <span
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-[38px] z-[10] cursor-pointer"
+              className="absolute right-3 top-[40px] cursor-pointer text-gray-500"
             >
-              {showPassword ? (
-                <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
-              ) : (
-                <AiOutlineEye fontSize={24} fill="#AFB2BF" />
-              )}
+              {showPassword ? <AiOutlineEyeInvisible size={24} /> : <AiOutlineEye size={24} />}
             </span>
           </label>
 
-          <label>
-            <p>
-              Address <sup>*</sup>
-            </p>
+          <label className="block">
+            <p className="text-sm font-medium text-gray-700 mb-2">Address <sup className="text-red-500">*</sup></p>
             <textarea
               required
               name="address"
               value={formData.address}
               onChange={handleOnChange}
               placeholder="Enter your address"
-              rows={4} // You can adjust the number of rows as needed
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              rows={3}
+              className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </label>
 
-          <label>
-            <p>
-              Phone Number <sup>*</sup>
-            </p>
+          <label className="block">
+            <p className="text-sm font-medium text-gray-700 mb-2">Phone Number <sup className="text-red-500">*</sup></p>
             <input
               required
               type="text"
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleOnChange}
-              placeholder="Enter your Phone Number"
+              placeholder="Enter your phone number"
+              className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </label>
 
-          <label>
-            <p>
-              GST IN <sup>*</sup>
-            </p>
+          <label className="block">
+            <p className="text-sm font-medium text-gray-700 mb-2">GST IN <sup className="text-red-500">*</sup></p>
             <input
               type="text"
               name="gstIn"
               value={formData.gstIn}
               onChange={handleOnChange}
               placeholder="Enter your GST IN"
+              className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </label>
-        </div>
 
-        <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">
-          Create Account
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full py-2 px-4 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 transition"
+          >
+            Create Account
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

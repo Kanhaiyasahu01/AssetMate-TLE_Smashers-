@@ -17,7 +17,7 @@ resetPassword,
 resetPasswordToken
 }  = require("../controllers/ResetPassword");
 
-const { auth } = require("../middlewares/auth")
+const { auth ,isAdmin} = require("../middlewares/auth")
 
 
 // Routes for Login, Signup, and Authentication
@@ -44,6 +44,6 @@ router.post("/reset-password-token", resetPasswordToken)
 router.post("/reset-password", resetPassword)
 
 
-router.put('/update-profile',auth,updateProfile);
+router.put('/update-profile',auth,isAdmin,updateProfile);
 // Export the router for use in the main application
 module.exports = router
