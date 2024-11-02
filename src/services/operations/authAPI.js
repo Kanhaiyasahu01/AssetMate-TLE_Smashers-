@@ -10,7 +10,8 @@ const {
     SIGNUP_API,
     LOGIN_API,
     RESETPASSTOKEN_API,
-    RESET_PASSWORD_API
+    RESET_PASSWORD_API,
+    UPDATE_PROFILE
 } = endpoints
   
 export function sendOtp(email, navigate) {
@@ -195,4 +196,39 @@ export function getPasswordResetToken(email , setEmailSent) {
         toast.dismiss(toastId);
       }
     }
+  }
+
+  export function updateProfile(formData, token) {
+    return async (dispatch) => {
+      const toastId = toast.loading("Updating profile...");
+  
+      try {
+        // API request to update profile, including the token in headers
+        const response = await apiConnector("PUT", UPDATE_PROFILE, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token for authentication
+          },
+        });
+  
+        console.log("UPDATE PROFILE RESPONSE:", response);
+  
+        if (!response.data.success) {
+          throw new Error(response.data.message);
+        }
+  
+        // Update user data in local storage and Redux state
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        dispatch(setUser(response.data.user));
+  
+        // Show success message
+        toast.success("Profile updated successfully!");
+      } catch (error) {
+        console.log("UPDATE PROFILE Error:", error);
+        // Show error message
+        toast.error("Unable to update profile. Please try again.");
+      } finally {
+        // Dismiss the loading toast
+        toast.dismiss(toastId);
+      }
+    };
   }

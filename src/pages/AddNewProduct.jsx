@@ -51,7 +51,7 @@ console.log(warehouses);
   };
 
   return (
-    <div className="container mx-auto p-6 w-full border rounded-lg shadow-lg">
+    <div className="container mx-auto p-6 w-full border rounded-lg shadow-lg bg-white">
         {/* make it a card */}
       <div>      
         <h2 className="text-2xl font-bold mb-4">Add New Product to Warehouse</h2>

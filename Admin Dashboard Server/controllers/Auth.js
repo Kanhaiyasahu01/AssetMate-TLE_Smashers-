@@ -252,3 +252,39 @@ exports.changePassword = async (req, res) => {
 };
 
 
+exports.updateProfile = async(req,res)=>{
+  try {
+    const userId = req.user.id ; 
+    console.log("userid",userId);
+    // Get user ID from auth middleware
+
+    // Destructure profile fields from request body
+    const { name, address, phoneNumber, gstIn } = req.body;
+
+    // Update the user profile
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { name, address, phoneNumber, gstIn },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: {
+        name: updatedUser.name,
+        email: updatedUser.email,
+        address: updatedUser.address,
+        phoneNumber: updatedUser.phoneNumber,
+        gstIn: updatedUser.gstIn,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+}

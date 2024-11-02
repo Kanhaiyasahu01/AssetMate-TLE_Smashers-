@@ -8,6 +8,7 @@ const {
   signup,
   sendotp,
   changePassword,
+  updateProfile,
 } = require("../controllers/Auth")
 
 
@@ -42,5 +43,7 @@ router.post("/reset-password-token", resetPasswordToken)
 // Route for resetting user's password after verification
 router.post("/reset-password", resetPassword)
 
+
+router.put('/update-profile',auth,updateProfile);
 // Export the router for use in the main application
 module.exports = router
