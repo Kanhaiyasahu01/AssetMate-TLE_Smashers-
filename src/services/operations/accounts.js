@@ -3,111 +3,123 @@ import { apiConnector } from "../apiconnector";
 import { accountsEndPoints } from "../apis";
 import { setLoading } from "../../slice/authSlice";
 import { deleteAccount, setAccounts } from "../../slice/accountSlice";
-import { setClientTransaction, setSupplierTransaction } from "../../slice/transactionSlice";
-import { deleteClientTransactionSuccess,deleteSupplierTransactionSuccess } from "../../slice/transactionSlice";
+import {
+  setClientTransaction,
+  setSupplierTransaction,
+} from "../../slice/transactionSlice";
+import {
+  deleteClientTransactionSuccess,
+  deleteSupplierTransactionSuccess,
+} from "../../slice/transactionSlice";
 const {
-    CREATE,
-    GET_ALL_ACCOUNT,
-    CREATE_TRANSACTION,
-    DELETE_ACCOUNT,
-    CLIENT_TRANSACTION,
-    SUPPLIER_TRANSACTION,
-    DELETE_CLIENT_TRANSACTION,
-    DELETE_SUPPLIER_TRANSACTION
+  CREATE,
+  GET_ALL_ACCOUNT,
+  CREATE_TRANSACTION,
+  DELETE_ACCOUNT,
+  CLIENT_TRANSACTION,
+  SUPPLIER_TRANSACTION,
+  DELETE_CLIENT_TRANSACTION,
+  DELETE_SUPPLIER_TRANSACTION,
 } = accountsEndPoints;
 
 export const createAccountService = (token, formData, navigate) => {
-    return async (dispatch) => {
-        const toastId = toast.loading("Creating account...");
-        dispatch(setLoading(true));
-        try {
-            const response = await apiConnector("POST", CREATE, formData, {
-                Authorization: `Bearer ${token}`,
-            });
+  return async (dispatch) => {
+    const toastId = toast.loading("Creating account...");
+    dispatch(setLoading(true));
+    try {
+      const response = await apiConnector("POST", CREATE, formData, {
+        Authorization: `Bearer ${token}`,
+      });
 
-            // Log the response for debugging
-            console.log("Create Account Response: ", response);
+      // Log the response for debugging
+      console.log("Create Account Response: ", response);
 
-            if (response?.data?.success) {
-                toast.success("Account Created Successfully");
-                navigate('/accounts/manage-accounts'); // Redirect on success
-            } else {
-                // Handle specific error messages if provided by the API
-                toast.error(response?.data?.message || "Failed to create account");
-            }
-        } catch (error) {
-            // Log error for debugging
-            console.error("Error creating account:", error);
+      if (response?.data?.success) {
+        toast.success("Account Created Successfully");
+        navigate("/accounts/manage-accounts"); // Redirect on success
+      } else {
+        // Handle specific error messages if provided by the API
+        toast.error(response?.data?.message || "Failed to create account");
+      }
+    } catch (error) {
+      // Log error for debugging
+      console.error("Error creating account:", error);
 
-            // Display error message
-            toast.error("Error creating account, please try again later.");
-        } finally {
-            dispatch(setLoading(false));
-            toast.dismiss(toastId); // Dismiss the loading toast
-        }
-    };
+      // Display error message
+      toast.error("Error creating account, please try again later.");
+    } finally {
+      dispatch(setLoading(false));
+      toast.dismiss(toastId); // Dismiss the loading toast
+    }
+  };
 };
 
 export const fetchAccountsService = (token) => {
-    return async (dispatch) => {
-      dispatch(setLoading(true));
-      try {
-        const response = await apiConnector("GET", GET_ALL_ACCOUNT, null, {
-          Authorization: `Bearer ${token}`,
-        }); // Replace GET_ALL_ACCOUNT with your API endpoint for fetching accounts
-  
-        console.log(response);
-        console.log("After response");
-  
-        if (response?.data?.accounts) {
-          dispatch(setAccounts(response.data.accounts)); // Set fetched accounts in the store
-          toast.success("Accounts fetched successfully");
-        } else {
-          toast.error("Failed to fetch accounts");
-        }
-      } catch (error) {
-        console.error("Error fetching accounts:", error);
+  return async (dispatch) => {
+    const toastId = toast.loading("fetching accounts...");
+    try {
+      const response = await apiConnector("GET", GET_ALL_ACCOUNT, null, {
+        Authorization: `Bearer ${token}`,
+      }); // Replace GET_ALL_ACCOUNT with your API endpoint for fetching accounts
+
+      console.log(response);
+      console.log("After response");
+
+      if (response?.data?.accounts) {
+        dispatch(setAccounts(response.data.accounts)); // Set fetched accounts in the store
+        toast.success("Accounts fetched successfully");
+      } else {
         toast.error("Failed to fetch accounts");
-      } finally {
-        dispatch(setLoading(false));
       }
-    };
-  };
-
-
-export const createTransactionService = (token,formData)=>{
-    return async(dispatch) => {
-        dispatch(setLoading(true));
-        try{
-            const response = await apiConnector("POST", CREATE_TRANSACTION, formData, {
-                Authorization: `Bearer ${token}`,
-              }); 
-            
-              console.log("Create transaction Response: ", response);
-              if(response?.data?.success){
-                toast.success("Transaction added");
-              }
-              else{
-                toast.error("Error while adding transaction");
-              }
-            
-        }catch (error) {
-            console.error("Error creating transaction:", error);
-            toast.error("Failed to create transaction");
-        } finally {
-            dispatch(setLoading(false));
-        }
+    } catch (error) {
+      console.error("Error fetching accounts:", error);
+      toast.error("Failed to fetch accounts");
+    } finally {
+      toast.dismiss(toastId);
     }
-}
+  };
+};
 
+export const createTransactionService = (token, formData) => {
+  return async (dispatch) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await apiConnector(
+        "POST",
+        CREATE_TRANSACTION,
+        formData,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+
+      console.log("Create transaction Response: ", response);
+      if (response?.data?.success) {
+        toast.success("Transaction added");
+      } else {
+        toast.error("Error while adding transaction");
+      }
+    } catch (error) {
+      console.error("Error creating transaction:", error);
+      toast.error("Failed to create transaction");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+};
 
 export const deleteAccountService = (token, accountId) => {
   return async (dispatch) => {
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector("DELETE", `${DELETE_ACCOUNT}/${accountId}`, null, {
-        Authorization: `Bearer ${token}`,
-      });
+      const response = await apiConnector(
+        "DELETE",
+        `${DELETE_ACCOUNT}/${accountId}`,
+        null,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
 
       console.log("Account deleted successfully: ", response);
       if (response?.data?.success) {
@@ -128,7 +140,7 @@ export const deleteAccountService = (token, accountId) => {
 
 export const getClientTransactions = (token) => {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading client transaction...")
+    const toastId = toast.loading("Loading client transaction...");
     try {
       const response = await apiConnector("GET", CLIENT_TRANSACTION, null, {
         Authorization: `Bearer ${token}`,
@@ -136,10 +148,9 @@ export const getClientTransactions = (token) => {
 
       if (response?.data?.success) {
         // Dispatch action to set client transactions in the Redux state
-        if(response.data.allClientTransactions.length >0 )
+        if (response.data.allClientTransactions.length > 0)
           dispatch(setClientTransaction(response.data.allClientTransactions));
-        else 
-          toast.error("No client Transaction");
+        else toast.error("No client Transaction");
       } else {
         toast.error("Failed to fetch client transactions.");
       }
@@ -155,7 +166,7 @@ export const getClientTransactions = (token) => {
 // Fetch Supplier Transactions
 export const getSupplierTransactions = (token) => {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading supplier transaction...")
+    const toastId = toast.loading("Loading supplier transaction...");
     try {
       const response = await apiConnector("GET", SUPPLIER_TRANSACTION, null, {
         Authorization: `Bearer ${token}`,
@@ -163,12 +174,13 @@ export const getSupplierTransactions = (token) => {
       console.log(response);
 
       if (response?.data?.success) {
-        if(response.data.allSupplierTransactions.length>0)
-          dispatch(setSupplierTransaction(response.data.allSupplierTransactions));
-        else
-          toast.error("Supplier transaction does not exists");
+        if (response.data.allSupplierTransactions.length > 0)
+          dispatch(
+            setSupplierTransaction(response.data.allSupplierTransactions)
+          );
+        else toast.error("Supplier transaction does not exists");
         // Dispatch action to set supplier transactions in the Redux state
-      } 
+      }
     } catch (error) {
       console.error("Error fetching supplier transactions:", error);
       toast.error("An error occurred while fetching supplier transactions.");
@@ -179,7 +191,7 @@ export const getSupplierTransactions = (token) => {
 };
 
 export const deleteClientTransaction = (token, transactionId) => {
-  console.log("servicec client id",transactionId);
+  console.log("servicec client id", transactionId);
   return async (dispatch) => {
     dispatch(setLoading(true)); // Set loading to true before API call
     try {
@@ -208,9 +220,8 @@ export const deleteClientTransaction = (token, transactionId) => {
   };
 };
 
-
 export const deleteSupplierTransaction = (token, transactionId) => {
-  console.log("servie supplier id",transactionId);
+  console.log("servie supplier id", transactionId);
   return async (dispatch) => {
     dispatch(setLoading(true)); // Set loading to true before API call
     try {

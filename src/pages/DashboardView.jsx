@@ -1,12 +1,20 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Bar, Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
-
+import { fetchAccountsService } from '../services/operations/accounts';
 export const DashboardView = () => {
-  const { accounts = [], loading } = useSelector((state) => state.account); // Default to empty array if accounts is undefined
+  const dispatch = useDispatch();
+  const {token} = useSelector(state=>state.auth);
+  const { accounts, loading } = useSelector((state) => state.account); // Default to empty array if accounts is undefined
+
+  useEffect(() => {
+      dispatch(fetchAccountsService(token)); 
+      console.log("i am calling ")
+  }, []);
+
   console.log("accounts", accounts);
-  
+
   const totalAccounts = accounts.length;
   const totalBalance = accounts.reduce((sum, account) => sum + Number(account.balance), 0).toFixed(2);
   const totalSales = accounts.reduce((sum, account) => sum + Number(account.sale), 0).toFixed(2);
@@ -119,7 +127,6 @@ export const DashboardView = () => {
           </div>
         </div>
       ))}
-
     </div>
   );
 };
