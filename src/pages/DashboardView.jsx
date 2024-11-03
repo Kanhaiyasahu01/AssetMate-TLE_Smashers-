@@ -1,101 +1,125 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-
-// Register the required components from chart.js
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+import { useSelector } from 'react-redux';
+import { Bar, Pie } from 'react-chartjs-2';
+import 'chart.js/auto';
 
 export const DashboardView = () => {
-  const todayInvoiceCount = 10; // Replace with dynamic data
-  const monthInvoiceCount = 200; // Replace with dynamic data
-  const todaySalesAmount = 1500; // Replace with dynamic data
-  const monthSalesAmount = 45000; // Replace with dynamic data
+  const { accounts = [], loading } = useSelector((state) => state.account); // Default to empty array if accounts is undefined
+  console.log("accounts", accounts);
+  
+  const totalAccounts = accounts.length;
+  const totalBalance = accounts.reduce((sum, account) => sum + Number(account.balance), 0).toFixed(2);
+  const totalSales = accounts.reduce((sum, account) => sum + Number(account.sale), 0).toFixed(2);
+  const totalExpenses = accounts.reduce((sum, account) => sum + Number(account.expense), 0).toFixed(2);
+  const netProfit = (totalSales - totalExpenses).toFixed(2);
 
-  // Sample data for sales and invoices
-  const salesData = {
-    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+  const accountTypes = accounts.reduce((acc, account) => {
+    acc[account.accountType] = (acc[account.accountType] || 0) + 1;
+    return acc;
+  }, {});
+
+  if (loading) return <div className="text-center text-xl">Loading...</div>;
+
+  const pieChartData = {
+    labels: Object.keys(accountTypes),
     datasets: [
       {
-        label: 'Sales (₹)',
-        data: [12000, 15000, 13000, 16000], // Replace with dynamic data
-        borderColor: '#06D6A0',
-        backgroundColor: 'rgba(6, 214, 160, 0.2)',
-        tension: 0.4,
+        label: 'Account Types',
+        data: Object.values(accountTypes),
+        backgroundColor: ['#FF9800', '#2196F3', '#4CAF50', '#9C27B0'],
       },
     ],
   };
 
-  const invoiceData = {
-    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+  const barChartData = {
+    labels: ['Sales', 'Expenses'],
     datasets: [
       {
-        label: 'Invoices',
-        data: [30, 45, 35, 50], // Replace with dynamic data
-        borderColor: '#FF1010',
-        backgroundColor: 'rgba(255, 16, 16, 0.2)',
-        tension: 0.4,
+        label: 'Amount in ₹',
+        data: [totalSales, totalExpenses],
+        backgroundColor: ['#FF5722', '#8BC34A'],
       },
     ],
   };
 
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Sales and Invoices Data',
-      },
-    },
+  const accountTypeColors = {
+    Savings: 'bg-richblue-200',
+    Checking: 'bg-caribbeangreen-100',
+    Current: 'bg-pink-100',
+    Other: 'bg-richblack-200',
   };
 
   return (
-    <div className="flex flex-wrap justify-around items-center p-5">
-      {/* Today's Invoice Count */}
-      <div
-        className="bg-gradient-to-br from-caribbeangreen-400 to-caribbeangreen-600 text-white text-center font-bold p-5 m-2 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 w-60"
-      >
-        <h3 className="text-lg">Today's Invoices</h3>
-        <p className="text-2xl">{todayInvoiceCount}</p>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h2 className="text-3xl font-bold mb-6 text-center">Admin Dashboard</h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white shadow-md rounded-lg p-6 text-center">
+          <h3 className="text-xl font-semibold">Total Accounts</h3>
+          <p className="text-2xl font-bold text-richblue-500">{totalAccounts || 0}</p>
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-6 text-center">
+          <h3 className="text-xl font-semibold">Total Balance</h3>
+          <p className="text-2xl font-bold text-caribbeangreen-500">₹{totalBalance || '0.00'}</p>
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-6 text-center">
+          <h3 className="text-xl font-semibold">Net Profit</h3>
+          <p className="text-2xl font-bold text-yellow-500">₹{netProfit || '0.00'}</p>
+        </div>
       </div>
 
-      {/* This Month's Invoice Count */}
-      <div
-        className="bg-gradient-to-br from-red-400 to-red-600 text-white text-center font-bold p-5 m-2 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 w-60"
-      >
-        <h3 className="text-lg">This Month's Invoices</h3>
-        <p className="text-2xl">{monthInvoiceCount}</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-4 text-center">Account Types Breakdown</h3>
+          <div className="h-64 w-full">
+            <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
+          </div>
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-4 text-center">Sales vs Expenses</h3>
+          <div className="h-64 w-full">
+            <Bar data={barChartData} options={{ maintainAspectRatio: false }} />
+          </div>
+        </div>
       </div>
 
-      {/* Today's Sales Amount */}
-      <div
-        className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-white text-center font-bold p-5 m-2 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 w-60"
-      >
-        <h3 className="text-lg">Today's Sales</h3>
-        <p className="text-2xl">₹ {todaySalesAmount}</p>
-      </div>
+      {Object.keys(accountTypeColors).map((accountType) => (
+        <div key={accountType} className="mb-8">
+          <div className={`${accountTypeColors[accountType]} text-richblack-900 p-3 rounded-t-lg font-bold text-lg`}>
+            {accountType}
+          </div>
+          <div className="bg-white shadow-md rounded-b-lg p-4">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="text-gray-600">
+                  <th className="p-2">#</th>
+                  <th className="p-2">Name</th>
+                  <th className="p-2">Account</th>
+                  <th className="p-2">Balance</th>
+                  <th className="p-2">Sales</th>
+                  <th className="p-2">Expenses</th>
+                </tr>
+              </thead>
+              <tbody>
+                {accounts
+                  .filter((account) => account.accountType === accountType)
+                  .map((account, index) => (
+                    <tr key={account.accountNo} className="border-t">
+                      <td className="p-2">{index + 1}</td>
+                      <td className="p-2">{account.name}</td>
+                      <td className="p-2">{account.accountNo}</td>
+                      <td className="p-2">₹{Number(account.balance).toFixed(2)}</td>
+                      <td className="p-2">₹{Number(account.sale).toFixed(2)}</td>
+                      <td className="p-2">₹{Number(account.expense).toFixed(2)}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
 
-      {/* This Month's Sales Amount */}
-      <div
-        className="bg-gradient-to-br from-green-400 to-green-600 text-white text-center font-bold p-5 m-2 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 w-60"
-      >
-        <h3 className="text-lg">This Month's Sales</h3>
-        <p className="text-2xl">₹ {monthSalesAmount}</p>
-      </div>
-
-      {/* Sales Chart */}
-      <div className="w-full max-w-4xl mt-5">
-        <h3 className="text-xl font-bold mb-2 text-center">Sales Trend</h3>
-        <Line data={salesData} options={chartOptions} />
-      </div>
-
-      {/* Invoices Chart */}
-      <div className="w-full max-w-4xl mt-5">
-        <h3 className="text-xl font-bold mb-2 text-center">Invoices Trend</h3>
-        <Line data={invoiceData} options={chartOptions} />
-      </div>
     </div>
   );
 };

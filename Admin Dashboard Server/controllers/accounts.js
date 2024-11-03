@@ -108,119 +108,119 @@ exports.deleteAccount = async (req, res) => {
 
 // create transaction
 exports.createTransaction = async (req, res) => {
-    try {
-      const { careOf, toAccount, amount, transactionType, method, note, isClient } = req.body;
-  
-      let transaction;
-      let careOfModel;
-  
-      // Create a new transaction based on whether it's for a Client or Supplier
-      if (isClient) {
-        // Create Client Transaction
-        transaction = new ClientTransaction({
-          careOf,
-          toAccount,
-          amount,
-          transactionType,
-          method,
-          note,
+  try {
+    const { careOf, toAccount, amount, transactionType, method, note, isClient } = req.body;
+
+    let transaction;
+    let careOfModel;
+
+    // Create a new transaction based on whether it's for a Client or Supplier
+    if (isClient) {
+      // Create Client Transaction
+      transaction = new ClientTransaction({
+        careOf,
+        toAccount,
+        amount,
+        transactionType,
+        method,
+        note,
+      });
+      
+      await transaction.save();
+
+      careOfModel = await Client.findById(careOf);
+      if (!careOfModel) {
+        return res.status(404).json({
+          success: false,
+          message: 'Client not found'
         });
-        
-        await transaction.save();
-  
-        careOfModel = await Client.findById(careOf);
-        if (!careOfModel) {
-          return res.status(404).json({
-            success: false,
-            message: 'Client not found'
-          });
-        }
-  
-        careOfModel.transactions.push(transaction._id); // Push the transaction to the client
-        await careOfModel.save();
-  
-        // Update the Account associated with this transaction for Client Transaction
-        const account = await Account.findById(toAccount);
-        if (!account) {
-          return res.status(404).json({
-            success: false,
-            message: 'Account not found'
-          });
-        }
-  
-        account.clientTransactions.push(transaction._id); // Push to clientTransactions array
-  
-        // Update account's sale or expense value based on the transaction type
-        if (transactionType === 'SALE') {
-          account.sale += amount;
-        } else if (transactionType === 'EXPENSE') {
-          account.expense += amount;
-        }
-  
-        await account.save();
-  
-      } else {
-        // Create Supplier Transaction
-        transaction = new SupplierTransaction({
-          careOf,
-          toAccount,
-          amount,
-          transactionType,
-          method,
-          note,
-        });
-  
-        await transaction.save();
-  
-        careOfModel = await Supplier.findById(careOf);
-        if (!careOfModel) {
-          return res.status(404).json({
-            success: false,
-            message: 'Supplier not found'
-          });
-        }
-  
-        careOfModel.transactions.push(transaction._id); // Push the transaction to the supplier
-        await careOfModel.save();
-  
-        // Update the Account associated with this transaction for Supplier Transaction
-        const account = await Account.findById(toAccount);
-        if (!account) {
-          return res.status(404).json({
-            success: false,
-            message: 'Account not found'
-          });
-        }
-  
-        account.supplierTransactions.push(transaction._id); // Push to supplierTransactions array
-  
-        // Update account's sale or expense value based on the transaction type
-        if (transactionType === 'SALE') {
-          account.sale += amount;
-        } else if (transactionType === 'EXPENSE') {
-          account.expense += amount;
-        }
-  
-        await account.save();
       }
-  
-      // Respond with success
-      return res.status(201).json({
-        success:true,
-        message: 'Transaction created successfully',
-        transaction,
+
+      careOfModel.transactions.push(transaction._id); // Push the transaction to the client
+      await careOfModel.save();
+
+      // Update the Account associated with this transaction for Client Transaction
+      const account = await Account.findById(toAccount);
+      if (!account) {
+        return res.status(404).json({
+          success: false,
+          message: 'Account not found'
+        });
+      }
+
+      account.clientTransactions.push(transaction._id); // Push to clientTransactions array
+
+      // Update account's sale or expense value based on the transaction type
+      if (transactionType === 'SALE') {
+        account.sale = Number(account.sale) + Number(amount);
+      } else if (transactionType === 'EXPENSE') {
+        account.expense = Number(account.expense) + Number(amount);
+      }
+
+      await account.save();
+
+    } else {
+      // Create Supplier Transaction
+      transaction = new SupplierTransaction({
+        careOf,
+        toAccount,
+        amount,
+        transactionType,
+        method,
+        note,
       });
-  
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ 
-        success: false,
-        message: 'Server error', 
-        error 
-      });
+
+      await transaction.save();
+
+      careOfModel = await Supplier.findById(careOf);
+      if (!careOfModel) {
+        return res.status(404).json({
+          success: false,
+          message: 'Supplier not found'
+        });
+      }
+
+      careOfModel.transactions.push(transaction._id); // Push the transaction to the supplier
+      await careOfModel.save();
+
+      // Update the Account associated with this transaction for Supplier Transaction
+      const account = await Account.findById(toAccount);
+      if (!account) {
+        return res.status(404).json({
+          success: false,
+          message: 'Account not found'
+        });
+      }
+
+      account.supplierTransactions.push(transaction._id); // Push to supplierTransactions array
+
+      // Update account's sale or expense value based on the transaction type
+      if (transactionType === 'SALE') {
+        account.sale = Number(account.sale) + Number(amount);
+      } else if (transactionType === 'EXPENSE') {
+        account.expense = Number(account.expense) + Number(amount);
+      }
+
+      await account.save();
     }
-  };
-  
+
+    // Respond with success
+    return res.status(201).json({
+      success: true,
+      message: 'Transaction created successfully',
+      transaction,
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ 
+      success: false,
+      message: 'Server error', 
+      error 
+    });
+  }
+};
+
 
 // Controller to get all accounts
 exports.getAllAccounts = async (req, res) => {

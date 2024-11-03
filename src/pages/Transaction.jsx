@@ -4,6 +4,7 @@ import { fetchSuppliersService } from '../services/operations/supplier';
 import { fetchClientsService } from '../services/operations/client';
 import { fetchAccountsService } from '../services/operations/accounts'; 
 import { createTransactionService } from '../services/operations/accounts';
+import { updateSale, updateExpense } from '../slice/accountSlice';
 
 export const Transaction = () => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ export const Transaction = () => {
     careOf: '',
     toAccount: '',
     amount: '',
-    date: '',
+    date: new Date().toISOString().split('T')[0], // Set default date to today in YYYY-MM-DD format
     transactionType: '',
     method: '',
     note: '',
@@ -46,22 +47,39 @@ export const Transaction = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (parseFloat(formData.amount) <= 0) {
-      alert('Amount must be a positive number');
+      alert("Amount must be a positive number");
       return;
     }
-
+  
     const transactionData = {
       ...formData,
-      amount: parseFloat(formData.amount), 
+      amount: parseFloat(formData.amount),
       date: new Date(formData.date),
       isClient: isClient,
     };
-
+  
+    // Dispatch the createTransactionService and update the store directly
     dispatch(createTransactionService(token, transactionData));
+  
+    // Prepare the action payload for updating sales or expenses
+    const actionPayload = {
+      accountId: formData.toAccount,
+      amount: transactionData.amount,
+    };
+    
+    // Immediately update the Redux state based on transactionType
+    if (transactionData.transactionType === "SALE") {
+      dispatch(updateSale(actionPayload));
+    } else if (transactionData.transactionType === "EXPENSE") {
+      dispatch(updateExpense(actionPayload));
+    }
+  
+    // Log transaction data
+    console.log("Transaction created and store updated successfully:", transactionData);
   };
 
   return (
-    <div className="bg-white  shadow-lg shadow-richblack-100 rounded-lg p-8 mx-auto">
+    <div className="bg-white shadow-lg shadow-richblack-100 rounded-lg p-8 mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-2xl font-semibold text-gray-700">
           {isClient ? 'Client' : 'Supplier'} Transaction
