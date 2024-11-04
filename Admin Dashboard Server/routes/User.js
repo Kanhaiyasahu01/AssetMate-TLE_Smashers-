@@ -29,7 +29,7 @@ const { auth ,isAdmin} = require("../middlewares/auth")
 router.post("/login", login)
 
 // Route for user signup
-router.post("/signup", signup)
+router.post("/signup",signup)
 
 // Route for sending OTP to the user's email
 router.post("/sendotp", sendotp)
@@ -44,6 +44,6 @@ router.post("/reset-password-token", resetPasswordToken)
 router.post("/reset-password", resetPassword)
 
 
-router.put('/update-profile',auth,isAdmin,updateProfile);
+router.put('/update-profile',auth,updateProfile);
 // Export the router for use in the main application
 module.exports = router

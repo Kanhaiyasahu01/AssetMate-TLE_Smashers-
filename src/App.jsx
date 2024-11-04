@@ -42,9 +42,27 @@ import { UpdateEnquiry } from './pages/UpdateEnquiry';
 import { Landing } from './pages/Landing';
 import { ForgetPassword } from './components/profile/ForgetPassword';
 import UpdatePassword from './components/profile/UpdatePassword';
+import PrivateRoute from './components/core/Auth/PrivateRoute';
+import NotFound from './components/common/NotFound';
+import { ROLE } from './utils/constant';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      // Redirect based on user role
+      if (user.role === ROLE.ADMIN) {
+        navigate('/dashboard/my-profile'); // Redirect to dashboard for admin
+      } else if (user.role === ROLE.SALES) {
+        navigate('/sales/quotation'); // Redirect to sales quotation for sales role
+      }
+      else if (user.role === ROLE.STOCK)
+          navigate('/supplier/new-order')
+    }
+  }, [user, navigate]);
 
 
   return (
@@ -102,52 +120,75 @@ function App() {
 
         <Route 
             element={
-              <Dashboard/>
+              <PrivateRoute>
+                  <Dashboard />
+              </PrivateRoute>
             }
           >
+        
+
+        {/* for admin role */}
+        {
+          user?.role === ROLE.ADMIN && (
+            <>
         <Route path="dashboard/my-profile" element={<DashboardView />} />
         <Route path="dashboard/view" element={<DashboardView />} />
-        <Route path="stock/add-warehouse" element={<AddWarehouse />} />
-        <Route path="stock/manage-warehouse" element={<ManageWarehouse />} />
-        <Route path="stock/add-product" element={<AddNewProduct />} />
-        <Route path="stock/manage-product" element={<ManageNewProduct />} />
-        <Route path="crm/add-client" element={<AddClient />} />
-        <Route path="crm/manage-client" element={<ManageClient />} />
-        <Route path="sales/new-invoice" element={<NewInvoice />} />
-        <Route path="sales/quotation" element={<Quotation />} />        
-        <Route path="sales/manage-invoice" element={<ManageInvoice1 />} />        
-        <Route path="sales/manage-quotation" element={<ManageQuotation />} />        
-        <Route path="sales/view/:id" element={<PrintDownloadComponent />} />        
-        <Route path="term/create" element={<TermsForm />} />        
-        <Route path="/sales/viewOrder/:id" element={<PrintOrder />} />        
-        <Route path="/supplier/new-supplier" element={<AddSupplier />} />        
-        <Route path="/supplier/manage-supplier" element={<ManageSupplier />} />        
-        <Route path="/supplier/new-order" element={<SupplierOrder />} />    
-        {/* <Route path="/supplier/viewSupplierOrder/:id" element={<ViewSupplierOrder />} />     */}
-
-        {/* Accounts */}
+        <Route path="term/create" element={<TermsForm />} />
         <Route path="/accounts/accounts" element={<Accounts />} />    
         <Route path="/accounts/manage-accounts" element={<ManageAccounts />} />    
         <Route path="/accounts/transaction" element={<Transaction />} />    
         <Route path="/accounts/manage-transaction" element={<ManageTransaction />} />
         <Route path="/accounts/:id" element={<AccountDetail />} />
-
-
-
-        {/* Products */}
-        <Route path="/stock/update-product/:id" element={<UpdateProduct />} />  
-
-
-        <Route path="/supplier/manage-order" element={<ManageSupplierOrder />} />    
-        <Route path="/supplier/viewOrder/:orderId" element={<ViewSupplierOrder />} />  
-
-        <Route path="/sales/new-enquiry" element={<Enquiry />} />    
-        <Route path="/sales/manage-enquiry" element={<ManageEnquiry />} />    
-        <Route path="/sales/enquiries/view/:id" element={<EnquiryDetails />} />    
-        <Route path="/sales/enquiries/update/:id" element={<UpdateEnquiry />} />
-
         <Route path="/settings/setting" element={<Settings />} />
+        <Route path="crm/add-client" element={<AddClient />} />
+        <Route path="crm/manage-client" element={<ManageClient />} />
+            </>
+            )
+        }
+
+       
+        {
+          user?.role === ROLE.ADMIN || user?.role === ROLE.SALES &&(
+            <>
+         {/* for sales role */}
+            <Route path="sales/new-invoice" element={<NewInvoice />} />
+            <Route path="sales/quotation" element={<Quotation />} />        
+            <Route path="sales/manage-invoice" element={<ManageInvoice1 />} />        
+            <Route path="sales/manage-quotation" element={<ManageQuotation />} />        
+            <Route path="sales/view/:id" element={<PrintDownloadComponent />} />   
+            <Route path="/sales/viewOrder/:id" element={<PrintOrder />} />  
+            <Route path="/sales/new-enquiry" element={<Enquiry />} />    
+            <Route path="/sales/manage-enquiry" element={<ManageEnquiry />} />    
+            <Route path="/sales/enquiries/view/:id" element={<EnquiryDetails />} />    
+            <Route path="/sales/enquiries/update/:id" element={<UpdateEnquiry />} />
+            </>
+            )
+        }
+       
+
+        
+        {
+          user?.role === ROLE.ADMIN || user?.role === ROLE.STOCK && (
+            <>
+     {/* for stock role */}
+     <Route path="/supplier/new-supplier" element={<AddSupplier />} />        
+        <Route path="/supplier/manage-supplier" element={<ManageSupplier />} />        
+        <Route path="/supplier/new-order" element={<SupplierOrder />} />    
+        <Route path="/supplier/manage-order" element={<ManageSupplierOrder />} />    
+        <Route path="/supplier/viewOrder/:orderId" element={<ViewSupplierOrder />} /> 
+
+        <Route path="stock/add-warehouse" element={<AddWarehouse />} />
+        <Route path="stock/manage-warehouse" element={<ManageWarehouse />} />
+        <Route path="stock/add-product" element={<AddNewProduct />} />
+        <Route path="stock/manage-product" element={<ManageNewProduct />} />
+        <Route path="/stock/update-product/:id" element={<UpdateProduct />} />  
+            </>
+            )
+        }
         </Route>
+
+        {/* Default route for unmatched paths */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   )

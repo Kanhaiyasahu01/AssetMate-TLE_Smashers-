@@ -17,22 +17,22 @@ const {
 } = require("../controllers/accounts")
 
 
-router.post('/create',auth,isAdmin,createAccount);
+router.post('/create',auth,createAccount);
 
-router.put('/update/:accountId',auth,isAdmin,updateAccount);
+router.put('/update/:accountId',auth,updateAccount);
 
-router.get('/get-all-accounts',auth,isAdmin,getAllAccounts);
+router.get('/get-all-accounts',auth,getAllAccounts);
 
-router.get('/get-account/:accountId',auth,isAdmin,getAccountById);
+router.get('/get-account/:accountId',auth,getAccountById);
 
-router.delete('/delete/:accountId',auth,isAdmin,deleteAccount);
+router.delete('/delete/:accountId',auth,deleteAccount);
 
-router.post('/create-transaction', auth,isAdmin,createTransaction);
+router.post('/create-transaction', auth,createTransaction);
 
-router.get('/client-transactions',auth,isAdmin,getAllClientTransaction);
+router.get('/client-transactions',auth,getAllClientTransaction);
 
-router.get('/supplier-transactions',auth,isAdmin,getAllSupplierTransaction);
+router.get('/supplier-transactions',auth,getAllSupplierTransaction);
 
-router.delete('/delete-client-transaction/:transactionId',auth,isAdmin,deleteClientTransaction);
-router.delete('/delete-supplier-transaction/:transactionId',auth,isAdmin,deleteSupplierTransaction);
+router.delete('/delete-client-transaction/:transactionId',auth,deleteClientTransaction);
+router.delete('/delete-supplier-transaction/:transactionId',auth,deleteSupplierTransaction);
 module.exports = router;

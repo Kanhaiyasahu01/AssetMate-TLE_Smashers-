@@ -8,9 +8,9 @@ export const DashboardView = () => {
   const {token} = useSelector(state=>state.auth);
   const { accounts, loading } = useSelector((state) => state.account); // Default to empty array if accounts is undefined
 
+
   useEffect(() => {
       dispatch(fetchAccountsService(token)); 
-      console.log("i am calling ")
   }, []);
 
   console.log("accounts", accounts);

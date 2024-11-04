@@ -60,3 +60,75 @@ exports.isAdmin = async (req, res, next) => {
 		});
 	}
 };
+
+exports.isSales = async (req, res, next) => {
+	try {
+		// Find user based on the email from the decoded JWT
+		const userDetails = await User.findOne({ email: req.user.email });
+
+		// Ensure the user exists and has the Admin role
+		if (!userDetails || userDetails.role !== "Sales") {
+			return res.status(403).json({
+				success: false,
+				message: "Access denied. Sales only.",
+			});
+		}
+
+		// Proceed to the next middleware if the user is an Admin
+		next();
+	} catch (error) {
+		// Handle errors, including if the user's role can't be verified
+		return res.status(500).json({
+			success: false,
+			message: "Failed to verify user role",
+		});
+	}
+};
+
+exports.isStock = async (req, res, next) => {
+	try {
+		// Find user based on the email from the decoded JWT
+		const userDetails = await User.findOne({ email: req.user.email });
+
+		// Ensure the user exists and has the Admin role
+		if (!userDetails || userDetails.role !== "Stock") {
+			return res.status(403).json({
+				success: false,
+				message: "Access denied. Stock only.",
+			});
+		}
+
+		// Proceed to the next middleware if the user is an Admin
+		next();
+	} catch (error) {
+		// Handle errors, including if the user's role can't be verified
+		return res.status(500).json({
+			success: false,
+			message: "Failed to verify user role",
+		});
+	}
+};
+
+exports.isMarketing = async (req, res, next) => {
+	try {
+		// Find user based on the email from the decoded JWT
+		const userDetails = await User.findOne({ email: req.user.email });
+
+		// Ensure the user exists and has the Admin role
+		if (!userDetails || userDetails.role !== "Marketing") {
+			return res.status(403).json({
+				success: false,
+				message: "Access denied. Marketing only.",
+			});
+		}
+
+		// Proceed to the next middleware if the user is an Admin
+		next();
+	} catch (error) {
+		// Handle errors, including if the user's role can't be verified
+		return res.status(500).json({
+			success: false,
+			message: "Failed to verify user role",
+		});
+	}
+};

@@ -122,7 +122,7 @@ export const OrderForm = ({ formData, setFormData, onSubmit }) => {
 
           {/* Right Section: Invoice Details */}
           <div className="bg-white p-4 rounded-lg shadow-md shadow-richblack-100 flex-1">
-            <h2 className="text-xl font-semibold mb-4">Invoice Details</h2>
+            <h2 className="text-xl font-semibold mb-4">Dispatch Details</h2>
             <div className="mt-4">
               <label
                 htmlFor="reference"
