@@ -4,12 +4,13 @@ export const ProductListForm = ({ products, onProductListChange }) => {
   const [productForm, setProductForm] = useState({
     productId: "",
     name: "",
-    price: 0, // This will contain the retail price
-    priceAtOrder: 0, // This should contain the total amount calculated
+    price: 0,
+    priceAtOrder: 0,
     quantity: 1,
     tax: 0,
     discount: 0,
   });
+  
   const [productTable, setProductTable] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -31,33 +32,27 @@ export const ProductListForm = ({ products, onProductListChange }) => {
   // Handle input changes for product form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setProductForm({
-      ...productForm,
+    setProductForm((prevForm) => ({
+      ...prevForm,
       [name]: value,
-    });
+    }));
   };
 
   // Handle selecting a product from the dropdown
   const handleSelectProduct = (productId) => {
     const selectedProduct = products.find((product) => product._id === productId);
-
-    const calculatedTax = (selectedProduct.retailPrice * 0.05).toFixed(2); // 5% tax
-    const discount = selectedProduct.discount || 0; // default discount as 0%
-    const totalPrice = calculateTotal(
-      selectedProduct.retailPrice,
-      productForm.quantity || 1,
-      calculatedTax,
-      discount
-    );
-
+    
+    const netTax = Math.max(selectedProduct.tax - selectedProduct.discount, 0);
+    const totalPrice = calculateTotal(selectedProduct.retailPrice, productForm.quantity || 1, netTax);
+    
     setProductForm({
       productId: selectedProduct._id,
       name: selectedProduct.name,
-      price: selectedProduct.retailPrice, // Store the retail price
-      priceAtOrder: totalPrice, // Store the calculated total
+      price: selectedProduct.retailPrice,
+      priceAtOrder: totalPrice,
       quantity: productForm.quantity || 1,
-      tax: calculatedTax,
-      discount: discount,
+      tax: selectedProduct.tax,
+      discount: selectedProduct.discount || 0,
     });
 
     setSearchTerm("");
@@ -65,48 +60,64 @@ export const ProductListForm = ({ products, onProductListChange }) => {
   };
 
   // Calculate total with tax and discount
-  const calculateTotal = (price, quantity, tax, discount) => {
-    const totalBeforeTaxDiscount = price * quantity;
-    const totalTax = parseFloat(tax);
-    const totalDiscount = (totalBeforeTaxDiscount * discount) / 100;
-    return (totalBeforeTaxDiscount + totalTax - totalDiscount).toFixed(2);
+  const calculateTotal = (price, quantity, netTax) => {
+    const totalBeforeTax = price * quantity;
+    const totalWithTax = totalBeforeTax + (totalBeforeTax * (netTax / 100));
+    return totalWithTax.toFixed(2);
   };
+
+  // Update priceAtOrder when quantity changes
+  useEffect(() => {
+    if (productForm.productId) {
+      const selectedProduct = products.find(product => product._id === productForm.productId);
+      const netTax = Math.max(selectedProduct.tax - selectedProduct.discount, 0);
+      const updatedPriceAtOrder = calculateTotal(selectedProduct.retailPrice, productForm.quantity, netTax);
+      
+      setProductForm(prevForm => ({
+        ...prevForm,
+        priceAtOrder: updatedPriceAtOrder,
+      }));
+    }
+  }, [productForm.quantity, productForm.productId, products]);
 
   // Add product to table
   const handleAddProduct = () => {
     if (!productForm.productId) {
-      alert("Please select a product");
-      return;
+        alert("Please select a product");
+        return;
     }
 
     let updatedProductTable = [...productTable];
 
     if (isEditing) {
-      updatedProductTable[editIndex] = {
-        ...productForm,
-        total: productForm.priceAtOrder, // Already calculated total
-      };
-      setIsEditing(false);
-      setEditIndex(null);
+        updatedProductTable[editIndex] = {
+            ...productForm,
+            total: productForm.priceAtOrder,
+        };
+        setIsEditing(false);
+        setEditIndex(null);
     } else {
-      const existingProductIndex = updatedProductTable.findIndex(
-        (product) => product.productId === productForm.productId
-      );
-
-      if (existingProductIndex > -1) {
-        updatedProductTable[existingProductIndex].quantity += parseInt(productForm.quantity, 10);
-        updatedProductTable[existingProductIndex].priceAtOrder = calculateTotal(
-          updatedProductTable[existingProductIndex].price,
-          updatedProductTable[existingProductIndex].quantity,
-          updatedProductTable[existingProductIndex].tax,
-          updatedProductTable[existingProductIndex].discount
+        const existingProductIndex = updatedProductTable.findIndex(
+            (product) => product.productId === productForm.productId
         );
-      } else {
-        updatedProductTable.push({
-          ...productForm,
-          total: productForm.priceAtOrder, // Already contains the calculated total
-        });
-      }
+
+        if (existingProductIndex > -1) {
+            // If the product already exists, update the quantity and total
+            const existingProduct = updatedProductTable[existingProductIndex];
+            existingProduct.quantity += parseInt(productForm.quantity, 10);
+            existingProduct.priceAtOrder = calculateTotal(
+                existingProduct.price,
+                existingProduct.quantity,
+                existingProduct.tax
+            );
+            updatedProductTable[existingProductIndex] = existingProduct; // Update the existing product
+        } else {
+            // If it doesn't exist, add a new product
+            updatedProductTable.push({
+                ...productForm,
+                total: productForm.priceAtOrder,
+            });
+        }
     }
 
     setProductTable(updatedProductTable);
@@ -114,15 +125,15 @@ export const ProductListForm = ({ products, onProductListChange }) => {
 
     // Reset form
     setProductForm({
-      productId: "",
-      name: "",
-      price: 0,
-      priceAtOrder: 0,
-      quantity: 1,
-      tax: 0,
-      discount: 0,
+        productId: "",
+        name: "",
+        price: 0,
+        priceAtOrder: 0,
+        quantity: 1,
+        tax: 0,
+        discount: 0,
     });
-  };
+};
 
   const handleEditProduct = (index) => {
     const productToEdit = productTable[index];
@@ -248,38 +259,50 @@ export const ProductListForm = ({ products, onProductListChange }) => {
                   isEditing ? "bg-green-700" : "bg-blue-700"
                 }`}
               >
-                {isEditing ? "Save" : "Add"}
+                {isEditing ? "Update" : "Add"}
               </button>
             </td>
           </tr>
+        </tbody>
+      </table>
 
-          {productTable.length > 0 &&
-            productTable.map((product, index) => (
-              <tr key={index}>
-                <td className="px-4 py-2 border">{product.name}</td>
-                <td className="px-4 py-2 border">{product.quantity}</td>
-                <td className="px-4 py-2 border">{product.price}</td>
-                <td className="px-4 py-2 border">{product.tax}</td>
-                <td className="px-4 py-2 border">{product.discount}</td>
-                <td className="px-4 py-2 border">
-                  {calculateTotal(product.price, product.quantity, product.tax, product.discount)}
-                </td>
-                <td className="px-4 py-2 border">
-                  <button
-                    onClick={() => handleEditProduct(index)}
-                    className="py-1 px-3 mr-2 bg-yellow-500 text-white rounded-md"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProduct(index)}
-                    className="py-1 px-3 bg-red-600 text-white rounded-md"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+      {/* Render the product table */}
+      <h3 className="text-lg font-semibold text-gray-700">Product Table</h3>
+      <table className="min-w-full table-auto border-collapse border border-gray-300">
+        <thead className="bg-gray-200">
+          <tr>
+            <th className="px-4 py-2 border">Product Name</th>
+            <th className="px-4 py-2 border">Quantity</th>
+            <th className="px-4 py-2 border">Price (Retail)</th>
+            <th className="px-4 py-2 border">Total</th>
+            <th className="px-4 py-2 border">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {productTable.map((product, index) => (
+            <tr key={index}>
+              <td className="px-4 py-2 border">{product.name}</td>
+              <td className="px-4 py-2 border">{product.quantity}</td>
+              <td className="px-4 py-2 border">{product.price}</td>
+              <td className="px-4 py-2 border">{product.priceAtOrder}</td>
+              <td className="px-4 py-2 border">
+                <button
+                  type="button"
+                  onClick={() => handleEditProduct(index)}
+                  className="bg-yellow-500 text-white py-1 px-2 rounded-md hover:bg-yellow-600"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteProduct(index)}
+                  className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 ml-2"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

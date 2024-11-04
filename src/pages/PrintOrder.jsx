@@ -1,22 +1,30 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import html2pdf from 'html2pdf.js';
 import { PrintOrderComponent } from './PrintOrderComponent';
 
 export const PrintOrder = () => {
-  const componentRef = useRef(null);
+  const componentRef = useRef(null);  // Initialize the reference
+  const [isDownloading, setIsDownloading] = useState(false); // State to manage download mode
 
+  // Function to print the order
   const handlePrint = () => {
-    const printContent = componentRef.current.cloneNode(true);
-    const printWindow = window.open('', '', 'width=800,height=600');
+    const printContent = componentRef.current.cloneNode(true);  // Clone the content
+
+    // Remove checkbox elements from the cloned content
+    const checkboxes = printContent.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => checkbox.remove());
+
+    const printWindow = window.open('', '', 'width=800,height=600');  // Open a new print window
 
     if (printWindow) {
+      // Function to handle image loading
       const waitForImagesToLoad = (content, callback) => {
         const images = content.querySelectorAll('img');
         let loadedImagesCount = 0;
         const totalImages = images.length;
 
         if (totalImages === 0) {
-          callback();
+          callback();  // No images, trigger print immediately
           return;
         }
 
@@ -24,18 +32,19 @@ export const PrintOrder = () => {
           img.onload = () => {
             loadedImagesCount++;
             if (loadedImagesCount === totalImages) {
-              callback();
+              callback();  // All images loaded
             }
           };
           img.onerror = () => {
             loadedImagesCount++;
             if (loadedImagesCount === totalImages) {
-              callback();
+              callback();  // Continue even if an image fails to load
             }
           };
         });
       };
 
+      // Inject the content into the print window
       printWindow.document.write(`
         <html>
           <head>
@@ -58,63 +67,63 @@ export const PrintOrder = () => {
             </style>
           </head>
           <body>
-            ${printContent.innerHTML}
+            <div>${printContent.innerHTML}</div>  <!-- Include all content -->
           </body>
         </html>
       `);
 
+      // Wait for images to load before triggering the print dialog
       waitForImagesToLoad(printWindow.document, () => {
-        printWindow.document.close();
-        printWindow.focus();
-        printWindow.print();
-        printWindow.close();
+        printWindow.document.close();  // Close the document stream
+        printWindow.focus();           // Focus on the new window
+        printWindow.print();           // Trigger the print dialog
+        printWindow.close();           // Close the print window after printing
       });
     } else {
       console.error('Failed to open print window.');
     }
   };
 
+  // Function to download the component as PDF
   const handleDownloadPdf = () => {
+    setIsDownloading(true); // Set download mode
     const element = componentRef.current;
     const opt = {
       filename: 'order.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+      html2canvas: { scale: 2, useCORS: true },  // Ensure high-quality rendering with CORS enabled for images
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },  // Adjusted for A4 paper
     };
 
     if (element) {
-      html2pdf().from(element).set(opt).save();
-    } else {
-      console.error('No component reference available for PDF generation.');
+      html2pdf().from(element).set(opt).save().then(() => {
+        setIsDownloading(false); // Reset download mode after download
+      });
     }
   };
 
   return (
     <div>
-      {/* Button container */}
-      <div className="p-4 mb-4 w-full flex justify-center">
-        <div className="w-[800px] bg-white shadow-xl p-6 rounded-lg">
-          <div className="flex justify-center gap-4">
-            <button 
-              onClick={handlePrint} 
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
-            >
-              Print Order
-            </button>
-            <button 
-              onClick={handleDownloadPdf} 
-              className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg"
-            >
-              Download as PDF
-            </button>
-          </div>
+      <div className="bg-gradient-to-r from-blue-500 to-blue-400 shadow-lg rounded-lg p-6 mb-4 max-w-3xl w-full mx-auto">
+        <div className="flex justify-evenly">
+          <button 
+            onClick={handlePrint} 
+            className="bg-white hover:bg-gray-100 text-blue-500 font-bold py-3 px-6 rounded-lg shadow transition duration-200 ease-in-out transform hover:scale-105"
+          >
+            Print Order
+          </button>
+          <button 
+            onClick={handleDownloadPdf} 
+            className="bg-white hover:bg-gray-100 text-green-500 font-bold py-3 px-6 rounded-lg shadow transition duration-200 ease-in-out transform hover:scale-105"
+          >
+            Download as PDF
+          </button>
         </div>
       </div>
 
       {/* Render the PrintOrderComponent with the ref */}
       <div ref={componentRef}>
-        <PrintOrderComponent />
+        <PrintOrderComponent isDownloading={isDownloading} /> {/* Pass the download state */}
       </div>
     </div>
   );

@@ -61,7 +61,7 @@ const PrintDownloadComponent = () => {
             </style>
           </head>
           <body>
-            ${printContent.innerHTML}
+            <div>${componentRef.current.innerHTML}</div>  <!-- Include all content -->
           </body>
         </html>
       `);
@@ -89,42 +89,30 @@ const PrintDownloadComponent = () => {
     };
 
     if (element) {
-      html2pdf().from(element).set(opt).save();
-    } else {
-      console.error('No component reference available for PDF generation.');
+      html2pdf().from(element).set(opt).save(); // Save the PDF
     }
   };
 
   return (
-    <div>
-      {/* Button to trigger print */}
-      <div className=" p-4 mb-4 w-full flex justify-center">
+    <div >
+<div className="bg-gradient-to-r from-blue-500 to-blue-400 shadow-lg rounded-lg p-6 mb-4 max-w-3xl w-full mx-auto">
+  <div className="flex justify-evenly">
+    <button 
+      onClick={handlePrint} 
+      className="bg-white hover:bg-gray-100 text-blue-500 font-bold py-3 px-6 rounded-lg shadow transition duration-200 ease-in-out transform hover:scale-105"
+    >
+      Print
+    </button>
+    <button 
+      onClick={handleDownloadPdf} 
+      className="bg-white hover:bg-gray-100 text-green-500 font-bold py-3 px-6 rounded-lg shadow transition duration-200 ease-in-out transform hover:scale-105"
+    >
+      Download PDF
+    </button>
+  </div>
+</div>
+      <PrintQuotation ref={componentRef} />
 
-      <div className="w-[800px] bg-white shadow-xl p-6 rounded-lg">
-      <div className="flex justify-center gap-4">
-          <button 
-            onClick={handlePrint} 
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
-          >
-            Print Quotation
-          </button>
-          <button 
-            onClick={handleDownloadPdf} 
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg"
-          >
-            Download as PDF
-          </button>
-        </div>
-
-      </div>
-
-        
-      </div>
-
-      {/* Render the PrintQuotation component and pass the ref */}
-      <div ref={componentRef}>
-        <PrintQuotation />
-      </div>
     </div>
   );
 };
