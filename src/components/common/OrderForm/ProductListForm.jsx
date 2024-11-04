@@ -123,6 +123,7 @@ export const ProductListForm = ({ products, onProductListChange }) => {
     setProductTable(updatedProductTable);
     onProductListChange(updatedProductTable);
 
+    
     // Reset form
     setProductForm({
         productId: "",

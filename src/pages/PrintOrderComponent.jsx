@@ -32,6 +32,7 @@ export const PrintOrderComponent = forwardRef((props, ref) => {
     if (id) {
       dispatch(fetchOrderService(token, id, setOrderData));
     }
+    console.log("order data",orderData)
   }, [id, token, dispatch]);
 
   // Fetch terms data
@@ -134,6 +135,13 @@ export const PrintOrderComponent = forwardRef((props, ref) => {
             </tbody>
           </table>
         </div>
+
+        <div className='flex w-full justify-end items-center'>
+  <p className='text-lg font-semibold text-gray-800'>
+    Grand Total: <span className='text-xl font-bold text-green-600'>{orderData.grandTotal}</span>
+  </p>
+</div>
+
 
         {termsData && (
           <div style={{ marginTop: '20px' }}>

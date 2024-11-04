@@ -185,7 +185,11 @@ export const PrintQuotation = forwardRef((props, ref) => {
             </tbody>
           </table>
         </div>
-
+<div className='flex w-full justify-end items-center'>
+  <p className='text-lg font-semibold text-gray-800'>
+    Grand Total: <span className='text-xl font-bold text-green-600'>{quotationData.grandTotal}</span>
+  </p>
+</div>
         {termsData && (
           <div style={{ marginTop: '20px' }}>
             <h3><strong>Terms and Conditions:</strong></h3>

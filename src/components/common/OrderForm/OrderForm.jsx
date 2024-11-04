@@ -34,6 +34,19 @@ export const OrderForm = ({ formData, setFormData, onSubmit }) => {
       productList: newProductList,
     });
   };
+  useEffect(() => {
+    const calculateGrandTotal = () => {
+      const grandTotal = formData.productList.reduce((total, product) => {
+        return total + parseFloat(product.priceAtOrder || 0);
+      }, 0);
+      setFormData((prevData) => ({ ...prevData, grandTotal: grandTotal.toFixed(2) }));
+    };
+
+    if (formData.productList) {
+      calculateGrandTotal();
+    }
+  }, [formData.productList, setFormData]);
+
 
   useEffect(() => {
     if (formData.warehouse) {
@@ -178,58 +191,7 @@ export const OrderForm = ({ formData, setFormData, onSubmit }) => {
         {/* Summary */}
         <div className="bg-white p-4 rounded-lg shadow-md shadow-richblack-100 mt-8">
           <h2 className="text-xl font-semibold mb-4">Summary</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <label
-                htmlFor="totalTax"
-                className="block font-medium text-gray-700"
-              >
-                Total Tax
-              </label>
-              <input
-                type="number"
-                id="totalTax"
-                name="totalTax"
-                value={formData.totalTax}
-                onChange={handleInputChange}
-                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
 
-            <div>
-              <label
-                htmlFor="totalDiscount"
-                className="block font-medium text-gray-700"
-              >
-                Total Discount
-              </label>
-              <input
-                type="number"
-                id="totalDiscount"
-                name="totalDiscount"
-                value={formData.totalDiscount}
-                onChange={handleInputChange}
-                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="shipping"
-                className="block font-medium text-gray-700"
-              >
-                Shipping Charge
-              </label>
-              <input
-                type="number"
-                id="shipping"
-                name="shipping"
-                value={formData.shipping}
-                onChange={handleInputChange}
-                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-          </div>
 
           {/* Grand Total */}
           <div className="mt-8">

@@ -30,6 +30,7 @@ export const EnquiryDetails = () => {
             .table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
             .table th { background-color: #f2f2f2; }
             .note { margin-top: 20px; }
+            .no-print { display: none; } /* Hide buttons during print */
           </style>
         </head>
         <body>
@@ -40,16 +41,28 @@ export const EnquiryDetails = () => {
     printWindow.document.close();
     printWindow.print();
   };
+
   const handleDownloadPdf = () => {
     const opt = {
-      margin: [0.5, 0.5, 1, 0.5], // Extra bottom margin to prevent cut-off
+      margin: [0.5, 0.5, 1, 0.5],
       filename: 'enquiry_details.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 3, useCORS: true, scrollY: 0, scrollX: 0 }, // Removed height restriction
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }, // Switched back to 'a4'
+      html2canvas: { scale: 3, useCORS: true, scrollY: 0, scrollX: 0 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
     };
-    
-    html2pdf().from(componentRef.current).set(opt).save();
+
+    // Add class to hide buttons before downloading
+    const buttons = document.querySelectorAll('.no-print');
+    buttons.forEach(button => {
+      button.style.display = 'none';
+    });
+
+    html2pdf().from(componentRef.current).set(opt).save().then(() => {
+      // Show buttons again after downloading
+      buttons.forEach(button => {
+        button.style.display = '';
+      });
+    });
   };
 
   if (!enquiry) {
@@ -58,12 +71,14 @@ export const EnquiryDetails = () => {
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen flex justify-center">
-      <div className=" w-full bg-white shadow-lg rounded-lg p-6">
+      <div ref={componentRef} className="w-full bg-white shadow-lg rounded-lg p-6">
         <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">Enquiry Details</h2>
-        <div ref={componentRef} className="details-container">
-          <p className="text-lg font-medium"><strong>Plant Name:</strong> {enquiry.plantName}</p>
+        <div className="details-container">
+        <div className='shadow-md p-4 shadow-richblack-50'>
+        <p className="text-lg font-medium"><strong>Plant Name:</strong> {enquiry.plantName}</p>
           <p className="text-lg font-medium"><strong>Contact Person:</strong> {enquiry.contactPerson}</p>
           <p className="text-lg font-medium"><strong>Created At:</strong> {new Date(enquiry.createdAt).toLocaleDateString()}</p>
+        </div>
 
           {/* Material Required Table */}
           <div className="mt-6">
@@ -113,7 +128,7 @@ export const EnquiryDetails = () => {
           )}
         </div>
 
-        <div className="flex justify-center space-x-4 mt-8">
+        <div className="flex justify-center space-x-4 mt-8 no-print">
           <button 
             onClick={handlePrint} 
             className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded transition"

@@ -45,21 +45,23 @@ export const ManageEnquiry = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Manage Enquiries</h2>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Search by Plant Name"
-        className="p-2 border rounded w-full mb-4"
-      />
-      <input
-        type="date"
-        value={searchDate}
-        onChange={handleDateChange}
-        className="p-2 border rounded w-full mb-4"
-        placeholder="Search by Date"
-      />
+      <div className="bg-white shadow-md rounded p-4 mb-4">
+        <h2 className="text-2xl font-semibold mb-4">Manage Enquiries</h2>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search by Plant Name"
+          className="p-2 border rounded w-full mb-4"
+        />
+        <input
+          type="date"
+          value={searchDate}
+          onChange={handleDateChange}
+          className="p-2 border rounded w-full mb-4"
+          placeholder="Search by Date"
+        />
+      </div>
       <div className="bg-white shadow-md rounded p-4">
         {filteredEnquiries.length > 0 ? (
           <table className="w-full table-auto border-collapse">
