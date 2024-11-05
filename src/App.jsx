@@ -52,20 +52,6 @@ function App() {
 
   const {user} = useSelector((state)=>state.profile);
   const navigate = useNavigate();
-  useEffect(() => {
-    if (user) {
-      // Redirect based on user role
-      if (user.role === ROLE.ADMIN) {
-        navigate('/dashboard/my-profile'); // Redirect to dashboard for admin
-      } else if (user.role === ROLE.SALES) {
-        navigate('/sales/quotation'); // Redirect to sales quotation for sales role
-      }
-      else if (user.role === ROLE.STOCK)
-          navigate('/supplier/new-order')
-      else if(user.role === ROLE.MARKETING)
-          navigate('/marketing/quotation');
-    }
-  }, []);
 
 
   return (
@@ -128,13 +114,12 @@ function App() {
               </PrivateRoute>
             }
           >
-        
-
+          <Route path="dashboard/my-profile" element={<Settings />} />
         {/* for admin role */}
         {
           user?.role === ROLE.ADMIN && (
             <>
-        <Route path="dashboard/my-profile" element={<DashboardView />} />
+        {/* <Route path="dashboard/my-profile" element={<DashboardView />} /> */}
         <Route path="dashboard/view" element={<DashboardView />} />
         <Route path="term/create" element={<TermsForm />} />
         <Route path="/accounts/accounts" element={<Accounts />} />    
@@ -142,7 +127,7 @@ function App() {
         <Route path="/accounts/transaction" element={<Transaction />} />    
         <Route path="/accounts/manage-transaction" element={<ManageTransaction />} />
         <Route path="/accounts/:id" element={<AccountDetail />} />
-        <Route path="/settings/setting" element={<Settings />} />
+        <Route path="/settings/setting" index element={<Settings />} />
         <Route path="crm/add-client" element={<AddClient />} />
         <Route path="crm/manage-client" element={<ManageClient />} />
             </>
@@ -168,7 +153,7 @@ function App() {
         }
        
        {
-        (user.role === ROLE.ADMIN || user.role === ROLE.SALES || user.role === ROLE.MARKETING) && (
+        (user?.role === ROLE.ADMIN || user?.role === ROLE.SALES || user?.role === ROLE.MARKETING) && (
           <Route path="sales/view/:id" element={<PrintDownloadComponent />} />   
         )
        }

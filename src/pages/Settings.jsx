@@ -97,12 +97,15 @@ export const Settings = () => {
             </>
           ) : (
             <>
-              <p><strong>Name:</strong> {user.name}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Address:</strong> {user.address}</p>
-              <p><strong>Phone Number:</strong> {user.phoneNumber}</p>
-              <p><strong>GSTIN:</strong> {user.gstIn || 'N/A'}</p>
-            </>
+                <p><strong>Name:</strong> {user.name}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Address:</strong> {user.address}</p>
+                <p><strong>Phone Number:</strong> {user.phoneNumber}</p>
+                {user.role === "Admin" && (
+                  <p><strong>GSTIN:</strong> {user.gstIn || 'N/A'}</p>
+                )}
+              </>
+
           )}
         </div>
 
@@ -123,12 +126,14 @@ export const Settings = () => {
               </button>
             </>
           ) : (
-            <button
-              onClick={() => setEditMode(true)}
-              className="w-full md:w-auto px-6 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-200"
-            >
-              Edit Profile
-            </button>
+            user.role === 'Admin' && (
+              <button
+                onClick={() => setEditMode(true)}
+                className="w-full md:w-auto px-6 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-200"
+              >
+                Edit Profile
+              </button>
+            )
           )}
           <button
             onClick={handleLogout}
