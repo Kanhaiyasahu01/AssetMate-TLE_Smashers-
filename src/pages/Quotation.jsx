@@ -26,7 +26,7 @@ export const Quotation = () => {
   });
 
   // This function will handle the final submission of the quotation
-  const submitHandler =  () => {
+  const submitHandler =  (marketingUserId) => {
     console.log("Final Form Data:", formData);
     const clientOrderData = {
         client: formData.client,
@@ -53,14 +53,8 @@ export const Quotation = () => {
       console.log("after formating")
       console.log(clientOrderData);
 
-    //   const createdQuotation = await dispatch(createQuotationService(token, clientOrderData));
 
-    // if (createdQuotation) {
-    //   // Navigate to another route to print/display the obtained data
-    //   history.push(`/print-quotation/${createdQuotation._id}`); // Adjust this route based on your application
-    // }
-    // You can now call your API or dispatch an action here
-    dispatch(createQuotationService(token, clientOrderData,navigate));
+    dispatch(createQuotationService(token, clientOrderData,navigate,marketingUserId));
   };
 
   return (

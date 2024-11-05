@@ -44,6 +44,7 @@ import { ForgetPassword } from './components/profile/ForgetPassword';
 import UpdatePassword from './components/profile/UpdatePassword';
 import PrivateRoute from './components/core/Auth/PrivateRoute';
 import NotFound from './components/common/NotFound';
+import { ViewMarketingQuotations } from './pages/ViewMarketingQuotations';
 import { ROLE } from './utils/constant';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -61,8 +62,10 @@ function App() {
       }
       else if (user.role === ROLE.STOCK)
           navigate('/supplier/new-order')
+      else if(user.role === ROLE.MARKETING)
+          navigate('/marketing/quotation');
     }
-  }, [user, navigate]);
+  }, []);
 
 
   return (
@@ -148,14 +151,13 @@ function App() {
 
        
         {
-          user?.role === ROLE.ADMIN || user?.role === ROLE.SALES &&(
+         ( user?.role === ROLE.ADMIN || user?.role === ROLE.SALES) &&(
             <>
          {/* for sales role */}
             <Route path="sales/new-invoice" element={<NewInvoice />} />
             <Route path="sales/quotation" element={<Quotation />} />        
             <Route path="sales/manage-invoice" element={<ManageInvoice1 />} />        
             <Route path="sales/manage-quotation" element={<ManageQuotation />} />        
-            <Route path="sales/view/:id" element={<PrintDownloadComponent />} />   
             <Route path="/sales/viewOrder/:id" element={<PrintOrder />} />  
             <Route path="/sales/new-enquiry" element={<Enquiry />} />    
             <Route path="/sales/manage-enquiry" element={<ManageEnquiry />} />    
@@ -165,13 +167,18 @@ function App() {
             )
         }
        
+       {
+        (user.role === ROLE.ADMIN || user.role === ROLE.SALES || user.role === ROLE.MARKETING) && (
+          <Route path="sales/view/:id" element={<PrintDownloadComponent />} />   
+        )
+       }
 
-        
+
         {
-          user?.role === ROLE.ADMIN || user?.role === ROLE.STOCK && (
+          (user?.role === ROLE.ADMIN || user?.role === ROLE.STOCK) && (
             <>
      {/* for stock role */}
-     <Route path="/supplier/new-supplier" element={<AddSupplier />} />        
+        <Route path="/supplier/new-supplier" element={<AddSupplier />} />        
         <Route path="/supplier/manage-supplier" element={<ManageSupplier />} />        
         <Route path="/supplier/new-order" element={<SupplierOrder />} />    
         <Route path="/supplier/manage-order" element={<ManageSupplierOrder />} />    
@@ -185,6 +192,11 @@ function App() {
             </>
             )
         }
+
+        {/* Marketing roles */}
+        <Route path="/marketing/quotation" element={<ViewMarketingQuotations />} />  
+
+
         </Route>
 
         {/* Default route for unmatched paths */}

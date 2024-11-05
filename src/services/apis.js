@@ -82,3 +82,10 @@ export const enquiryEndPoints = {
     GET_ENQUIRY:`${BASE_URL}/enquiry/get-enquiry`,
     UPDATE:`${BASE_URL}/enquiry/update`,
 }
+
+
+export const marketingEndPoints = {
+    ADD_QUOTATION:`${BASE_URL}/marketing/add-quotation`,
+    GET_MARKETING_USERS:`${BASE_URL}/marketing/get-users`,
+    GET_MARKETING_QUOTATION:`${BASE_URL}/marketing/get-all-quotations`,
+}

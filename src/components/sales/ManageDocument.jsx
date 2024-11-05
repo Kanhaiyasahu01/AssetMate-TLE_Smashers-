@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchMarketingQuotations } from '../../services/operations/marketing';
 import {
   fetchAllOrdersService,
   deleteOrderByIdService,
@@ -26,7 +27,9 @@ export const ManageDocument = ({ type }) => {
   useEffect(() => {
     if (type === 'invoice') {
       dispatch(fetchAllOrdersService(token, setDocuments));
-    } else {
+    } else if(type === 'marketing')
+        dispatch(fetchMarketingQuotations(token,setDocuments));
+    else {
       dispatch(fetchAllQuotationsService(token, setDocuments));
     }
   }, [dispatch, token, type]);

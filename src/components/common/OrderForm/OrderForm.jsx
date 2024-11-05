@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { ProductListForm } from "./ProductListForm";
 import { fetchClientsService } from "../../../services/operations/client";
 import { fetchWarehousesService } from "../../../services/operations/warehouse";
+import { getMarketingUsersService } from "../../../services/operations/marketing";
+
 
 export const OrderForm = ({ formData, setFormData, onSubmit }) => {
   const dispatch = useDispatch();
@@ -11,6 +13,9 @@ export const OrderForm = ({ formData, setFormData, onSubmit }) => {
   const { warehouses } = useSelector((state) => state.warehouse);
   const [warehouseProducts, setWarehouseProducts] = useState([]);
 
+  const {marketingUsers} = useSelector(state => state.marketing);
+  const [marketingUser, setMarketingUser] = useState('');
+
   useEffect(() => {
     if (warehouses.length === 0) {
       dispatch(fetchWarehousesService(token));
@@ -18,6 +23,11 @@ export const OrderForm = ({ formData, setFormData, onSubmit }) => {
     if (clients.length === 0) {
       dispatch(fetchClientsService(token));
     }
+
+    if(marketingUsers.length === 0){
+      dispatch(getMarketingUsersService(token));
+    }
+
   }, [dispatch, token, warehouses.length, clients.length]);
 
   const handleInputChange = (e) => {
@@ -61,8 +71,15 @@ export const OrderForm = ({ formData, setFormData, onSubmit }) => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    onSubmit(); // Call the submitHandler passed from the parent component (Quotation)
+    console.log("marketing user",marketingUser)
+    onSubmit(marketingUser);
   };
+
+  const handleMarketingUserInput = (e) => {
+    setMarketingUser(e.target.value);
+  };
+
+
 
   return (
     <div className="bg-white p-6 rounded-sm shadow-md">
@@ -230,6 +247,32 @@ export const OrderForm = ({ formData, setFormData, onSubmit }) => {
                 <option value="CREDIT">CREDIT</option>
               </select>
           </div>
+        </div>
+
+        <div className="mt-8">
+        <label
+              htmlFor="marketingUsers"
+              className="block font-medium text-gray-700"
+            >
+              Select Marketing Employee
+            </label>
+            <select
+                name="marketingUsers"
+                id="marketingUsers"
+                value={marketingUser}
+                onChange={handleMarketingUserInput}
+                className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="" disabled>
+                  Choose employee
+                </option>
+                {marketingUsers.map((SingleMarketingUser, index) => (
+                  <option value={SingleMarketingUser._id} key={index}>
+                    {SingleMarketingUser.name}
+                  </option>
+                ))}
+              </select>
+
         </div>
 
         {/* Submit Button */}

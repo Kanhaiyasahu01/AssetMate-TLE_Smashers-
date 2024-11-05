@@ -39,6 +39,12 @@ const userSchema = new mongoose.Schema({
     image: {
         type: String,
     },
+    quotation:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "ClientOrder",
+        }
+    ]
 });
 
 module.exports = mongoose.model("User", userSchema);

@@ -21,6 +21,8 @@ const clientRoutes = require("./routes/Client");
 const termRoutes = require("./routes/Terms");
 const accountRoutes = require("./routes/Account");
 const enquiryRoutes = require("./routes/Enquiry");
+const marketingRoutes = require("./routes/Marketing");
+
 const bodyParser = require('body-parser');
 // Database connection
 dbConnect();
@@ -57,6 +59,8 @@ app.use("/api/v1/client", clientRoutes);
 app.use("/api/v1/terms",termRoutes)
 app.use("/api/v1/account",accountRoutes);
 app.use('/api/v1/enquiry',enquiryRoutes);
+app.use('/api/v1/marketing',marketingRoutes);
+
 // Default route
 app.get("/", (req, res) => {
 	return res.json({

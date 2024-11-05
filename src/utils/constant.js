@@ -67,6 +67,13 @@ export const sidebarData = [
       ]
     },
     {
+      title: 'Marketing', // Add the Term section
+      sections: [
+        { name: 'View Quotations', path: '/marketing/quotation' },
+
+      ]
+    },
+    {
       title:"Settings",
       sections:[
           {name:"Setting", path:"settings/setting"}

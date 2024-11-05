@@ -120,19 +120,7 @@ export function login(email, password, navigate) {
           localStorage.setItem("user", JSON.stringify(userData));
           
           console.log("User Role:", userData.role); // Log the role
-          if (userData.role.trim() === "Sales") {
-              console.log("Navigating to Sales Quotation");
-              navigate("/sales/quotation");   
-          } else if (userData.role.trim() === "Stock") {
-              console.log("Navigating to Supplier New Order");
-              navigate("/supplier/new-order");
-          } else if (userData.role.trim() === "Marketing") {
-              console.log("Navigating to Marketing Quotation");
-              navigate("/marketing/quotation");
-          } else {
-              console.log("Navigating to Dashboard View");
-              navigate("/dashboard/view"); // Uncomment this to check if it gets executed unexpectedly
-          }
+         
       } catch (error) {
           console.log("LOGIN API ERROR............", error);
           toast.error("Login Failed");

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AiOutlineRight, AiOutlineMenu, AiOutlineClose } from "react-icons/ai"; // Import right arrow and menu icons
 import { sidebarData } from '../../utils/constant';
 import { FaMoneyBill, FaWarehouse, FaUsers, FaTruck, FaBriefcase, FaUserTie, FaTachometerAlt, FaFileAlt } from "react-icons/fa"; // Section icons
+import { SiCoinmarketcap } from "react-icons/si";
 import { FaUserGear } from "react-icons/fa6";
 import { useSelector } from 'react-redux';
 
@@ -16,11 +17,13 @@ export const Sidebar = () => {
   const filterSidebarData = () => {
     switch (user.role) {
       case 'Admin':
-        return sidebarData; // Admin sees all sections
+        return sidebarData.filter(menu =>menu.title !=='Marketing' ); // Admin sees all sections
       case 'Sales':
         return sidebarData.filter(menu => menu.title === 'Sales'); // Sales only sees Sales tab
       case 'Stock':
         return sidebarData.filter(menu => menu.title === 'Stock' || menu.title === 'Supplier'); // Stock sees Stock and Supplier tabs
+      case 'Marketing':
+        return sidebarData.filter(menu => menu.title === 'Marketing');
       default:
         return [];
     }
@@ -59,6 +62,8 @@ export const Sidebar = () => {
         return <FaFileAlt />;
       case 'Settings':
         return <FaUserGear />;
+      case 'Marketing':
+        return <SiCoinmarketcap />;
       default:
         return null;
     }

@@ -7,6 +7,7 @@ import clientReducer from "../slice/clientSlice";
 import supplierReducer from "../slice/supplierSlice";
 import accountsReducer  from "../slice/accountSlice";
 import transactionReducer from "../slice/transactionSlice"
+import marketingReducer from "../slice/marketingSlice"
 const rootReducer  = combineReducers({
     auth: authReducer,
     profile:profileReducer,
@@ -15,6 +16,7 @@ const rootReducer  = combineReducers({
     supplier:supplierReducer,
     account:accountsReducer,
     transaction:transactionReducer,
+    marketing:marketingReducer,
 })
 
 export default rootReducer

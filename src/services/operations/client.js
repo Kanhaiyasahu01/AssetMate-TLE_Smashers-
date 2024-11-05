@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 import { setClients, setLoading } from "../../slice/clientSlice";
 import { clientEndPoints } from "../apis"
 import { deleteClient } from "../../slice/clientSlice";
-
+import { addQuotationToMarketingUserService } from "./marketing";
 const {
     ADD_CLIENT,
     ADDITIONAL_DETAILS,
@@ -19,6 +19,7 @@ const {
     DELETE_ORDER_ID,
     DELETE_CLIENT
 } = clientEndPoints
+
 
 
 
@@ -120,7 +121,7 @@ export const fetchClientsService = (token) => {
 };
 
 
-export const createQuotationService = (token, clientOrderData,navigate) => {
+export const createQuotationService = (token, clientOrderData,navigate,marketingUserId) => {
   return async (dispatch) => {
     dispatch(setLoading(true)); // Set loading state
     try {
@@ -129,13 +130,22 @@ export const createQuotationService = (token, clientOrderData,navigate) => {
         Authorization: `Bearer ${token}`,
       });
       console.log("Print response",response);
+      
       // Check if the response has the expected data
       if (!response?.data?.quotation) {
         throw new Error("Failed to create quotation");
-        
       }
 
+      console.log("inside create quotation");
+      const formData = {
+        userId:marketingUserId,
+        quotationId:response?.data?.quotation?._id
+      }
+      console.log("formdata",formData);
+      await dispatch(addQuotationToMarketingUserService(token,formData));
+
       console.log("Quotation created successfully:", response.data.quotation);
+
       toast.success("Quotation created successfully");
       navigate(`/sales/view/${response.data.quotation._id}`);
       // Navigate to another route to display the obtained data (assuming you have a way to navigate)
@@ -256,7 +266,8 @@ export const fetchAllOrdersService = (token,setOrders) =>{
       setOrders(response.data.allOrders);
       toast.success("orders fetched successfully");
     }catch(err){
-
+      console.log(err);
+      console.log("error occured while fetching order")
     }
   }
 }
