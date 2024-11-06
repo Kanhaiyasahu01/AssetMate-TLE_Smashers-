@@ -3,16 +3,38 @@ const app = express();
 require("dotenv").config();
 const dbConnect = require("./config/database");
 const cors = require('cors');
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
+const bodyParser = require('body-parser');
 
-const corsOptions = {
-	origin: '*', // This will allow all origins
+// Database connection
+dbConnect();
+
+// Constants
+const PORT = process.env.PORT || 8080;
+const allowedOrigins = [
+	'http://localhost:5173',
+	'https://assetmate-tle-smashers.vercel.app'
+];
+
+// CORS configuration
+app.use(cors({
+	origin: (origin, callback) => {
+		// Allow requests from allowed origins or if there is no origin (like Postman or mobile apps)
+		if (!origin || allowedOrigins.includes(origin)) {
+			return callback(null, true);
+		}
+		return callback(new Error('Not allowed by CORS'), false);
+	},
+	credentials: true,
 	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-	preflightContinue: false,
 	optionsSuccessStatus: 204
-  };
-  
-  app.use(cors(corsOptions));
+}));
+
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
+app.use(bodyParser.json());
+
 // Importing routes
 const userRoutes = require("./routes/User");
 const warehouseRoutes = require("./routes/Warehouse");
@@ -23,45 +45,15 @@ const accountRoutes = require("./routes/Account");
 const enquiryRoutes = require("./routes/Enquiry");
 const marketingRoutes = require("./routes/Marketing");
 
-const bodyParser = require('body-parser');
-// Database connection
-dbConnect();
-
-const PORT = process.env.PORT || 8080;
-
-// Middleware
-app.use(express.json());
-app.use(cookieParser());
-app.use(bodyParser.json());
-// CORS configuration
-const allowedOrigins = [
-	'http://localhost:5173', 
-	'https://assetmate-tle-smashers.vercel.app/' 
-	// Vite development server URL
-];
-
-app.use(
-	cors({
-		origin: (origin, callback) => {
-			// Allow requests without origin (like mobile apps, Postman, etc.)
-			if (!origin || allowedOrigins.includes(origin)) {
-				return callback(null, true);
-			}
-			return callback(new Error('Not allowed by CORS'), false);
-		},
-		credentials: true,  // Allow credentials such as cookies to be sent
-	})
-);
-
 // Route handling
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/warehouse", warehouseRoutes);
 app.use("/api/v1/supplier", supplierRoutes);
 app.use("/api/v1/client", clientRoutes);
-app.use("/api/v1/terms",termRoutes)
-app.use("/api/v1/account",accountRoutes);
-app.use('/api/v1/enquiry',enquiryRoutes);
-app.use('/api/v1/marketing',marketingRoutes);
+app.use("/api/v1/terms", termRoutes);
+app.use("/api/v1/account", accountRoutes);
+app.use("/api/v1/enquiry", enquiryRoutes);
+app.use("/api/v1/marketing", marketingRoutes);
 
 // Default route
 app.get("/", (req, res) => {
