@@ -36,7 +36,7 @@ app.use(bodyParser.json());
 // CORS configuration
 const allowedOrigins = [
 	'http://localhost:5173', 
-	'assetmate-tle-smashers-ki7gv6wm9-kanhaiya-lal-sahus-projects.vercel.app' 
+	'https://assetmate-tle-smashers.vercel.app/' 
 	// Vite development server URL
 ];
 
