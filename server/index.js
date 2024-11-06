@@ -35,6 +35,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 // CORS configuration
 const allowedOrigins = [
+	'https://assetmate-tle-smashers.netlify.app/',
 	'http://localhost:5173', 
 	'https://assetmate-tle-smashers.vercel.app/',
 	
