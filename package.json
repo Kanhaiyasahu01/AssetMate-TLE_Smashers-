@@ -6,11 +6,11 @@
   "scripts": {
     "dev": "concurrently -n \"client,server\" -c \"bgBlue,bgYellow\" \"npm run dev-client\" \"npm run dev-server\"",
     "dev-client": "vite",
-    "dev-server": "cd Admin Dashboard Server && npm run dev",
+    "dev-server": "cd server && npm run dev",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "cd Admin Dashboard Server && npm run dev"
+    "server": "cd server && npm run dev"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",

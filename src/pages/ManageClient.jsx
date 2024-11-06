@@ -55,8 +55,10 @@ export const ManageClient = () => {
               <thead className='bg-blue-600 text-white'>
                 <tr className="bg-gray-100 text-gray-700 text-left">
                   <th className="py-3 px-4 border-b">S. No</th>
+                  <th className="py-3 px-4 border-b">Name</th>
                   <th className="py-3 px-4 border-b">Company</th>
                   <th className="py-3 px-4 border-b">Email</th>
+
                   <th className="py-3 px-4 border-b text-center">Actions</th>
                 </tr>
               </thead>
@@ -65,6 +67,7 @@ export const ManageClient = () => {
                   <tr key={client._id} className="hover:bg-gray-50">
                     <td className="py-3 px-4 border-b">{index + 1}</td>
                     <td className="py-3 px-4 border-b">{client.billingAddress.company}</td>
+                    <td className="py-3 px-4 border-b">{client.billingAddress.name}</td>
                     <td className="py-3 px-4 border-b">{client.billingAddress.email}</td>
                     <td className="py-3 px-4 border-b text-center">
                       <button

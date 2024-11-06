@@ -114,7 +114,9 @@ function App() {
               </PrivateRoute>
             }
           >
-          <Route path="dashboard/my-profile" element={<Settings />} />
+        <Route path="dashboard/my-profile" element={<Settings />} />
+        <Route path="/settings/setting" index element={<Settings />} />
+
         {/* for admin role */}
         {
           user?.role === ROLE.ADMIN && (
@@ -127,7 +129,6 @@ function App() {
         <Route path="/accounts/transaction" element={<Transaction />} />    
         <Route path="/accounts/manage-transaction" element={<ManageTransaction />} />
         <Route path="/accounts/:id" element={<AccountDetail />} />
-        <Route path="/settings/setting" index element={<Settings />} />
         <Route path="crm/add-client" element={<AddClient />} />
         <Route path="crm/manage-client" element={<ManageClient />} />
             </>

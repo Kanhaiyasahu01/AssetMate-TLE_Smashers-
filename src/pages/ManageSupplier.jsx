@@ -54,6 +54,7 @@ export const ManageSupplier = () => {
               <thead className='bg-blue-600 text-white'>
                 <tr className="bg-gray-100 text-gray-700 text-left">
                   <th className="py-3 px-4 border-b">S. No</th>
+                  <th className="py-3 px-4 border-b">Name</th>
                   <th className="py-3 px-4 border-b">Company</th>
                   <th className="py-3 px-4 border-b">Email</th>
                   <th className="py-3 px-4 border-b text-center">Actions</th>
@@ -63,6 +64,7 @@ export const ManageSupplier = () => {
                 {suppliers.map((supplier, index) => (
                   <tr key={supplier._id} className="hover:bg-gray-50">
                     <td className="py-3 px-4 border-b">{index + 1}</td>
+                    <td className="py-3 px-4 border-b">{supplier.billingAddress.name}</td>
                     <td className="py-3 px-4 border-b">{supplier.billingAddress.company}</td>
                     <td className="py-3 px-4 border-b">{supplier.billingAddress.email}</td>
                     <td className="py-3 px-4 border-b text-center">

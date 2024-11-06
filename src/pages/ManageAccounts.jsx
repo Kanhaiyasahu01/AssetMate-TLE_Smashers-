@@ -70,7 +70,7 @@ export const ManageAccounts = () => {
                       <span>{account.name}</span>
                     </div>
                     <div className="flex-1 text-center text-gray-800">
-                      <span>${account.balance.toFixed(2)}</span>
+                      <span>{account.balance.toFixed(2)}</span>
                     </div>
                     <div className="flex-1 text-center text-gray-800">
                       <span>{account.accountType}</span>
