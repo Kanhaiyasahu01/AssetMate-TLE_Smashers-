@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 8080;
 const allowedOrigins = [
 	"http://localhost:5173",
 	// "https://assetmate-tle-smashers.netlify.app"
+	"https://asset-mate-tle-smashers.vercel.app/",
 ];
 
 // CORS configuration
