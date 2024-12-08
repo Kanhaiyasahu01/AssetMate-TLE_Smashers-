@@ -710,4 +710,140 @@ exports.deleteOrderById = async (req, res) => {
     }
   };
   
-  
+  const PlantClient = require("../models/PlantClient"); // Import your PlantClient model
+
+// Create a new PlantClient
+exports.createPlantClient = async (req, res) => {
+  try {
+    const { personName, designation, plantName, department, email, mobileNo, alternateMoNo, LandlineNumber, remarks } = req.body;
+    // Validate required fields
+    if (!personName || !email || !mobileNo) {
+      return res.status(400).json({
+        success: false,
+        message: "Person Name, Email, and Mobile Number are required fields.",
+      });
+    }
+
+    // Create the new PlantClient
+    const newPlantClient = await PlantClient.create({
+      personName,
+      designation,
+      plantName,
+      department,
+      email,
+      mobileNo,
+      alternateMoNo,
+      LandlineNumber,
+      remarks,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Plant Client created successfully.",
+      plantClient: newPlantClient,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while creating the Plant Client.",
+      error: error.message,
+    });
+  }
+};
+
+// Update an existing PlantClient
+exports.updatePlantClient = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the ID from URL parameters
+    const { personName, designation, plantName, department, email, mobileNo, alternateMoNo, LandlineNumber, remarks } = req.body;
+
+    // Find the PlantClient by ID
+    const plantClient = await PlantClient.findById(id);
+    if (!plantClient) {
+      return res.status(404).json({
+        success: false,
+        message: "Plant Client not found.",
+      });
+    }
+
+    // Update the PlantClient
+    plantClient.personName = personName || plantClient.personName;
+    plantClient.designation = designation || plantClient.designation;
+    plantClient.plantName = plantName || plantClient.plantName;
+    plantClient.department = department || plantClient.department;
+    plantClient.email = email || plantClient.email;
+    plantClient.mobileNo = mobileNo || plantClient.mobileNo;
+    plantClient.alternateMoNo = alternateMoNo || plantClient.alternateMoNo;
+    plantClient.LandlineNumber = LandlineNumber || plantClient.LandlineNumber;
+    plantClient.remarks = remarks || plantClient.remarks;
+
+    // Save the updated PlantClient
+    const updatedPlantClient = await plantClient.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Plant Client updated successfully.",
+      plantClient: updatedPlantClient,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the Plant Client.",
+      error: error.message,
+    });
+  }
+};
+
+// Delete a PlantClient
+exports.deletePlantClient = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the ID from URL parameters
+
+    // Find and delete the PlantClient by ID
+    const plantClient = await PlantClient.findByIdAndDelete(id);
+    if (!plantClient) {
+      return res.status(404).json({
+        success: false,
+        message: "Plant Client not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Plant Client deleted successfully.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting the Plant Client.",
+      error: error.message,
+    });
+  }
+};
+
+// Get all PlantClients
+exports.getAllPlantClients = async (req, res) => {
+  try {
+    // Fetch all PlantClients from the database
+    const plantClients = await PlantClient.find()
+    .populate({
+      path: 'plantName', // Populate plantName (Client document)
+      populate: {
+        path: 'billingAddress', // Populate billingAddress within Client model
+      },
+    })
+    .exec();
+    
+    return res.status(200).json({
+      success: true,
+      message: "Plant Clients retrieved successfully.",
+      plantClients,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving the Plant Clients.",
+      error: error.message,
+    });
+  }
+};

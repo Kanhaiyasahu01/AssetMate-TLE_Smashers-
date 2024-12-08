@@ -13,7 +13,11 @@ const {
     fetchAllOrder,
     deleteOrderById,
     fetchAllQuotation,
-    deleteClients
+    deleteClients,
+    createPlantClient,
+    updatePlantClient,
+    deletePlantClient,
+    getAllPlantClients,
 }  = require("../controllers/Client")
 
 
@@ -41,4 +45,12 @@ router.get('/get-all-quotation',auth,fetchAllQuotation);
 router.delete('/delete-order',auth,deleteOrderById);
 
 router.delete('/delete-client',auth,deleteClients);
+
+
+// plant client
+router.post('/create-plant-client',auth,createPlantClient);
+router.post('/update-plant-client/:id',auth,updatePlantClient);
+router.post('/delete-plant-client',auth,deletePlantClient);
+router.get('/get-all-plant-clients',auth,getAllPlantClients)
+
 module.exports = router;

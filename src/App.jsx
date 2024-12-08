@@ -48,6 +48,8 @@ import { ViewMarketingQuotations } from './pages/ViewMarketingQuotations';
 import { ROLE } from './utils/constant';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AddPlantClient } from './pages/AddPlantClient';
+import { ManagePlantClient } from './pages/ManagePlantClient';
 function App() {
 
   const {user} = useSelector((state)=>state.profile);
@@ -129,8 +131,11 @@ function App() {
         <Route path="/accounts/transaction" element={<Transaction />} />    
         <Route path="/accounts/manage-transaction" element={<ManageTransaction />} />
         <Route path="/accounts/:id" element={<AccountDetail />} />
-        <Route path="crm/add-client" element={<AddClient />} />
-        <Route path="crm/manage-client" element={<ManageClient />} />
+        <Route path="crm/add-plant" element={<AddClient />} />
+        <Route path="crm/manage-plant" element={<ManageClient />} />
+        <Route path="crm/update-client/:id" element={<AddClient />} />
+        <Route path="crm/add-plant-client" element={<AddPlantClient />} />
+        <Route path="crm/manage-plant-client/" element={<ManagePlantClient />} />
             </>
             )
         }

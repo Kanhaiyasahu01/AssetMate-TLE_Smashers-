@@ -4,6 +4,7 @@ import { setClients, setLoading } from "../../slice/clientSlice";
 import { clientEndPoints } from "../apis"
 import { deleteClient } from "../../slice/clientSlice";
 import { addQuotationToMarketingUserService } from "./marketing";
+import { setPlantClients } from "../../slice/plantClientSlice";
 const {
     ADD_CLIENT,
     ADDITIONAL_DETAILS,
@@ -17,11 +18,12 @@ const {
     GET_ALL_ORDER,
     GET_ALL_QUOTATION,
     DELETE_ORDER_ID,
-    DELETE_CLIENT
+    DELETE_CLIENT,
+    ADD_PLANT_CLIENT,
+    UPDATE_PLANT_CLIENT,
+    DELETE_PLANT_CLIENT,
+    GET_PLANT_CLIENTS,
 } = clientEndPoints
-
-
-
 
 // Add Client Service
 export const addClientService = (token, clients, billingAddress, shippingAddress, additionalDetails,formData) => {
@@ -160,7 +162,6 @@ export const createQuotationService = (token, clientOrderData,navigate,marketing
   };
 };
 
-
 // i am thinking to use it for order also
 export const fetchQuotationService = (token, id, setQuotationData) => {
   return async (dispatch) => {
@@ -188,7 +189,6 @@ export const fetchQuotationService = (token, id, setQuotationData) => {
     }
   };
 };
-
 
 export const createOrderService = (token, clientOrderData,navigate) =>{
   return async(dispatch)=>{
@@ -247,7 +247,6 @@ export const fetchOrderService = (token, id, setOrderData) => {
   };
 };
 
-
 export const fetchAllOrdersService = (token,setOrders) =>{
   return async(dispatch)=>{
     dispatch(setLoading(true));
@@ -271,7 +270,6 @@ export const fetchAllOrdersService = (token,setOrders) =>{
     }
   }
 }
-
 
 export const deleteOrderByIdService = (token, formData) => {
   return async (dispatch) => {
@@ -301,7 +299,6 @@ export const deleteOrderByIdService = (token, formData) => {
   };
 };
 
-
 export const fetchAllQuotationsService = (token, setQuotations) => {
   return async (dispatch) => {
     dispatch(setLoading(true)); // Start loading
@@ -327,8 +324,6 @@ export const fetchAllQuotationsService = (token, setQuotations) => {
     }
   };
 };
-
-
 
 export const deleteQuotationByIdService = (token, formData) => {
   return async (dispatch) => {
@@ -387,3 +382,68 @@ export const deleteClientService = (token, id) => {
   };
 };
 
+export const addPlantClientService = (token, formData) => {
+  return async (dispatch) => {
+    const toastId = toast.loading("Adding client into plant");
+    try {
+      const response = await apiConnector("POST", ADD_PLANT_CLIENT, formData, {
+        Authorization: `Bearer ${token}`,
+      });
+
+      console.log("response", response);
+      if (!response?.data?.success) {
+        throw new Error(response?.data?.message || "Unable to add client");
+      }
+
+      toast.success("Client added successfully");
+      // Dispatch success action if required
+      dispatch({ type: "ADD_CLIENT_SUCCESS", payload: response.data });
+
+    } catch (err) {
+      console.error("Error adding client:", err.message);
+      toast.error(err.message || "Failed to add client");
+      // Dispatch failure action if required
+      dispatch({ type: "ADD_CLIENT_FAILURE", payload: err.message });
+    } finally {
+      toast.dismiss(toastId); // Ensure the loading toast is dismissed
+    }
+  };
+};
+
+export const getAllPlantClientsService = (token) => {
+  return async (dispatch) => {
+    const toastId = toast.loading("Loading...");
+
+    try {
+      // Make the API call to fetch plant clients
+      const response = await apiConnector("GET", GET_PLANT_CLIENTS, null, {
+        Authorization: `Bearer ${token}`,
+      });
+
+      console.log("response", response);
+
+      // Check if the response is successful
+      if (!response?.data?.success) {
+        throw new Error(response?.data?.message || "Unable to fetch plant clients");
+      }
+
+      // Dispatch success action with fetched plant clients
+      dispatch(setPlantClients(response.data.plantClients));
+
+      // Success toast
+      toast.success("Plant Clients fetched successfully");
+
+    } catch (err) {
+      console.error("Error fetching plant clients:", err.message);
+
+      // Error toast
+      toast.error(err.message || "Failed to fetch plant clients");
+
+      // Dispatch failure action if required (optional)
+      dispatch({ type: "FETCH_PLANT_CLIENTS_FAILURE", payload: err.message });
+    } finally {
+      // Ensure the loading toast is dismissed
+      toast.dismiss(toastId);
+    }
+  };
+};

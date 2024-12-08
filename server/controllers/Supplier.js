@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 exports.createAddress = async (req, res) => {
   console.log("inside create address controller")
   try {
-      const { name, company, phone, email, address, city, country, postbox } = req.body;
+      const { name, company, phone, email, address,city,state,country, postbox,gstNo } = req.body;
 console.log("inside create address controller")
       // Validate required fields
       if (!name || !company || !phone || !email || !city || !country) {
@@ -28,10 +28,11 @@ console.log("inside create address controller")
           email,
           address,
           city,
+          state,
           country,
           postbox,
+          gstNo,
       });
-      console.log("Address created billing")
       // Respond with success
       return res.status(201).json({
           success: true,
@@ -53,15 +54,7 @@ console.log("inside create address controller")
 // Controller for creating Additional Details
 exports.createAdditionalDetails = async (req, res) => {
     try {
-      const { tax, discount, documentId, customFields } = req.body;
-  
-      // Validate required fields
-      if (!documentId) {
-        return res.status(400).json({
-          success: false,
-          message: "Document ID is required",
-        });
-      }
+      const {customFields } = req.body;
   
       // Check if customFields array is provided, and create the fields
       let customFieldIds = [];
@@ -80,9 +73,6 @@ exports.createAdditionalDetails = async (req, res) => {
   
       // Create additional details with the custom field references
       const newAdditionalDetails = await AdditionalDetails.create({
-        tax,
-        discount,
-        documentId,
         customFields: customFieldIds,
       });
   

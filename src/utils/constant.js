@@ -36,8 +36,10 @@ export const sidebarData = [
     {
       title: "CRM",
       sections: [
-        { name: "Add Client", path: "crm/add-client" },
-        { name: "Manage Client", path: "crm/manage-client" },
+        { name: "Add Plant", path: "crm/add-plant" },
+        { name: "Manage Plant", path: "crm/manage-plant" },
+        { name: "Add Client", path: "crm/add-plant-client" },
+        { name: "Manage Client", path: "crm/manage-plant-client" },
       ],
     },
     {

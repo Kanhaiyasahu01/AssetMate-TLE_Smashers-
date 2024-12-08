@@ -25,6 +25,9 @@ const addressSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    state:{
+        type:String,
+    },
     country: {
         type: String,
         required: true,
@@ -32,6 +35,9 @@ const addressSchema = new mongoose.Schema({
     postbox: {
         type: String,
     },
+    gstNo:{
+        type:String,
+    }
 });
 
 module.exports = mongoose.model("Address", addressSchema);

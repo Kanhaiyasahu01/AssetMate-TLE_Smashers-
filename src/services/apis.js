@@ -38,6 +38,13 @@ export const clientEndPoints = {
     DELETE_ORDER_ID:`${BASE_URL}/client/delete-order`,
     DELETE_QUOTATION_ID:`${BASE_URL}/client/delete-order`,
     DELETE_CLIENT:`${BASE_URL}/client/delete-client`,
+    // plant client
+    ADD_PLANT_CLIENT:`${BASE_URL}/client/create-plant-client`,
+    UPDATE_PLANT_CLIENT:`${BASE_URL}/client/create-plant-client`,
+    DELETE_PLANT_CLIENT:`${BASE_URL}/client/create-plant-client`,
+    GET_PLANT_CLIENTS:`${BASE_URL}/client/get-all-plant-clients`,
+
+
 }
 
 export const termsEndPoints = {
